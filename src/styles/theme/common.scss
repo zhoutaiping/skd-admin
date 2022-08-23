@@ -1,0 +1,84 @@
+$--color-aside-menu-text-default: rgba(255, 255, 255, 0.5);
+$--color-aside-menu-icon-default: rgba(255, 255, 255, 0.3);
+$--color-aside-menu-text-active: rgba(255, 255, 255, .95);
+$--color-aside-border: rgba(255, 255, 255, .1);
+
+/* Colors
+-------------------------- */
+$--color-white: #fff !default;
+$--color-black: #000 !default;
+
+$--color-success: #67c23a !default;
+$--color-warning: #e6a23c !default;
+$--color-danger: #f56c6c !default;
+$--color-info: #909399 !default;
+
+$--color-success-light: mix($--color-white, $--color-success, 80%) !default;
+$--color-warning-light: mix($--color-white, $--color-warning, 80%) !default;
+$--color-danger-light: mix($--color-white, $--color-danger, 80%) !default;
+$--color-info-light: mix($--color-white, $--color-info, 80%) !default;
+
+$--color-success-lighter: mix($--color-white, $--color-success, 90%) !default;
+$--color-warning-lighter: mix($--color-white, $--color-warning, 90%) !default;
+$--color-danger-lighter: mix($--color-white, $--color-danger, 90%) !default;
+$--color-info-lighter: mix($--color-white, $--color-info, 90%) !default;
+
+$--color-text-primary: #303133 !default;
+$--color-text-regular: #606266 !default;
+$--color-text-secondary: #909399 !default;
+$--color-text-placeholder: #c0c4cc !default;
+
+$--pseudo-background-color: #eaf4fc;
+$--pseudo-hover-background-color: #d7edfe;
+$--light-green: #f3faeb;
+$--orange: #fe8520;
+$--light-orange: #7a7066;
+$--gray: #969696;
+$--red: #fe371a;
+$--dark-green: #008333;
+$--error-red: #ff1500;
+$--error-light-red: #ffe7e5;
+$--disabled-color: #848484;
+$--border-gray: #eaeaea;
+$--button-border-gray: gray;
+$--tip-border: #b7dbf6;
+$--tip-background: #f7fbfd;
+$--wrap-background: #f7f7f7;
+
+
+$--status-success: #52c41a;
+$--status-error: #f5222d;
+$--status-default: #CCC;
+$--status-processing: #1890ff;
+$--status-warning: #faad14;
+
+/* Disable base
+  -------------------------- */
+$--disabled-fill-base: #e2e2e2;
+$--disabled-color-base: #bbb;
+$--disabled-border-base: #cdcdcd;
+
+/* Background
+-------------------------- */
+$--background-color-base: #f5f7fa !default;
+
+/* Border
+-------------------------- */
+$--border-width-base: 1px !default;
+$--border-style-base: solid !default;
+$--border-color-base: #e8e8e8 !default;
+$--border-color-light: #e4e7ed !default;
+$--border-color-lighter: #ebeef5 !default;
+$--border-color-extra-light: #f2f6fc !default;
+$--border-color-hover: $--color-text-placeholder !default;
+$--border-base: $--border-width-base $--border-style-base $--border-color-base !default;
+$--border-radius-base: 3px !default; // YD ***
+$--border-radius-small: 3px !default;
+$--border-radius-circle: 100% !default;
+
+
+/* Box-shadow
+-------------------------- */
+$--box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) !default;
+$--box-shadow-dark: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .12) !default;
+$--box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !default;

@@ -1,0 +1,192 @@
+.card-content {
+  margin-top: 12px;
+  background: #f7f7f7;
+  padding: 12px;
+}
+
+.inline-box {
+  background: #fff;
+  padding: 10px;
+}
+
+.inline-box .el-form-item__label {
+  font-size: 12px;
+}
+
+.user-title {
+  font-size: 14px;
+  font-weight: 100;
+}
+
+.user-title::before {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  background: $--color-primary;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
+
+.correct-title {
+  font-size: 14px;
+  font-weight: 100;
+  padding: 5px 0;
+}
+
+.user-icon {
+  width: 35px;
+  height: 35px;
+  display: inline-block;
+  background-size: contain;
+  margin: 5px;
+  vertical-align: top;
+}
+
+.upload-box .el-upload-dragger {
+  width: 180px;
+  height: 120px;
+  border: 1px solid #d9d9d9;
+  border-radius: 0;
+}
+
+.upload-box .tip-box {
+  margin-top: 38px;
+}
+
+.upload-box .el-upload-dragger .el-upload__text {
+  display: inline-block;
+  width: 55%;
+  text-align: left;
+  font-size: 12px;
+}
+
+.form-inline {
+  background: #f7f7f7;
+}
+
+.box {
+  display: inline-block;
+  vertical-align: top;
+  width: 400px;
+}
+
+.upload-box {
+  width: 280px;
+  display: inline-block;
+  position: relative;
+}
+
+.upload-second-box {
+  margin-left: 116px;
+  display: block;
+  margin-top: 15px;
+}
+
+.tip-required {
+  font-size: 12px;
+  color: #48576a;
+  text-align: right;
+  padding: 8px 12px 11px 0;
+  box-sizing: border-box;
+  width: 110px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.submit-btn {
+  padding: 10px 39px;
+  margin-left: 125px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.reset-tab .el-tabs__header {
+  border-bottom: none;
+  position: relative;
+  margin: 10px 0 16px 0;
+  box-shadow: 0px 4px 20px -2px rgba(0, 0, 0, .12);
+}
+
+.reset-tab .el-tabs__item {
+  font-size: 12px;
+}
+
+.example {
+  color: $--color-primary;
+  font-style: normal;
+  position: relative;
+  cursor: pointer;
+}
+
+.example-icon {
+  position: absolute;
+  display: none;
+}
+
+.el-upload__tip :hover .example-icon {
+  display: block;
+}
+
+
+/*.example :hover.example-icon{
+  display: block;
+}*/
+
+.upload-container {
+  position: relative;
+  .el-upload__tip {
+    position: absolute;
+    position: absolute;
+    left: 80%;
+    top: 60px;
+    bottom: 0;
+    width: 320px;
+    display: block;
+  }
+}
+
+.el-upload-list--picture .el-upload-list__item {
+  z-index: 10;
+}
+
+.upload-container .el-upload__tip {
+  z-index: 0;
+}
+
+.info-box {
+  padding: 20px 10px;
+}
+
+.info-content li {
+  font-size: 12px;
+  color: #333;
+  margin-top: 10px;
+}
+
+.info-content li div {
+  display: inline-block;
+  width: 300px;
+  height: 30px;
+  line-height: 30px;
+  background: #EBEBEB;
+  color: #333;
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding-left: 12px;
+  border: 1px solid #D6D6D6;
+  overflow: hidden;
+}
+
+.correct-card {
+  margin-top: 0;
+}
+.currentBtn {
+  font-size: 12px;
+  margin-left: 114px;
+  button {
+    height: 30px;
+    padding: 5px 15px;
+  }
+}

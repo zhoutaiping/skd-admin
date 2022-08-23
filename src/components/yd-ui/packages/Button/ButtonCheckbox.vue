@@ -1,0 +1,311 @@
+<style lang="scss">
+.yd-button-checkbox {
+  > .el-button {
+    border-radius: 2px;
+    transition: 0.15s;
+    &:hover {
+      border-color: $--color-primary;
+    }
+  }
+}
+
+.popover--checkboxs {
+  padding: 0px;
+
+  .popover__footer {
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    button {
+      width: 80px;
+    }
+  }
+
+  .checkbox {
+    &-search {
+      overflow: hidden;
+      padding: 0 12px;
+      padding-bottom: 8px;
+    }
+    &-list {
+      &-wrap {
+        position: relative;
+        z-index: 1;
+        padding: 8px 0;
+        background: #fff;
+      }
+      &__scroll {
+        flex-direction: column;
+        max-height: 250px;
+        overflow-x: auto;
+        display: flex;
+      }
+    }
+
+    &-item {
+      .el-checkbox {
+        display: block;
+        padding: 8px 12px;
+      }
+      &:hover {
+        background: rgb(250, 250, 250);
+      }
+    }
+  }
+}
+</style>
+<template>
+  <span class="yd-button-checkbox">
+    <el-popover
+      ref="popover"
+      v-model="visible"
+      popper-class="popover--checkboxs"
+      placement="bottom-start"
+      width="230"
+      trigger="click"
+    >
+      <div class="checkbox-list-wrap">
+        <div class="checkbox-search">
+          <InputSearch
+            v-model="keyword"
+            @change="handleSearch"
+          />
+        </div>
+        <div class="checkbox-list">
+          <div class="checkbox-item">
+            <el-checkbox
+              :indeterminate="isIndeterminate"
+              v-model="checkAll"
+              class="checkbox-item"
+              @change="handleCheckAllChange"
+            >全选</el-checkbox>
+          </div>
+
+          <div class="checkbox-list__scroll">
+            <yd-scroll>
+              <el-checkbox-group
+                v-model="val"
+                @change="handleChange"
+              >
+                <div
+                  v-for="(item, index) in checksView"
+                  :key="index"
+                  class="checkbox-item"
+                >
+                  <el-checkbox
+                    :label="item.value"
+                    :value="item.value"
+                  >{{ item.label }}</el-checkbox>
+                </div>
+              </el-checkbox-group>
+            </yd-scroll>
+          </div>
+        </div>
+      </div>
+      <div class="popover__footer">
+        <el-button
+          type="default"
+          @click="handleReset"
+        >清空已选</el-button>
+        <el-button
+          :disabled="totalValue === 0"
+          type="primary"
+          @click="handleSubmit"
+        >{{ textSubmit }}</el-button>
+      </div>
+    </el-popover>
+    <el-button
+      v-popover:popover
+      :style="{width}"
+      type="default"
+    >
+      {{ text }}
+    </el-button>
+  </span>
+</template>
+
+<script>
+import InputSearch from '@/components/Input/InputSearch'
+const NAME = 'yd-button-checkbox'
+import { arrayDedupe } from '@/utils/array'
+
+export default {
+  name: NAME,
+
+  components: { InputSearch },
+
+  props: {
+    value: [Array, String],
+    checks: Array,
+    unit: {
+      type: String,
+      default: '个'
+    },
+    width: {
+      type: String,
+      default: 'auto'
+    },
+    itemName: {
+      type: String,
+      default: '网站'
+    },
+    textAll: {
+      type: String,
+      default: '选择网站'
+    },
+    textSubmit: {
+      type: String,
+      default: '确认查询'
+    },
+    defaultCheck: {
+      type: Boolean,
+      default: true
+    }
+
+  },
+
+  data() {
+    return {
+      checkAll: false,
+      val: this.value,
+      text: '',
+      visible: false,
+      isIndeterminate: true,
+      keyword: ''
+    }
+  },
+
+  computed: {
+    checksView() {
+      const list = []
+      const { checks, keyword } = this
+
+      checks.forEach(item => {
+        if (item.label.includes(keyword)) {
+          list.push(item)
+        }
+      })
+      return keyword ? list : checks
+    },
+
+    totalList() {
+      const { checks } = this
+      if (checks && checks.length > 0) {
+        return checks.length
+      } else {
+        return '--'
+      }
+    },
+    totalValue() {
+      const { val } = this
+      if (val && val.length > 0) {
+        return val.length
+      } else {
+        return 0
+      }
+    }
+  },
+
+  watch: {
+    value(val) {
+      this.val = val
+      this.handleChange()
+      this.updateListView()
+      this.updateText()
+    },
+    checks(val) {
+      if (val && this.val && this.val.length === 0) {
+        this.checkAll = this.defaultCheck
+        this.handleCheckAllChange(true)
+        this.updateText()
+      }
+    }
+  },
+
+  mounted() {
+    this.handleChange()
+    this.text = `选择${this.itemName}`
+  },
+
+  methods: {
+    init() {
+      this.keyword = ''
+      this.checkAll = this.defaultCheck
+      this.handleCheckAllChange()
+      this.handleChange()
+      this.updateText()
+    },
+    // 更新显示列表
+    updateListView() {
+      this.listView = []
+      this.checks.forEach(item => {
+        if (this.val.includes(item.value)) this.listView.push(item)
+      })
+    },
+
+    handleSearch(keyword) {
+      this.keyword = keyword
+      this.handleChange()
+    },
+
+    handleCheckAll() {
+      this.checkAll = true
+      this.handleCheckAllChange()
+    },
+    handleCheckAllChange() {
+      const { checkAll, val, checksView } = this
+      const valAll = checksView.filter(_ => !_.disabled).map(_ => _.value)
+      if (checkAll) {
+        this.val = arrayDedupe(val.concat(valAll))
+      } else {
+        this.val = []
+      }
+
+      this.handleChange()
+    },
+    handleChange() {
+      const { checksView, val } = this
+      const valAll = checksView.filter(_ => !_.disabled).map(_ => _.value)
+
+      this.checkAll = true
+      this.isIndeterminate = false
+
+      val.forEach(item => {
+        if (valAll.includes(item)) this.isIndeterminate = true
+      })
+
+      valAll.forEach(item => {
+        if (!val.includes(item)) {
+          this.checkAll = false
+        }
+      })
+      if (this.checkAll) this.isIndeterminate = false
+    },
+    handleReset() {
+      this.isIndeterminate = false
+      this.val = []
+      this.checkAll = false
+      // this.handleSubmit()
+    },
+
+    updateText() {
+      const { val } = this
+
+      if (val && val.length > 0) {
+        this.text = `已选${this.totalValue}${this.unit}(共${this.totalList}${this.unit})${this.itemName}`
+      } else {
+        this.text = `选择${this.itemName}`
+      }
+    },
+
+    handleSubmit() {
+      this.$emit('input', this.val)
+      this.$emit('submit', this.val)
+
+      this.updateText()
+      this.visible = false
+      this.handleChange()
+    }
+  }
+}
+</script>
