@@ -22,9 +22,18 @@ import DeviceReputation from '../../../../constants/DeviceReputation'
 
 export default {
   props: {
-    value: Object,
-    rules: Array,
-    logics: Array
+    value: {
+      type: Object,
+      default: () => {}
+    },
+    rules: {
+      type: Array,
+      default: () => []
+    },
+    logics: {
+      type: Array,
+      default: () => []
+    }
   },
 
   data() {

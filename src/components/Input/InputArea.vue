@@ -78,8 +78,8 @@
               <yd-scroll>
                 <yd-form-checkbox
                   v-if="index === 0 && !province"
-                  :checks="SELECT_CN"
                   v-model="val"
+                  :checks="SELECT_CN"
                   :span="8"
                 />
                 <template v-else>
@@ -90,9 +90,9 @@
                     >
                       <div>
                         <yd-form-checkbox
+                          v-model="val"
                           :check-all-label="oItem.label"
                           :checks="oItem.options"
-                          v-model="val"
                           :span="8"
                           show-check-all
                         />
@@ -101,8 +101,8 @@
                   </template>
                   <template v-else>
                     <yd-form-checkbox
-                      :checks="item.options"
                       v-model="val"
+                      :checks="item.options"
                       :span="8"
                       show-check-all
                     />

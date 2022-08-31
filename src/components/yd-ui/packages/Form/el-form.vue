@@ -4,8 +4,9 @@
       labelPosition ? 'el-form--label-' + labelPosition : '',
       { 'el-form--inline': inline }
     ]"
-    class="el-form">
-    <slot/>
+    class="el-form"
+  >
+    <slot />
   </form>
 </template>
 <script>

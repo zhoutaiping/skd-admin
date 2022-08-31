@@ -10,7 +10,7 @@
 </style>
 <template>
   <div class="yd-card-list">
-    <slot/>
+    <slot />
   </div>
 </template>
 

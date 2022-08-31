@@ -81,8 +81,8 @@
   <yd-card :class="b()" :loading="loading">
     <div :class="b('header')">
       <template v-if="isEdit">
-        <InputSearch class="pull-left" @change="handleSearch"/>
-        <yd-form-checkbox v-if="filters && filters.length > 0" :class="b('filter')" :checks="filters" class="pull-left"/>
+        <InputSearch class="pull-left" @change="handleSearch" />
+        <yd-form-checkbox v-if="filters && filters.length > 0" :class="b('filter')" :checks="filters" class="pull-left" />
         <div class="pull-right">
           <el-button @click="handleReset">清空已选</el-button>
         </div>
@@ -96,7 +96,7 @@
     </div>
 
     <div v-if="isEdit" :class="b('action')">
-      <el-checkbox v-if="checksView.length > 0" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+      <el-checkbox v-if="checksView.length > 0" v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
       <p class="pull-right">已选 {{ val.length }} 个</p>
     </div>
 
@@ -109,7 +109,7 @@
           <template v-if="isEdit">
             <el-checkbox-group v-model="val" @change="handleChange">
               <el-row class="select-list">
-                <el-col v-for="(item, index) in checksView" :span="8" :key="index">
+                <el-col v-for="(item, index) in checksView" :key="index" :span="8">
                   <div class="select-item">
                     <el-checkbox :label="item.value" :disabled="item.disabled" :value="item.value">{{ item.label }}</el-checkbox>
                   </div>

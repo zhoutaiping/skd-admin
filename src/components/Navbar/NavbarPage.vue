@@ -33,10 +33,10 @@
       <navbar-page-item
         v-for="(item, index) in data"
         :ref="item.to === toPath ? 'pageItemActive' : ''"
+        :key="index"
         :tab="tab"
         :to="{name: item.name, query: $route.query}"
         :active="item.name === value"
-        :key="index"
         @click="handleClick"
       >
         {{ item.title || item.label || $t(item.name) }}

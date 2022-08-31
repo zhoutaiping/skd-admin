@@ -30,9 +30,9 @@
 </style>
 <template>
   <div :class="b()">
-    <slot/>
+    <slot />
     <div :class="b('right')">
-      <slot name="right"/>
+      <slot name="right" />
     </div>
   </div>
 </template>

@@ -34,8 +34,8 @@ describe(Name, () => {
   //   expect(wrapper.not.toBeVisible())
   //   vm.handleOpen()
   //   expect(vm.visible).toBe(true)
-  // }) 
-  
+  // })
+
   // it(`handleClose`, () => {
   //   expect(wrapper.toBeVisible())
   //   vm.handleClose()

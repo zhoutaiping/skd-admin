@@ -1,6 +1,6 @@
 import { shallowMount, mount, createLocalVue } from '@vue/test-utils'
 import Component from '@/components/Column/ColumnDomain.vue'
-import VueRouter from "vue-router"
+import VueRouter from 'vue-router'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)

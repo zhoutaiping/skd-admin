@@ -1,8 +1,8 @@
 <template>
   <yd-form-select
     v-if="options.type === 'select'"
-    :selects="options.options"
     v-model="val"
+    :selects="options.options"
     :multiple="options.multiple"
     :filterable="options.filterable"
     :disabled="options.disabled"
@@ -31,8 +31,8 @@
   </el-checkbox>
   <el-input
     v-else
-    :disabled="options.disabled"
     v-model="val"
+    :disabled="options.disabled"
     :placeholder="options.placeholder"
     style="width: 320px"
   />

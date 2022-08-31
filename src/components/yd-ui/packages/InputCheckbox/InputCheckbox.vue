@@ -24,7 +24,7 @@
 <template>
   <div ref="dom">
     <el-popover ref="popover" :width="popoverWidth" transition="-" popper-class="popover--checkbox" placement="bottom" trigger="click">
-      <el-checkbox v-show="indeterminate" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleAllClick">全选</el-checkbox>
+      <el-checkbox v-show="indeterminate" v-model="checkAll" :indeterminate="isIndeterminate" @change="handleAllClick">全选</el-checkbox>
       <el-checkbox-group v-model="val" @change="handleChange">
         <div v-for="item in checks" :key="item.value">
           <el-checkbox :label="item.value" :value="item.value">{{ item.label }}</el-checkbox>
@@ -32,7 +32,7 @@
       </el-checkbox-group>
     </el-popover>
     <el-tooltip :disabled="!valView" :open-delay="500" :content="valView" effect="light" transition="-" placement="top" popper-class="tooltip--input">
-      <el-input v-popover:popover v-model="valView" :placeholder="placeholder"/>
+      <el-input v-model="valView" v-popover:popover :placeholder="placeholder" />
     </el-tooltip>
   </div>
 </template>
@@ -46,9 +46,18 @@ export default {
   name: NAME,
 
   props: {
-    value: [String, Number, Array],
-    placeholder: String,
-    checks: Array,
+    value: {
+      type: [String, Number, Array],
+      default: ''
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    checks: {
+      type: Array,
+      default: () => []
+    },
     split: {
       type: String,
       default: '|'

@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <el-row>
       <el-col :span="16">
         <ChartPie

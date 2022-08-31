@@ -63,8 +63,8 @@
       :class="b('header')"
     >
       <InputSearch
-        :disabled="disabled"
         v-model="keyword"
+        :disabled="disabled"
         placeholder="请输入进行查询"
         style="width: 100%"
         @clear="handleSearch"

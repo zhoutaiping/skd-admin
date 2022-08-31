@@ -10,7 +10,7 @@
     </template>
     <template v-else>
       <a @click="Help.openServicePanel(appAssets.afterKF)">
-      <slot />{{ title }}</a>
+        <slot />{{ title }}</a>
     </template>
   </span>
   <span v-else>

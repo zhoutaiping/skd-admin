@@ -9,9 +9,9 @@
 <template>
   <div :class="b()">
     <a-range-picker
+      v-model="value"
       :disabled-date="disabledDate"
       :locale="locale"
-      v-model="value"
       :format="'YYYY-MM-DD HH:mm:ss'"
       @change="handleSelectDateRange"
     >

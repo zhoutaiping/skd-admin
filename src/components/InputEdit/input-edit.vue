@@ -1,9 +1,9 @@
 <template>
   <div class="input-edit">
-    <el-input :class="{'is-error':validContent}" v-model="itemValue" class="url-input" placeholder="请输入内容" @blur="verifyUrl"/>
+    <el-input v-model="itemValue" :class="{'is-error':validContent}" class="url-input" placeholder="请输入内容" @blur="verifyUrl" />
     <el-button type="primary" class="add-btn-in" @click="addItem(itemValue)">添加</el-button>
     <div class="tag">
-      <el-tag v-for="(item, index) in listData" :closable="true" :close-transition="false" :key="index" class="list-item" type="gray" @close="handleClose(item)">{{ item }}</el-tag>
+      <el-tag v-for="(item, index) in listData" :key="index" :closable="true" :close-transition="false" class="list-item" type="gray" @close="handleClose(item)">{{ item }}</el-tag>
     </div>
   </div>
 </template>

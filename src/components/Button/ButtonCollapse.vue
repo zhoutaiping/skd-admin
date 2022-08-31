@@ -10,7 +10,7 @@
   <a
     :class="b([value ? 'active' : ''])"
     @click="$emit('click')"
-  ><slot/> <i
+  ><slot /> <i
     :class="value ? 'el-icon-caret-bottom' : 'el-icon-caret-left'"
   /></a>
 </template>

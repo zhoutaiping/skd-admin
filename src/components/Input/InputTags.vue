@@ -6,8 +6,8 @@
     <el-form>
       <el-form-item>
         <el-input
-          :placeholder="placeholder"
           v-model="form.value"
+          :placeholder="placeholder"
           style="width: 180px; margin-right: 8px"
         />
         <el-button

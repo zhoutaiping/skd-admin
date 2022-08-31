@@ -1,16 +1,16 @@
 <template>
   <div>
     <yd-form-select
-      :selects="selectCountry"
       v-model="form.country_code"
+      :selects="selectCountry"
       default-text="选择国家"
       style="width: 150px"
       @change="handleChangeCountry"
     />
     <yd-form-select
       v-if="selectCity.length"
-      :selects="selectCity"
       v-model="form.province_code"
+      :selects="selectCity"
       style="width: 150px; margin-left: 10px"
       default-text="选择省市"
     />
@@ -25,9 +25,9 @@
       <el-tag
         v-for="(item, index) in listView"
         v-if="item.zone_name"
+        :key="index"
         :closable="true"
         :close-transition="true"
-        :key="index"
         disable-transitions
         style="margin-right: 10px"
         type="gray"

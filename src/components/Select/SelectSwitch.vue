@@ -12,8 +12,8 @@
 
 <template>
   <el-select
-    :class="b()"
     v-model="val"
+    :class="b()"
     :disabled="disabled"
     placeholder="请选择"
     @change="handleChange"
@@ -122,7 +122,7 @@ export default create({
           {
             label: 'ON',
             value: this.onValue
-          },
+          }
         )
       }
       if (this.offVisible) {

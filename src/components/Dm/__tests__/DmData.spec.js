@@ -57,7 +57,7 @@ describe(Name, () => {
     vm.init({ total: 'AS' })
     expect(vm.pagination.total).toBe(0)
   })
-  
+
   // it('DmData handleCurrentChange', () => {
   //   vm.handleCurrentChange(10)
   //   expect(vm.pagination.page).toBe(10)

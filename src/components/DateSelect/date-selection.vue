@@ -7,10 +7,10 @@
     <el-button v-show="buttonSelfShow" :class="{'active': activeType === 'custom'}" @click="handleButtonDateLogChange">自定义</el-button>
     <span v-show="buttonShow" class="block">
       <span class="demonstration">从</span>
-      <el-date-picker v-model="startTimevalue" :picker-options="pickerOptions" type="date" placeholder="选择开始时间" value-format="yyyy-MM-dd" @change="timeSelectStar"/>
+      <el-date-picker v-model="startTimevalue" :picker-options="pickerOptions" type="date" placeholder="选择开始时间" value-format="yyyy-MM-dd" @change="timeSelectStar" />
       <span class="demonstration">到</span>
-      <el-date-picker v-model="endTimevalue" :picker-options="pickerOptions" type="date" placeholder="选择结束时间" value-format="yyyy-MM-dd" @change="timeSelectEnd"/>
-      <slot/>
+      <el-date-picker v-model="endTimevalue" :picker-options="pickerOptions" type="date" placeholder="选择结束时间" value-format="yyyy-MM-dd" @change="timeSelectEnd" />
+      <slot />
       <el-button :class="{ active: dateStatus[4] }" class="btn--search" @click="handleButtonDateSelfLogChange">查询</el-button>
     </span>
   </span>

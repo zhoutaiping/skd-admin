@@ -12,8 +12,8 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
           v-for="(item, index) in selects"
-          :command="item.value"
           :key="index"
+          :command="item.value"
           :disabled="item.disabled"
         >{{ item.label }}</el-dropdown-item>
       </el-dropdown-menu>

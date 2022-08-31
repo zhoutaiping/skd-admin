@@ -22,7 +22,7 @@
       {{ title }}
     </template>
     <template slot="extra">
-      <slot name="extra"/>
+      <slot name="extra" />
     </template>
     <Chart
       ref="Chart"

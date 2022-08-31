@@ -5,8 +5,8 @@
   >
     <el-radio
       v-for="item in radios"
-      :size="size"
       :key="item.value"
+      :size="size"
       :disabled="item.disabled || disabled"
       :label="item.value"
       :border="border"

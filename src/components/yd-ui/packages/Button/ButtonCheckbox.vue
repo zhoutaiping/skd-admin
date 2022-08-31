@@ -74,8 +74,8 @@
         <div class="checkbox-list">
           <div class="checkbox-item">
             <el-checkbox
-              :indeterminate="isIndeterminate"
               v-model="checkAll"
+              :indeterminate="isIndeterminate"
               class="checkbox-item"
               @change="handleCheckAllChange"
             >全选</el-checkbox>

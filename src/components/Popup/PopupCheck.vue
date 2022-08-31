@@ -12,8 +12,8 @@
 <template>
   <div>
     <el-checkbox
-      :indeterminate="isIndeterminate"
       v-model="checkAll"
+      :indeterminate="isIndeterminate"
       @change="handleAllClick"
     >全选</el-checkbox>
     <el-checkbox-group

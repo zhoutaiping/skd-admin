@@ -73,7 +73,7 @@
           type="selection"
           width="55"
         />
-        <slot name="table-column"/>
+        <slot name="table-column" />
       </el-table>
     </DmTable>
   </div>

@@ -43,9 +43,9 @@
     </div>
     <template>
       <yd-form-radio-button
+        v-model="val"
         :class="b('body')"
         :radios="AUTO_TIME"
-        v-model="val"
         :disabled="!open"
         size="mini"
         @change="handleUpdateInterval"
@@ -56,7 +56,7 @@
       :class="b('button')"
       :type="open ? 'primary' : 'default'"
     >
-    <i class="el-icon-refresh" />{{ val | labelView(AUTO_TIME) }}</el-button>
+      <i class="el-icon-refresh" />{{ val | labelView(AUTO_TIME) }}</el-button>
   </el-popover>
 </template>
 

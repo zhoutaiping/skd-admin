@@ -66,12 +66,13 @@
     :style="{
       height: height + 'px'
     }"
-    class="item-number-group">
+    class="item-number-group"
+  >
     <div v-if="$slots.header || header" class="item-number-group__header">
       <slot name="header">{{ header }}</slot>
     </div>
     <div class="item-number-list">
-      <slot/>
+      <slot />
     </div>
     <div v-if="$slots.footer || footer" class="item-number-group__footer">
       <slot name="footer">{{ footer }}</slot>

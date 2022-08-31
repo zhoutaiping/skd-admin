@@ -19,8 +19,8 @@
     >
       <el-form-item label="模式">
         <yd-form-radio-button
-          :radios="DeviceReputation.Mode"
           v-model="form.match_mode"
+          :radios="DeviceReputation.Mode"
         />
       </el-form-item>
       <el-form-item
@@ -60,9 +60,9 @@
                   prop="type"
                 >
                   <yd-form-select
+                    v-model="scope.row.type"
                     :disabled="scope.$index !== list.length - 1"
                     :selects="selectOptionsDisabled(DeviceReputation.MatchType, list.map(_=>_.type))"
-                    v-model="scope.row.type"
                     @change="val => handleChangeType(val, scope.row)"
                   />
                 </ColumnForm>
@@ -81,8 +81,8 @@
                 >
                   <yd-form-select
                     v-if="scope.row.type"
-                    :selects="selectExport(DeviceReputation.Logic, mathTypeMap[scope.row.type].logic)"
                     v-model="scope.row.logic"
+                    :selects="selectExport(DeviceReputation.Logic, mathTypeMap[scope.row.type].logic)"
                   />
                 </ColumnForm>
               </template>
@@ -102,8 +102,8 @@
                     <el-input v-model="scope.row.data.value">
                       <yd-form-select
                         slot="append"
-                        :selects="DeviceReputation.TimeUnit"
                         v-model="scope.row.data.unit"
+                        :selects="DeviceReputation.TimeUnit"
                         style="width: 100px"
                       />
                     </el-input>
@@ -111,8 +111,8 @@
                 </template>
                 <template v-else-if="scope.row.type === 'app_start_times'">
                   <el-input-number
-                    :min="1"
                     v-model="scope.row.data.value"
+                    :min="1"
                     controls-position="right"
                   />
                   <span style="margin-left: 8px">次</span>

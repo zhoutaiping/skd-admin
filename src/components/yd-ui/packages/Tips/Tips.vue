@@ -1,6 +1,6 @@
 <template>
   <div :class="{'is-border-bottom': borderBottom}" class="yd-tips">
-    <slot/>
+    <slot />
   </div>
 </template>
 

@@ -18,7 +18,7 @@
       label-position="top"
     >
       <el-form-item label="匹配条件">
-        <TableRules ref="TableRules"/>
+        <TableRules ref="TableRules" />
       </el-form-item>
       <el-form-item
         label="处置方式"

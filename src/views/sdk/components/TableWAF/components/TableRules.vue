@@ -32,8 +32,8 @@
               prop="rule_type"
             >
               <yd-form-select
-                :disabled="scope.$index !== list.length - 1"
                 v-model="scope.row.rule_type"
+                :disabled="scope.$index !== list.length - 1"
                 :selects="formatTypeSelect(wafRules, scope.row.rule_type)"
                 @change="val => handleTypeChange(val, scope.row)"
               />
@@ -94,8 +94,8 @@
               <!-- 终端系统 -->
               <template v-if="scope.row.rule_type === 'device_os'">
                 <yd-form-select
-                  :selects="wafSelects.deviceOS"
                   v-model="scope.row.data"
+                  :selects="wafSelects.deviceOS"
                   style="width: 100%"
                   multiple
                 />
@@ -103,8 +103,8 @@
               <!-- 终端风险类型 -->
               <template v-if="scope.row.rule_type === 'device_risk'">
                 <yd-form-select
-                  :selects="wafSelects.deviceRisk"
                   v-model="scope.row.data"
+                  :selects="wafSelects.deviceRisk"
                   style="width: 100%"
                   multiple
                 />
@@ -116,8 +116,8 @@
               <!-- CPU架构 -->
               <template v-if="scope.row.rule_type === 'cpu_arch'">
                 <yd-form-select
-                  :selects="wafSelects.cpuArch"
                   v-model="scope.row.data"
+                  :selects="wafSelects.cpuArch"
                   style="width: 100%"
                   multiple
                 />

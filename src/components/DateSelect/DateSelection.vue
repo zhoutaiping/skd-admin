@@ -25,8 +25,8 @@
 
 <template>
   <el-radio-group
-    :class="b()"
     v-model="selectType"
+    :class="b()"
     @change="handleClick"
   >
     <template v-if="customPopover">

@@ -66,7 +66,8 @@
     }
 
     &__footer {
-      // border-top: 1px solid rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       padding: 16px;
       overflow: hidden;
     }
@@ -215,11 +216,26 @@ export default {
   name: NAME,
 
   props: {
-    title: String,
-    visible: Boolean,
-    width: [String, Number],
-    size: String,
-    appendToBody: Boolean,
+    title: {
+      type: String,
+      default: ''
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    width: {
+      type: [String, Number],
+      default: ''
+    },
+    size: {
+      type: String,
+      default: ''
+    },
+    appendToBody: {
+      type: Boolean,
+      default: false
+    },
     asideType: {
       type: String,
       default: 'default'

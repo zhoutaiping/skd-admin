@@ -26,7 +26,7 @@
 </style>
 <template>
   <div :style="{height: height + 'px'}" class="chart-wrapper">
-    <div ref="chart" :style="{height: height + 'px'}" :id="id"/>
+    <div :id="id" ref="chart" :style="{height: height + 'px'}" />
     <div v-if="isNull" class="chart-null">
       <div class="chart-null__text">暂无数据</div>
     </div>

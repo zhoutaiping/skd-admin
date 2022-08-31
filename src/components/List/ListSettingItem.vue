@@ -28,7 +28,7 @@
       {{ title }}
     </div>
     <div :class="b('body')">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>

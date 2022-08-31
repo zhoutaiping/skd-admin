@@ -16,9 +16,9 @@
     .el-table {
       thead {
         font-weight: bold;
-        color: #fff !important;
+        // color: #fff !important;
         th {
-          background: #1664ff;
+          // background: #1664ff;
         }
       }
     }

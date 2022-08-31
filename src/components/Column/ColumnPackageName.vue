@@ -1,6 +1,6 @@
 <template>
   <div :class="b()">
-    {{ row.instance_id || '-' }}<br >
+    {{ row.instance_id || '-' }}<br>
     {{ row.package_name }}
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <yd-form-select
-    :selects="list"
     v-model="value"
+    :selects="list"
     default-text="所有套餐"
     filterable
     @change="handleClick"

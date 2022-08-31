@@ -23,12 +23,13 @@
              },
              sizeClass ? 'el-form-item--' + sizeClass : ''
     ]"
-    class="yd-form-item el-form-item">
+    class="yd-form-item el-form-item"
+  >
     <label v-if="label || $slots.label" :for="labelFor" :style="labelStyle" class="el-form-item__label">
       <slot name="label">{{ label + form.labelSuffix }}</slot>
     </label>
     <div :style="contentStyle" class="el-form-item__content">
-      <slot/>
+      <slot />
       <transition name="el-zoom-in-top">
         <div
           v-if="validateState === 'error' && showMessage && form.showMessage"
@@ -37,7 +38,8 @@
               ? inlineMessage
               : (elForm && elForm.inlineMessage || false)
           }"
-          class="el-form-item__error">
+          class="el-form-item__error"
+        >
           {{ validateMessage }}
         </div>
       </transition>

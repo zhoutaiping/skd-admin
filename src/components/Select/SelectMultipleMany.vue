@@ -21,8 +21,8 @@
   >
     <TransferItem
       ref="TransferItem"
-      :size="size"
       v-model="value"
+      :size="size"
       :fetch-data="fetchData"
       style="margin-bottom: 12px"
       @update="handleUpdate"

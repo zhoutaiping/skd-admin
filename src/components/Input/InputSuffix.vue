@@ -32,8 +32,8 @@
         >
           <div class="yd-popup-suffix__title">{{ item.title }}</div>
           <yd-form-checkbox
-            :checks="formatLabel(item.list)"
             v-model="val"
+            :checks="formatLabel(item.list)"
             show-check-all
             @change="handleChange"
           />

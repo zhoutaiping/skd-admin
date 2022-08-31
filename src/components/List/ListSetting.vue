@@ -10,7 +10,7 @@
 </style>
 <template>
   <div :class="b()">
-    <slot/>
+    <slot />
   </div>
 </template>
 

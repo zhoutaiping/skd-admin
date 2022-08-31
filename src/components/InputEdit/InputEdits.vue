@@ -1,8 +1,8 @@
 <template>
   <div class="input-edit">
     <el-input
-      :class="{'is-error':validContent}"
       v-model="itemValue"
+      :class="{'is-error':validContent}"
       :placeholder="placeholder"
       :autosize="{ minRows: 2, maxRows: 4}"
       :type="input_type"
@@ -17,9 +17,9 @@
     <div class="tag">
       <el-tag
         v-for="(item, index) in listData"
+        :key="index"
         :closable="true"
         :close-transition="false"
-        :key="index"
         style="margin-right: 8px"
         @close="handleClose(item)"
       >{{ item }}</el-tag>

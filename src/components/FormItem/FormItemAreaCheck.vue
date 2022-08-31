@@ -17,8 +17,8 @@
       <el-row>
         <el-col
           v-for="item in CountryList"
-          :span="8"
           :key="item.value"
+          :span="8"
         >
           <el-checkbox
             :label="item.value"
@@ -36,8 +36,8 @@
       <el-row>
         <el-col
           v-for="item in ProvinceList"
-          :span="6"
           :key="item.value"
+          :span="6"
         >
           <el-checkbox
             :label="item.value"

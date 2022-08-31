@@ -1,9 +1,9 @@
 <template>
   <div :class="['is-' + placement, 'is-' + effect, 'size-' + size, {'is-opacity': opacity}]" class="yd-loading">
     <div class="bouncing-loader">
-      <div/>
-      <div/>
-      <div/>
+      <div />
+      <div />
+      <div />
     </div>
   </div>
 </template>
@@ -15,7 +15,10 @@ export default {
   name: NAME,
 
   props: {
-    placement: String,
+    placement: {
+      type: String,
+      default: ''
+    },
     opacity: Boolean,
     size: {
       type: String,

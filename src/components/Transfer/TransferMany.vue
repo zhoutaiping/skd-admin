@@ -62,8 +62,8 @@
         <strong v-else>{{ outLabel }}（{{ total.out }}）</strong>
         <template v-if="custom">
           <el-input
-            :disabled="disabled"
             v-model="customeInput"
+            :disabled="disabled"
             class="customInput"
             type="textarea"
           />
@@ -71,10 +71,10 @@
         <template v-else>
           <TransferItem
             ref="OutList"
+            v-model="selectedOut"
             :disabled="disabled"
             :show-search="showOutSearch"
             :size="size"
-            v-model="selectedOut"
             :fetch-data="fetchOutList"
             border
             @update="val => handleUpdateItem(val, 'out')"
@@ -86,10 +86,10 @@
         <strong>{{ inLabel }}（{{ total.in }}）</strong>
         <TransferItem
           ref="InList"
+          v-model="selectedIn"
           :disabled="disabled"
           :show-search="showInSearch"
           :size="size"
-          v-model="selectedIn"
           :fetch-data="fetchInList"
           border
           @update="val => handleUpdateItem(val, 'in')"

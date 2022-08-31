@@ -19,9 +19,9 @@
       </el-form-item>
       <el-form-item prop="reqs">
         <el-input-number
+          v-model="form.reqs"
           :min="0"
           :max="1000"
-          v-model="form.reqs"
           controls-position="right"
           style="width: 120px; margin-right: 10px"
           @change="handleChange"

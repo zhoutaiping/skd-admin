@@ -102,8 +102,8 @@
             class="checkbox-item"
           >
             <el-checkbox
-              :indeterminate="isIndeterminate"
               v-model="checkAll"
+              :indeterminate="isIndeterminate"
               style="margin-top: 4px"
               class="checkbox-item"
               @change="handleCheckAllChange"
@@ -136,8 +136,8 @@
       </div>
     </el-popover>
     <el-input
-      v-popover:popover
       ref="dom"
+      v-popover:popover
       :style="{width}"
       :placeholder="value.length > 0 ? '' : text"
       class="input__core"

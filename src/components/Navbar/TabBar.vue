@@ -1,7 +1,7 @@
 <style lang="scss">
 </style>
 <template>
-  <div :class="b()"/>
+  <div :class="b()" />
 </template>
 
 <script>

@@ -24,14 +24,14 @@
 <template>
   <div class="toolbar-wall-dashboard-detail">
     <el-select v-if="type === 'firewall'" v-model="params.action_mode" class="select--action">
-      <el-option value="" label="全部"/>
-      <el-option v-for="item in ACTION_TYPE" :key="item.value" :label="item.label" :value="item.value"/>
+      <el-option value="" label="全部" />
+      <el-option v-for="item in ACTION_TYPE" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
     <el-select v-else v-model="params.action_mode" class="select--action">
-      <el-option value="" label="全部"/>
-      <el-option v-for="item in ACTION_TCP_TYPE" :key="item.value" :label="item.label" :value="item.value"/>
+      <el-option value="" label="全部" />
+      <el-option v-for="item in ACTION_TCP_TYPE" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <el-input v-model="params.request_ip" class="input--search" placeholder="根据访问IP进行搜索" icon="search"/>
+    <el-input v-model="params.request_ip" class="input--search" placeholder="根据访问IP进行搜索" icon="search" />
     <el-button class="btn-search" type="primary" @click="handleChange">查询</el-button>
   </div>
 </template>

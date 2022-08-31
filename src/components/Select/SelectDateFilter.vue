@@ -26,8 +26,8 @@
 
 <template>
   <el-radio-group
-    :class="b()"
     v-model="filterType"
+    :class="b()"
     @change="handleClick()"
   >
     <template v-if="customSwitch">

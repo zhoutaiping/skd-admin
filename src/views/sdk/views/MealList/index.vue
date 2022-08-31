@@ -1,9 +1,9 @@
 <template>
   <ConsolePageLayout style="padding:12px;">
     <DmToolbar>
-      <router-link :to="'/sdk/meal-open'">
-        <el-button>添加应用</el-button>
-      </router-link>
+      <!-- <router-link :to="'/sdk/meal-open'"> -->
+      <el-button type="primary" @click="$refs.Add.handleOpen()">添加应用</el-button>
+      <!-- </router-link> -->
     </DmToolbar>
     <DmData
       ref="DmData"
@@ -13,7 +13,7 @@
         :loading="loading"
         min-height
       >
-        <el-table :data="list">
+        <el-table :data="list" border>
           <el-table-column
             label="应用名称"
             prop="package_name"
@@ -36,8 +36,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="创建时间" prop="created_at" />
           <el-table-column
-            label="到期时间"
+            v-if="false"
+            label="更新时间"
             min-width="100"
           >
             <template slot-scope="scope">
@@ -55,7 +57,7 @@
                   管理
                 </el-button>
               </router-link>
-              <el-divider direction="vertical" />
+              <!-- <el-divider direction="vertical" />
               <router-link :to="{name: `sdk_explorer`, params: {id: scope.row.id}}">
                 <el-button type="text">
                   资源管理
@@ -66,12 +68,13 @@
                 <el-button type="text">
                   控制台
                 </el-button>
-              </router-link>
+              </router-link> -->
             </template>
           </el-table-column>
         </el-table>
       </DmTable>
     </DmData>
+    <Add ref="Add" />
   </ConsolePageLayout>
 </template>
 
@@ -79,11 +82,11 @@
 import consoleData from '@/mixins/consoleData'
 import ColumnExpireTime from '@/components/Column/ColumnExpireTime'
 import DmToolbar from '@/components/Dm/DmToolbar.vue'
-
+import Add from './components/add.vue'
 export default {
   inject: ['ModuleId'],
 
-  components: { ColumnExpireTime, DmToolbar },
+  components: { ColumnExpireTime, DmToolbar, Add },
 
   mixins: [consoleData],
 

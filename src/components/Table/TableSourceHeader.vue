@@ -87,7 +87,7 @@
               type="text"
               @click="handleRowEdit(scope.row)"
             >编辑</el-button>
-            <el-divider direction="vertical"/>
+            <el-divider direction="vertical" />
             <el-button
               v-if="scope.row.$edit"
               type="text"

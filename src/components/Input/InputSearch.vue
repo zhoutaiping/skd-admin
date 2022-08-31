@@ -6,9 +6,9 @@
 
 <template>
   <el-input
+    v-model="keyword"
     :class="b()"
     :placeholder="placeholder"
-    v-model="keyword"
     :disabled="disabled"
     clearable
     prefix-icon="el-icon-search"

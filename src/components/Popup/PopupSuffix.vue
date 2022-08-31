@@ -35,7 +35,7 @@
         <el-row>
           <el-col v-for="(item, index) in SUFFIX_LIST" :key="index" style="width: 20%">
             <div class="yd-popup-suffix__title">{{ item.title }}</div>
-            <yd-form-checkbox :checks="formatLabel(item.list)" v-model="checks" show-check-all />
+            <yd-form-checkbox v-model="checks" :checks="formatLabel(item.list)" show-check-all />
           </el-col>
         </el-row>
       </yd-scroll>

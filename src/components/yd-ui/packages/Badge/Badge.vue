@@ -1,7 +1,7 @@
 <template>
   <span class="yd-badge">
-    <span :class="'yd-badge-status--' + status" class="yd-badge__dot"/>
-    <span class="yd-badge__text">{{ text }}<slot/></span>
+    <span :class="'yd-badge-status--' + status" class="yd-badge__dot" />
+    <span class="yd-badge__text">{{ text }}<slot /></span>
   </span>
 </template>
 

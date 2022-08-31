@@ -13,8 +13,8 @@
     <el-form>
       <el-form-item>
         <el-input
-          :autosize="{ minRows: 10, maxRows: 20}"
           v-model="diyPageContent"
+          :autosize="{ minRows: 10, maxRows: 20}"
           class="upload-html diy-input"
           type="textarea"
           placeholder="<h1></h1>"

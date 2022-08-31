@@ -1,7 +1,7 @@
 <template>
   <div :class="'mode-' + mode" class="yd-form">
     <el-form ref="form" :label-width="labelWidth" :model="options" :rules="options.$rules" :label-position="labelPosition">
-      <slot/>
+      <slot />
     </el-form>
   </div>
 </template>

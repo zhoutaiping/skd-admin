@@ -8,8 +8,8 @@
 
 <template>
   <el-popover
-    :title="title"
     v-model="visible"
+    :title="title"
     :popper-class="b('popper')"
     placement="top"
     width="160"
@@ -30,7 +30,7 @@
       >确定</el-button>
     </div>
     <template slot="reference">
-      <slot/>
+      <slot />
     </template>
   </el-popover>
 </template>

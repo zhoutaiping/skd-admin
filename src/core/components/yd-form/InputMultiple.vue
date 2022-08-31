@@ -164,29 +164,29 @@ $table-border-color: rgb(223, 229, 236);
   <div ref="dom" class="yd-input-multiple">
     <el-popover ref="popover" :width="popoverWidth" popper-class="popover--multiple" transition="-" placement="bottom" trigger="click" @show="handleShow" @hide="handleHide">
       <yd-form ref="form" :options="form" mode="in-table">
-        <slot/>
+        <slot />
         <div class="input-list-wrap">
           <yd-scroll ref="scroll">
             <el-form-item v-for="(item, index) in form.list" :key="index" :prop="'list.' + index + '.value'" :rules="rules" class="yd-form-item--multiple input-item is-inline-error">
-              <el-input :ref="`input_${index}`" :placeholder="placeholderItem" v-model="item.value" @change="handleChange(item, index)"/>
+              <el-input :ref="`input_${index}`" v-model="item.value" :placeholder="placeholderItem" @change="handleChange(item, index)" />
               <div class="input-item__action">
                 <el-button type="text" @click="removeItem(item)">删除</el-button>
               </div>
             </el-form-item>
             <a class="btn-add" @click="addItem">
               <span class="btn-add__title">
-                <yd-icon name="el-icon-plus"/>
+                <yd-icon name="el-icon-plus" />
                 新增
               </span>
               <span class="btn-add__desc">
-                <slot name="tips"/>
+                <slot name="tips" />
               </span>
             </a>
           </yd-scroll>
         </div>
       </yd-form>
     </el-popover>
-    <el-input v-popover:popover v-model="valueView" :placeholder="placeholder"/>
+    <el-input v-model="valueView" v-popover:popover :placeholder="placeholder" />
   </div>
 </template>
 

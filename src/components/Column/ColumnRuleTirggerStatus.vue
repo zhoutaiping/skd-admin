@@ -13,7 +13,7 @@
 
 <template>
   <div class="column-rule-tirgger-status">
-    <yd-icon name="icon el-icon-circle-check"/>已拦截
+    <yd-icon name="icon el-icon-circle-check" />已拦截
     <p class="text--desc">匹配中 CC防护策略</p>
   </div>
 </template>

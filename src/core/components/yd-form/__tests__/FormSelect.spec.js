@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import localVue from 'tests/use/components'
-import { asyncExpect } from 'tests/utils'
+// import { asyncExpect } from 'tests/utils'
 import Component from '../FormSelect'
 import Vuex from 'vuex'
 

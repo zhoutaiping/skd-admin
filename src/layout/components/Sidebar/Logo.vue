@@ -65,6 +65,7 @@ export default {
       display: inline-block;
       margin: 0;
       color: #fff;
+      // color: #1664ff;
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;

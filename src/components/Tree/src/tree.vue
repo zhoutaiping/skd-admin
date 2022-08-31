@@ -11,12 +11,12 @@
   >
     <el-tree-node
       v-for="child in root.childNodes"
+      :key="getNodeKey(child)"
       :node="child"
       :props="props"
       :disabled="disabled"
       :render-after-expand="renderAfterExpand"
       :show-checkbox="showCheckbox"
-      :key="getNodeKey(child)"
       :render-content="renderContent"
       @node-expand="handleNodeExpand"
     />

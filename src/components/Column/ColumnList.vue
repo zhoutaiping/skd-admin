@@ -60,8 +60,8 @@
           <ul>
             <li
               v-for="(item, index) in listFormat"
-              :class="b('item')"
               :key="index"
+              :class="b('item')"
             >
               <span
                 v-if="item.icon"
@@ -77,9 +77,9 @@
         <ul :class="b('core')">
           <li
             v-for="(item, index) in listFormat"
-            v-if="index < num"
-            :class="b('item')"
+            v-show="index < num"
             :key="index"
+            :class="b('item')"
             class="ellipsis"
           >
             <span

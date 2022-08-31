@@ -48,9 +48,9 @@
     class="Dialog"
     @close="handleClose"
   >
-    <slot/>
+    <slot />
     <div slot="footer">
-      <slot name="footer"/>
+      <slot name="footer" />
     </div>
   </el-dialog>
 </template>

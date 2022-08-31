@@ -106,8 +106,8 @@
         </div>
         <div :class="b('panelBody')">
           <el-checkbox
-            :indeterminate="isIndeterminate"
             v-model="checkAll"
+            :indeterminate="isIndeterminate"
             :class="b('panelItem')"
             @change="handleCheckAllChange"
           >全选</el-checkbox>
@@ -117,8 +117,8 @@
           >
             <el-checkbox
               v-for="(item, index) in checksView"
-              :class="b('panelItem')"
               :key="index"
+              :class="b('panelItem')"
               :value="item.value"
               :label="item.value"
             >{{ item.label }}</el-checkbox>
@@ -139,8 +139,8 @@
           <template v-else>
             <div
               v-for="(item, index) in valList"
-              :class="b('panelItem')"
               :key="index"
+              :class="b('panelItem')"
             >
               {{ item.label }}
               <i

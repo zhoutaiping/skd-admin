@@ -13,8 +13,8 @@
   <div class="FormCheckbox">
     <el-checkbox
       v-if="showCheckAll"
-      :indeterminate="isIndeterminate"
       v-model="checkAll"
+      :indeterminate="isIndeterminate"
       class="FormCheckbox__checkall"
       @change="handleCheckAllChange"
     >{{ checkAllLabel }}</el-checkbox>
@@ -26,8 +26,8 @@
         <el-row>
           <el-col
             v-for="item in checks"
-            :span="span"
             :key="item.value"
+            :span="span"
             class="label"
           >
             <el-checkbox

@@ -6,7 +6,7 @@
 
 <template>
   <div :class="b()">
-    <ColumnList :num="5" :list="nList"/>
+    <ColumnList :num="5" :list="nList" />
   </div>
 </template>
 

@@ -22,10 +22,10 @@
 <template>
   <div :class="b()">
     <div :class="b('body')">
-      <slot/>
+      <slot />
     </div>
     <div :class="b('action')">
-      <slot name="action"/>
+      <slot name="action" />
     </div>
   </div>
 </template>

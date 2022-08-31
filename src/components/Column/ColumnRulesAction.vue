@@ -18,7 +18,7 @@
       <span v-if="data.action_data.time_unit">{{ data.action_data.time_unit | labelView(CLOUD_WALL.TIME_TYPE) }}</span>
     </span>
     <span v-if="data.action === CLOUD_WALL.HANDLE_TYPE_VAR.RELEASE">
-      <template v-if="Number(data.action_data.cc) === 1 || Number(data.action_data.waf) === 1">后继续执行<br >
+      <template v-if="Number(data.action_data.cc) === 1 || Number(data.action_data.waf) === 1">后继续执行<br>
         <span v-if="Number(data.action_data.cc) === 1">CC 防护</span> <span v-if="Number(data.action_data.waf) === 1">WAF 防护</span>
       </template>
     </span>
@@ -30,7 +30,10 @@ import * as CLOUD_WALL from '@/constants/cloud-wall'
 
 export default {
   props: {
-    data: Object
+    data: {
+      type: Object,
+      default: () => {}
+    }
   },
   data() {
     return {

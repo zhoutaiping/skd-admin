@@ -93,7 +93,7 @@ export default createDialog({
   },
 
   methods: {
-    afterOpen(form) {
+    afterOpen(form = []) {
       this.$nextTick(() => {
         this.$refs.Form.clearValidate()
         if (form.channel_status) this.$refs.TableChannel.setList(form.channel_source_list || [])
@@ -110,7 +110,7 @@ export default createDialog({
       }
 
       if (form.channel_status) {
-        form.channel_source_list = await this.$refs.TableChannel.getList()
+        form.channel_source_list = this.$refs.TableChannel.getList()
       } else {
         form.channel_source_list = []
       }

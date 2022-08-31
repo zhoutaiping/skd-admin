@@ -52,19 +52,19 @@
       v-if="footer"
       slot="footer"
     >
-      <slot name="footer"/>
+      <slot name="footer" />
       <template v-if="actionVisible">
-        <el-button
-          v-if="showCancel"
-          :type="aside ? 'text' : 'default'"
-          @click="handleClose"
-        >{{ canceText }}</el-button>
         <el-button
           v-if="showSubmit"
           :loading="submitLoading"
           :type="aside ? 'text' : 'primary'"
           @click="handleSubmit"
         >{{ submitText }}</el-button>
+        <el-button
+          v-if="showCancel"
+          :type="aside ? 'text' : 'default'"
+          @click="handleClose"
+        >{{ canceText }}</el-button>
       </template>
     </div>
   </yd-dialog>

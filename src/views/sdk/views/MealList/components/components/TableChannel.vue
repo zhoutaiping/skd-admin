@@ -18,8 +18,8 @@
               prop="id"
             >
               <yd-form-select
-                :selects="selectList"
                 v-model="scope.row.id"
+                :selects="selectList"
                 style="width: 100%"
               />
             </ColumnForm>

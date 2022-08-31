@@ -16,8 +16,8 @@
     <el-row :gutter="12">
       <el-col
         v-for="(item, index) in viewData"
-        :span="8"
         :key="index"
+        :span="8"
         :class="b('item')"
       >{{ item.label }}：
         <slot
