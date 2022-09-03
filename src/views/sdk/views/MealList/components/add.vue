@@ -9,7 +9,7 @@
     :fetch-submit="fetchSubmit"
     :mode="options.mode"
     width="700px"
-    title="应用"
+    title-label="应用"
     @submit="handleSubmit"
   >
     <el-form
@@ -20,11 +20,11 @@
       label-width="150px"
     >
       <el-form-item
-        prop="domain"
+        prop="app_name"
         label="应用名称"
       >
         <el-input
-          v-model="form.name"
+          v-model="form.app_name"
           class="input-box"
         />
       </el-form-item>
@@ -108,25 +108,14 @@ export default createDialog({
         listView: []
       },
       formDefault: {
-        protocol: 1,
-        domain: '',
-        port: '',
-        loading: 1,
-        channel_loading: 1,
-        remark: '',
-        channel_status: 0,
-        source_type: ''
+        app_name: '',
+        remark: ''
       },
       rules: {
-        port: [
-          { required: true, message: '请输入端口', trigger: 'blur' },
-          { validator: portValidator, trigger: 'blur' }
+        app_name: [
+          { required: true, message: '请输入应用名称', trigger: 'blur' }
         ],
-        domain: [
-          {
-
-          }
-        ]
+        remark: []
       }
     }
   },
@@ -149,18 +138,10 @@ export default createDialog({
       }
 
       try {
-        if (this.options.batch) {
-          if (this.options.mode === 'Create') {
-            await this.Fetch.post('V4/tjkd.app.domain.batch.add', form)
-          } else {
-            await this.Fetch.post('V4/tjkd.app.domain.batch.edit', form)
-          }
+        if (this.options.mode === 'Create') {
+          await this.Fetch.post('/add', form)
         } else {
-          if (this.options.mode === 'Create') {
-            await this.Fetch.post('V4/tjkd.app.domain.add', form)
-          } else {
-            await this.Fetch.post('V4/tjkd.app.domain.edit', form)
-          }
+          await this.Fetch.post('/modify', form)
         }
       } catch (e) {
         throw new Error()
@@ -169,7 +150,7 @@ export default createDialog({
 
     async handleSubmit() {
       this.Message('ACTION_SUCCESS')
-      this.$emit('init')
+      this.$emit('submit')
       this.handleClose()
     }
   }

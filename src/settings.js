@@ -1,5 +1,6 @@
 module.exports = {
   title: 'SDK APP Admin',
+  logo:'',
 
   /**
    * @type {boolean} true | false

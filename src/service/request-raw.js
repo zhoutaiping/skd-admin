@@ -28,20 +28,18 @@ service.interceptors.request.use(
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    console.log('--------', response)
-    const { status: statusCode, data: body } = response
-
-    const { status, data, msg, code } = body
+    const { status: status, data: body } = response
+    const { data, msg, code } = body
     // agw
-    if (code === 0 && msg) {
+    if (code !== 0 && msg) {
       Message.warning(msg)
       return Promise.reject(body)
     }
-    if (status) {
-      const { message } = status
-      const code = Number(status.code)
-      if (statusCode === 200) {
-        if (code !== 1) {
+    // if (status) {
+      // const { message } = status
+      // const code = Number(code)
+      if (status === 200) {
+        if (code !== 0) {
           if (code === 16149) {
             // 退出登录
             // TODO ACCESS
@@ -55,16 +53,16 @@ service.interceptors.response.use(
             //
           } else {
             const dataMessage = JSON.stringify(data) === '[]' ? '' : data
-            Message.warning(message || dataMessage || '操作失败')
+            Message.warning(msg || dataMessage || '操作失败')
           }
 
           return Promise.reject(body)
         }
       } else {
         Message.warning('操作失败')
-        return Promise.reject(message)
+        return Promise.reject(msg)
       }
-    }
+    // }
 
     if (typeof data === 'object' && data !== null) data._status = status
     if (data) {
