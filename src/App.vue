@@ -7,11 +7,11 @@
 </template>
 
 <script>
-import { LocaleProvider } from 'ant-design-vue'
+import { ConfigProvider } from 'ant-design-vue'
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
 export default {
   name: 'App',
-  components: { ALocaleProvider: LocaleProvider },
+  components: { ALocaleProvider: ConfigProvider },
   data() {
     return {
       locale: zhCN

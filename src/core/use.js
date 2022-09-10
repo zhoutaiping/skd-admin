@@ -19,10 +19,10 @@ import '@/styles/index.scss'
 
 // ui
 import './components'
+import './antd-ui'
 
 import Dm from '@/components/Dm'
 Vue.use(Dm)
-
 import DatePicker from 'ant-design-vue/lib/date-picker'
 import 'ant-design-vue/lib/date-picker/style'
 
