@@ -175,6 +175,42 @@ export const asyncRoutes = [
         ]
       },
       {
+        path: 'report',
+        name: `sdk.router.report`,
+        component: () => import('@/views/sdk/views/Report/index'),
+        redirect: {
+          name: `sdk.router.report__visit`
+        },
+        alwaysShow: true,
+        meta: { title: '数据报表',icon: 'component' },
+        children: [
+          // {
+          //   path: 'cc',
+          //   name: `sdk.router.report__cc`,
+          //   component: () => import('@/views/sdk/views/Report/CC'),
+          //   meta: { title: 'CC攻击统计' }
+          // },
+          {
+            path: 'visit',
+            name: `sdk.router.report__visit`,
+            component: () => import('@/views/sdk/views/Report/Visit'),
+            meta: { title: '访问分析'  }
+          },
+          // {
+          //   path: 'waf',
+          //   name: `sdk.router.report__waf`,
+          //   component: () => import('@/views/sdk/views/Report/Waf/index'),
+          //   meta: { title: '业务安全分析' }
+          // },
+          // {
+          //   path: 'waf/:id',
+          //   name: `sdk.router.report__waf__id`,
+          //   component: () => import('@/views/sdk/views/Report/Waf/Detail'),
+          //   meta: { title: '业务安全分析' }
+          // }
+        ]
+      },
+      {
         path: 'logs',
         name: `SDK_Log`,
         component: () => import('@/views/sdk/views/Log/index'),
