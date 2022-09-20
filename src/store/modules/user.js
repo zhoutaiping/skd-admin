@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo ,signOut, verifyToken} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import Message from 'ant-design-vue/lib/message'
@@ -45,61 +45,76 @@ const actions = {
         setToken(res.accessToke)
         resolve()
       }).catch(error => {
-
+        localStorage.clear()
         reject(error)
       })
     })
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit, state,dispatch }, token) {
     return new Promise((resolve, reject) => {
-      const user = JSON.parse(localStorage.getItem('user'))
-      getInfo(user.accessToken).then(response => {
-        localStorage.setItem('user', JSON.stringify(response))
-        if (!response) {
-          reject('Verification failed, please Login again.')
+        const user = JSON.parse(localStorage.getItem('user'))
+        if(user) {
+          const { nick_name, avatar } = user
+          commit('SET_ROLES', ['admin'])
+          commit('SET_NAME', nick_name)
+          commit('SET_AVATAR', avatar)
+          resolve(data)
+        } else {
+          const data = {
+            roles: ['admin'],
+            introduction: 'I am a super administrator',
+            avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+            name: 'Super Admin'
+          }
+    
+          if (!data) {
+            return reject('Verification failed, please Login again.')
+          }
+    
+          const { name, avatar } = data
+    
+          commit('SET_NAME', name)
+          commit('SET_AVATAR', avatar)
+          resolve(data)
         }
-
-        const { roles=['admin'], name, avatar, introduction, id } = response
-
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-        setToken(response.accessToke)
-        commit('SET_ROLES', roles)
-        commit('SET_USER_ID', id)
-        commit('SET_TOKEN', response.accessToken)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
     })
   },
 
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      const user = JSON.parse(localStorage.getItem('user'))
-      const _params = {
-        token: user.accessToken,
-        user_id:Number(user.id)
-      }
-      console.log(_params)
-      logout(_params).then(() => {
+      // signOut(JSON.stringify(getToken())).then(() => {
+          localStorage.clear()
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
           resetRouter()
           dispatch('tagsView/delAllViews', null, { root: true })
           resolve()
-          Message.success("退出成功!")
-      }).catch(error => {
-        reject(error)
+      //     Message.success("退出成功!")
+      // }).catch(error => {
+      //   reject(error)
+      // })
+    })
+  },
+
+  verifyToken({ commit, state, dispatch }, token) {
+    return new Promise((resolve, reject) => {
+      verifyToken(token).then(data => {
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', JSON.stringify(data))
+        setToken()
+        commit('SET_TOKEN', token)
+        commit('SET_ROLES', ['admin'])
+        commit('SET_USER_ID', data.id)
+        commit('SET_NAME', data.nick_name || data.user_name)
+        commit('SET_AVATAR', data.avatar)
+        commit('SET_INTRODUCTION', data.introduction)
+        resolve(data)
+      }).catch(e => {
+        reject()
       })
     })
   },

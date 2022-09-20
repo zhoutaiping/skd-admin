@@ -1,48 +1,74 @@
 import axios from 'axios'
-import { messageFilter } from '@/config/messageFilter'
 import { Message } from 'element-ui'
 import { uuid } from '@/utils/uuid'
 import Lockr from 'lockr'
-
+import router from '@/router'
+import { getToken } from '@/utils/auth'
 const service = axios.create({
-  baseURL: '',
-  timeout: 15000,
+  baseURL: process.env.NODE_ENV !== 'development' ?  'https://api.axisnow.xyz' : '/api' ,
+  timeout: 30000,
   headers: {
-    'Request-Id': uuid()
-    // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    'content-type': 'application/json; charset=utf-8'
   }
 })
+
+service.interceptors.request.use(
+  config => {
+    return config
+  }
+)
 
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    const { status: statusCode, data: body } = response
+    const { status: status, data: body } = response
+    let { data, code, msg } = body
+    // console.log('----body--status',body,status)
 
-    const { status, data } = body
-    if (status) {
-      let { message } = status
-      message = messageFilter(message)
-      const code = Number(status.code)
-      if (statusCode === 200) {
-        if (code !== 1) {
-          if (code === 16149) {
-            // 退出登录
-            // TODO ACCESS
-            window.location.href = '/login'
-            Lockr.rm('user_id')
+    const _status = body.status && body.status || null
+    if (_status) {
+      code = _status.code
+      msg = _status.msg || _status.message || msg
+    }
+
+    if (code === 20007) {
+      // 退出登录
+      // TODO ACCESS
+      Message.warning("用户未登录")
+      Lockr.rm('user_id')
+      const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://console.axisnow.xyz' : 'http://localhost:8080'
+      if (defaultSettings.expireUrl) window.open(defaultSettings.expireUrl + '?redirect_url=' + redirect_url,'_self');
+    }
+    // agw
+    if (code !== 0 && msg) {
+      Message.warning(msg)
+      return Promise.reject(body)
+    }
+
+    // if (status) {
+      // const { message } = status
+      // const code = Number(code)
+      if (status === 200) {
+        if (code !== 0) {
+          if (code === 142005) { // 无权限
+            router.push({
+              name: 'home.router.access'
+            })
+          } else if ([2010007, 100200, 300029, 400004, 400005, 142007].includes(code)) {
+            //
           } else {
             const dataMessage = JSON.stringify(data) === '[]' ? '' : data
-            Message.warning(message || dataMessage || '操作失败')
+            Message.warning(msg || dataMessage || '操作失败')
           }
-          return Promise.reject(message)
+          return Promise.reject(body)
         }
       } else {
         Message.warning('操作失败')
-        return Promise.reject(message)
+        return Promise.reject(msg)
       }
-    }
+    // }
 
-    if (typeof data === 'object') data._status = status
+    if (typeof data === 'object' && data !== null) data._status = status
     if (data) {
       return data
     } else {
@@ -50,22 +76,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    let { error: eMessage } = error.response.data
-    try {
-      eMessage = JSON.parse(eMessage)
-      return Promise.reject(eMessage)
-    } catch (e) {
-      if (eMessage === "The broker session id isn't attached to a user session") {
-        return Promise.reject(error.response.data)
-      }
-
-      if (eMessage === 'No token') {
-        return Promise.reject(error.response.data)
-      }
-
-      Message.error(eMessage || error.message)
-      return Promise.reject(error)
-    }
+    return Promise.reject(error.msg)
   }
 )
 

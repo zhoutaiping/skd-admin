@@ -12,18 +12,17 @@
         </el-tooltip> -->
 
       </template>
-
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar :src="th_default" size="medium" />
-          <!-- <img :src="th_default+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <el-avatar :src="account_th" size="medium" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item >{{ name }}</el-dropdown-item>
+          <!-- <router-link to="/news">
+            <el-dropdown-item divided>新闻页</el-dropdown-item>
+          </router-link> -->
+          <el-dropdown-item  @click.native="logout">
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -37,7 +36,9 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
+import th from '@/assets/images/th.png'
 import th_default from '@/assets/images/th.jpg'
+import defaultSettings from '@/settings'
 export default {
   components: {
     Breadcrumb,
@@ -53,8 +54,16 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
+      'name',
       'device'
-    ])
+    ]),
+
+    account_th() {
+      const th_url = {
+        'zhoutaiping': th
+      }
+      return this.avatar || th_url['zhoutaiping'] || th_default
+    }
   },
   methods: {
     toggleSideBar() {
@@ -62,7 +71,8 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://www.axisnow.xyz/' : 'http://localhost:8080/'
+      if (defaultSettings.signOutUrl) window.open(defaultSettings.signOutUrl + '?redirect_url=' + redirect_url,'_self');
     }
   }
 }

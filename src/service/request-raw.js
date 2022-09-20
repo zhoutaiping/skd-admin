@@ -3,17 +3,17 @@ import { Message } from 'element-ui'
 import { uuid } from '@/utils/uuid'
 import Lockr from 'lockr'
 import router from '@/router'
+import { getToken } from '@/utils/auth'
 const service = axios.create({
-  baseURL: '/api',
+  // baseURL: '/api',
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json'
+    'content-type': 'application/json; charset=utf-8'
   }
 })
 
 service.interceptors.request.use(
   config => {
-    console.log('config---------', config)
     return config
   }
 )
@@ -22,23 +22,38 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const { status: status, data: body } = response
-    const { data, msg, code } = body
+    let { data, code, msg } = body
+    // console.log('----body--status',body,status)
+
+    const _status = body.status && body.status || null
+    if (_status) {
+      code = _status.code
+      msg = _status.msg || _status.message || msg
+    }
+
+    if (code === 20007) {
+      // 退出登录
+      // TODO ACCESS
+      Message.warning("用户未登录")
+      Lockr.rm('user_id')
+      const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://console.axisnow.xyz' : 'http://localhost:8080'
+      if (defaultSettings.expireUrl) window.open(defaultSettings.expireUrl + '?redirect_url=' + redirect_url,'_self');
+    }
+    
+    // console.log("_status---",_status)
     // agw
     if (code !== 0 && msg) {
       Message.warning(msg)
       return Promise.reject(body)
     }
+
+    
     // if (status) {
       // const { message } = status
       // const code = Number(code)
       if (status === 200) {
         if (code !== 0) {
-          if (code === 16149) {
-            // 退出登录
-            // TODO ACCESS
-            window.location.href = '/login'
-            Lockr.rm('user_id')
-          } else if (code === 142005) { // 无权限
+          if (code === 142005) { // 无权限
             router.push({
               name: 'home.router.access'
             })
@@ -48,7 +63,6 @@ service.interceptors.response.use(
             const dataMessage = JSON.stringify(data) === '[]' ? '' : data
             Message.warning(msg || dataMessage || '操作失败')
           }
-
           return Promise.reject(body)
         }
       } else {

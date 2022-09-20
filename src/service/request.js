@@ -7,8 +7,7 @@ const service = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
   headers: {
-    'Request-Id': uuid()
-    // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    contentType:'application/json;charset=UTF-8'
   }
 })
 
