@@ -28,7 +28,7 @@ export default {
   watch:{
     $route:{
       handler(val) {
-        if(['/login', '/', '/dashboard'].includes(this.$route.path)) {
+        if(['/login', '/', '/dashboard'].includes(this.$route.path)) {s
           this.signCallback()
         }else {
           const _token = getQueryVariable('token')
@@ -41,7 +41,6 @@ export default {
     }
   },
   beforeMount() {
-    console.log(1,this.$route)
     if(['/login', '/', '/dashboard'].includes(this.$route.path)) {
       this.signCallback()
     }
