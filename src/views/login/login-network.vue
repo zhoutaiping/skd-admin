@@ -83,6 +83,8 @@ export default {
     const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
       tenant_prefix_url: tenant_prefix_url,
+      routes:['/','register','network'],
+      hostList: ['console.axisnow.xyz'],
       loginForm: {
         email: "",
         nick_name: "",
@@ -102,7 +104,7 @@ export default {
   },
   computed: {
     userinfo() {
-      return this.$store.state.user.userinfo || {};
+      return JSON.parse(localStorage.getItem('userinfo')) || this.$store.state.user.userinfo || {};
     },
     Token() {
       return localStorage.getItem("token") || getQueryVariable("token");
@@ -116,31 +118,32 @@ export default {
       deep: true,
     },
   },
-  mounted() {
+  created() {
     this.$nextTick(() =>{
-      this.init()
+      if(this.Token) {
+        this.init()
+      }
     })
   },
   methods: {
     init() {
       const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
-      this.loginForm = Object.assign(
-        { email: "", nick_name: "" },
-        {
-          ...user_info
-        }
-      );
+      if(Object.keys(user_info).length) {
+        this.loginForm = Object.assign(
+          { email: "", nick_name: "" },
+          { ...user_info }
+        );
+      } else {
+        this.$store.dispatch('user/getUserInfo',this.Token)
+      }
     },
+   
     handleUrl(url) {
       if (url) {
         const URL = url + this.tenant_prefix_url;
         if (window.location.host !== URL) {
-          console.log(
-            window.location.protocol + "//" + URL + "/?token=" + this.Token
-          );
           if(process.env.NODE_ENV === 'development') {
-            console.log(URL)
-            this.$router.push('/')
+            this.$router.push('/dashboard')
           }else {
             window.location.replace(
               window.location.protocol + "//" + URL + "/?token=" + this.Token
@@ -150,15 +153,8 @@ export default {
           this.$router.push("/?token=" + this.Token);
         }
       }
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
-          acc[cur] = query[cur];
-        }
-        return acc;
-      }, {});
-    },
+    }
+   
   },
 };
 </script>

@@ -62,7 +62,8 @@ const actions = {
   getInfo({ commit, state,dispatch }, token) {
     return new Promise((resolve, reject) => {
       const user = JSON.parse(localStorage.getItem('user'))
-      if(user) {
+      console.log()
+      if(user  && Object.keys(user).length) {
         const { nick_name, avatar } = user
         commit('SET_ROLES', ['admin'])
         commit('SET_NAME', nick_name)
@@ -72,18 +73,31 @@ const actions = {
       }
     })
   },
-
+  initPage({ commit, state, dispatch }) {
+    const userinfo = JSON.parse(localStorage.getItem('userinfo'))
+    const user = JSON.parse(localStorage.getItem('user'))
+    if(userinfo && Object.keys(userinfo).length) {
+      commit('SET_USER_INFO', res)
+    }
+    if(user  && Object.keys(user).length) {
+      const { nick_name, avatar } = user
+      commit('SET_ROLES', ['admin'])
+      commit('SET_NAME', nick_name)
+      commit('SET_AVATAR', avatar)
+      commit('SET_USER_KK', ['andao-console'])
+    }
+  },
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       // signOut(JSON.stringify(getToken())).then(() => {
-          localStorage.clear()
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resetRouter()
-          dispatch('tagsView/delAllViews', null, { root: true })
-          resolve()
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
+        localStorage.clear()
+        resetRouter()
+        dispatch('tagsView/delAllViews', null, { root: true })
+        resolve()
       //     Message.success("退出成功!")
       // }).catch(error => {
       //   reject(error)

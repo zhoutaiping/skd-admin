@@ -1,15 +1,14 @@
 <template>
   <div class="dashboard-container">
-    <component :is="'adminDashboard'" />
+    <adminDashboard />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
-import editorDashboard from './editor'
 import defaultSettings from '@/settings'
-import { getToken, setToken, removeToken } from '@/utils/auth' 
+import { removeToken } from '@/utils/auth' 
 function getQueryVariable(name) {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
   var r = window.location.search.substr(1).match(reg)
@@ -18,7 +17,7 @@ function getQueryVariable(name) {
 }
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard },
+  components: { adminDashboard },
   data() {
     return {
       currentRole: 'adminDashboard'

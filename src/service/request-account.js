@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { uuid } from '@/utils/uuid'
-import Lockr from 'lockr'
+import store from '@/store'
+import * as Lockr from 'lockr'
 import router from '@/router'
-import { getToken } from '@/utils/auth'
+import { removeToken } from '@/utils/auth'
 import defaultSettings from '@/settings'
 const service = axios.create({
   baseURL: process.env.NODE_ENV !== 'development' ?  'https://account.axisnow.xyz' : '/account' ,
@@ -30,19 +31,22 @@ service.interceptors.response.use(
       code = _status.code
       msg = _status.msg || _status.message || msg
     }
-    if (code === 20007) {
-      // 退出登录
-      // TODO ACCESS
-      Message.warning("用户未登录")
-      Lockr.rm('user_id')
-      if (defaultSettings.expireUrl) window.open(defaultSettings.expireUrl + '?redirect_url=' + window.location.origin,'_self');
-    }
     // agw
     if (code !== 0 && msg) {
       Message.warning(msg)
       return Promise.reject(body)
     }
 
+    console.log('code=======',code)
+    if (code === 20007) {
+      // 退出登录
+      // TODO ACCESS
+      Message.warning("用户未登录")
+      Lockr.rm('user_id')
+      store.dispatch('user/logout')
+      if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + window.location.origin,'_self');
+      return Promise.reject(body)
+    }
     
     // if (status) {
       // const { message } = status

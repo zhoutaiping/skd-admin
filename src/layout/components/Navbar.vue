@@ -18,13 +18,9 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item >{{ name }}</el-dropdown-item>
-          <router-link to="/register">
-            <el-dropdown-item divided>创建网络</el-dropdown-item>
-          </router-link>
-          <router-link to="/network">
-            <el-dropdown-item divided>网络切换</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item  @click.native="logout">
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('register')"  divided>创建网络</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('network')" divided>网络切换</el-dropdown-item>
+          <el-dropdown-item  @click.native="logout" divided>
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -59,18 +55,29 @@ export default {
       'name',
       'device'
     ]),
-
+    is_console() {
+      return window.location.host === 'console.axisnow.xyz'
+    },
     account_th() {
       return this.avatar || th_default
     }
   },
   methods: {
+    handleOpen(type) {
+      if(!type) return
+      const Token = localStorage.getItem('token')
+      if (process.env.NODE_ENV === 'development'){
+        this.$router.push(type)
+        return
+      }
+      window.location.replace("https://console.axisnow.xyz/"+ type + '?token=' + Token,'_self');
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      if (defaultSettings.signOutUrl) window.open(defaultSettings.signOutUrl + '?redirect_url=' + window.location.origin,'_self');
+      if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + 'https://www.axisnow.xyz','_self');
     }
   }
 }

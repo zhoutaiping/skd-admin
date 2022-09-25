@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { uuid } from '@/utils/uuid'
-import Lockr from 'lockr'
+import * as Lockr from 'lockr'
 import router from '@/router'
 import { getToken } from '@/utils/auth'
 const service = axios.create({

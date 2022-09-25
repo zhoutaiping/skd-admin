@@ -216,7 +216,6 @@
 </template>
     
     <script>
-import { validAlphabets, validEmail } from "@/utils/validate";
 function getQueryVariable(name) {
   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
   var r = window.location.search.substr(1).match(reg);
@@ -261,7 +260,7 @@ export default {
   },
   computed:{
     userinfo() {
-      return this.$store.state.user.userinfo || {};
+      return JSON.parse(localStorage.getItem('userinfo')) || this.$store.state.user.userinfo || {};
     },
     Token() {
       return localStorage.getItem('token') || getQueryVariable('token')
@@ -283,16 +282,21 @@ export default {
   methods: {
     init() {
       const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
-      console.log("userinfo", user_info)
-      this.form = Object.assign(
-        { tenant_prefix: "",tenant_name: "", },
-        {
-          ...user_info
-        }
-      );
+      if(Object.keys(user_info).length) {
+        this.loginForm = Object.assign(
+          { email: "", nick_name: "" },
+          {
+            ...user_info
+          }
+        );
+      } else {
+        this.$store.dispatch('user/getUserInfo',this.Token)
+      }
     },
     handleReplace(url) {
-      location.href = url + this.tenant_prefix_url
+      window.location.replace(
+        window.location.protocol + "//" +  url + this.tenant_prefix_url + "/?token=" + this.Token
+      );
     },
     checkCapslock(e) {
       const { key } = e;
