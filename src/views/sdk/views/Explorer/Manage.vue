@@ -103,13 +103,11 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
-      console.log('--init')
       this.formatResponse(this.RESDATA.data)
     })
   },
   methods: {
     formatResponse(response) {
-      console.log('--init')
       const { list = [] } = response
       this.list = list
       this.$refs.DmData.init({ total: this.RESDATA.total })

@@ -2,7 +2,7 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken, removeToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -18,50 +18,30 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log("---------3",to.path)
-
   if (hasToken) {
-    console.log("---------4")
-    if (to.path === '/login') {
-      console.log(5)
-      // if is logged in, redirect to the home page
-      next({ path: '/' })
-      NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
-    } else {
-      console.log(6)
-      const hasGetUserInfo = store.getters.user_id
-      if (hasGetUserInfo) {
-        const accessRoutes = await store.dispatch('permission/generateRoutes', ['admin'])
-        router.addRoutes(accessRoutes)
-        next()
+      const account_console = store.getters.account_console
+      if (account_console && account_console.length > 0) {
         next()
       } else {
-        console.log(8)
         try {
-          // get user info
-          // await store.dispatch('user/getInfo')
-          console.log(9)
+         
+          await store.dispatch('user/getInfo')
           const accessRoutes = await store.dispatch('permission/generateRoutes', ['admin'])
           router.addRoutes(accessRoutes)
           next()
         } catch (error) {
-          console.log(10)
+          removeToken()
+          localStorage.clear()
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           next(`/dashboard`)
           NProgress.done()
         }
       }
-    }
   } else {
-    /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
-      // in the free login whitelist, go directly
       next()
     } else {
-      // other pages that do not have permission to access are redirected to the login page.
-      // next(`/login?redirect=${to.path}`)
       next(`/?redirect=${to.path}`)
       NProgress.done()
     }

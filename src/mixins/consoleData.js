@@ -42,8 +42,10 @@ export default {
     },
 
     async fetchList(params = {}) {
+      if(!this.API_INDEX) return
       const { DmData } = this.$refs
       Object.assign(this.bindParams, params)
+
       params = {
         ...DmData.getPagination(),
         ...this.params,

@@ -6,9 +6,9 @@ import router from '@/router'
 import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.NODE_ENV !== 'development' ?  'https://api.axisnow.xyz' : '/api' ,
-  timeout: 30000,
+  timeout: 300000,
   headers: {
-    'content-type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json'
   }
 })
 
@@ -36,8 +36,8 @@ service.interceptors.response.use(
       // TODO ACCESS
       Message.warning("用户未登录")
       Lockr.rm('user_id')
-      const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://console.axisnow.xyz' : 'http://localhost:8080'
-      if (defaultSettings.expireUrl) window.open(defaultSettings.expireUrl + '?redirect_url=' + redirect_url,'_self');
+      // const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://console.axisnow.xyz' : 'http://localhost:8080'
+      if (defaultSettings.expireUrl) window.open(defaultSettings.expireUrl + '?redirect_url=' + window.location.origin,'_self');
     }
     // agw
     if (code !== 0 && msg) {

@@ -2,14 +2,16 @@ import { login, logout, getInfo ,signOut, verifyToken} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import Message from 'ant-design-vue/lib/message'
-
+import FetchAccount from '@/api/fetch-account'
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
   user_id: '',
-  roles: []
+  roles: [],
+  account_console: [],
+  userinfo: {}
 }
 
 const mutations = {
@@ -30,6 +32,12 @@ const mutations = {
   },
   SET_USER_ID: (state, user_id) => {
     state.user_id = user_id
+  },
+  SET_USER_KK: (state, list) => {
+    state.account_console = list
+  },
+  SET_USER_INFO: (state, data) => {
+    state.userinfo = data
   }
 }
 
@@ -39,7 +47,6 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ user_name: username.trim(), password: password }).then(res => {
-        console.log()
         localStorage.setItem('user', JSON.stringify(res))
         commit('SET_TOKEN', res.accessToken)
         setToken(res.accessToke)
@@ -54,31 +61,15 @@ const actions = {
   // get user info
   getInfo({ commit, state,dispatch }, token) {
     return new Promise((resolve, reject) => {
-        const user = JSON.parse(localStorage.getItem('user'))
-        if(user) {
-          const { nick_name, avatar } = user
-          commit('SET_ROLES', ['admin'])
-          commit('SET_NAME', nick_name)
-          commit('SET_AVATAR', avatar)
-          resolve(data)
-        } else {
-          const data = {
-            roles: ['admin'],
-            introduction: 'I am a super administrator',
-            avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-            name: 'Super Admin'
-          }
-    
-          if (!data) {
-            return reject('Verification failed, please Login again.')
-          }
-    
-          const { name, avatar } = data
-    
-          commit('SET_NAME', name)
-          commit('SET_AVATAR', avatar)
-          resolve(data)
-        }
+      const user = JSON.parse(localStorage.getItem('user'))
+      if(user) {
+        const { nick_name, avatar } = user
+        commit('SET_ROLES', ['admin'])
+        commit('SET_NAME', nick_name)
+        commit('SET_AVATAR', avatar)
+        commit('SET_USER_KK', ['andao-console'])
+        resolve(user)
+      }
     })
   },
 
@@ -99,13 +90,22 @@ const actions = {
       // })
     })
   },
-
+  getUserInfo({ commit, state, dispatch }, token) {
+    return new Promise((resolve, reject) => {
+      FetchAccount.get('user/info', {token:token}).then(res => {
+        commit('SET_USER_INFO', res)
+        localStorage.setItem('userinfo', JSON.stringify(res))
+        resolve(res)
+      })
+      dispatch('verifyToken', token)
+    })
+  },
   verifyToken({ commit, state, dispatch }, token) {
     return new Promise((resolve, reject) => {
       verifyToken(token).then(data => {
         localStorage.setItem('token', token)
         localStorage.setItem('user', JSON.stringify(data))
-        setToken()
+        setToken(token)
         commit('SET_TOKEN', token)
         commit('SET_ROLES', ['admin'])
         commit('SET_USER_ID', data.id)

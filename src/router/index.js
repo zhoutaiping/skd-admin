@@ -47,11 +47,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
     path: '/register',
     component: () => import('@/views/login/register'),
     hidden: true
@@ -69,11 +64,6 @@ export const constantRoutes = [
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
     hidden: true
   },
   {
@@ -246,7 +236,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

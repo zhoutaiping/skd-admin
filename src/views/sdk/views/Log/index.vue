@@ -75,7 +75,7 @@ export default {
 
   data() {
     return {
-      API_INDEX: '../agw/oplog/console/user/oplog/list',
+      // API_INDEX: '../agw/oplog/console/user/oplog/list',
       bindParams: {
         biz_type: '安全加速sdk',
         data_key: ''

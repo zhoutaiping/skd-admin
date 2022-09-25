@@ -1,3 +1,167 @@
+<template>
+  <div class="index-module__container">
+    <div class="index-module__content">
+      <div class="index-module__main">
+        <div class="arco-spin">
+          <div class="arco-spin-children">
+            <div class="index-module__form">
+              <el-form
+                ref="loginForm"
+                :model="loginForm"
+                :rules="loginRules"
+                class="login-form"
+                autocomplete="on"
+                label-position="left"
+              >
+                <div class="title-container">
+                  <h3 class="title">
+                    登录一个已存在的网络
+                    <!-- <p class="desc-box">
+                          告诉我们一些您的信息，以完成您的账号注册
+                        </p> -->
+                  </h3>
+                </div>
+                <div
+                  v-for="tenant in loginForm.tenant_list"
+                  :key="tenant.tenant_id"
+                  class="network-box"
+                  style="position: relative; display: flex"
+                >
+                  <div style="width: 450px; padding: 5px 20px">
+                    <span class="name-box">{{ tenant.tenant_name }}</span
+                    ><br />
+                    <span class="url-box">
+                      {{ tenant.tenant_prefix }}{{ tenant_prefix_url }}</span
+                    >
+                  </div>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    style="position: absolute; right: 7px; top: 13px"
+                    @click="handleUrl(tenant.tenant_prefix)"
+                    >登录</el-button
+                  >
+                </div>
+                <el-divider>or</el-divider>
+                <div
+                  class="desc-box"
+                  style="margin-bottom: 25px; color: #3d3d3d"
+                >
+                  <!-- 新用户?<br /> -->
+                  <router-link
+                    :to="{
+                      path: '/register',
+                      query: {
+                        token: Token,
+                      },
+                    }"
+                  >
+                    创建一个新的网络-->
+                  </router-link>
+                </div>
+              </el-form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+    
+<script>
+import defaultSettings from "@/settings";
+function getQueryVariable(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]);
+  return null;
+}
+export default {
+  name: "Login",
+  components: {},
+  data() {
+    const tenant_prefix_url = defaultSettings.tenant_prefix_url;
+    return {
+      tenant_prefix_url: tenant_prefix_url,
+      loginForm: {
+        email: "",
+        nick_name: "",
+        tenant_list: [],
+      },
+      loginRules: {
+        nick_name: [],
+        email: [],
+      },
+      capsTooltip: false,
+      loading: false,
+      showDialog: false,
+      redirect: undefined,
+      otherQuery: {},
+      // Token: "",
+    };
+  },
+  computed: {
+    userinfo() {
+      return this.$store.state.user.userinfo || {};
+    },
+    Token() {
+      return localStorage.getItem("token") || getQueryVariable("token");
+    },
+  },
+  watch: {
+    userinfo: {
+      handler(val) {
+        this.init()
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.$nextTick(() =>{
+      this.init()
+    })
+  },
+  methods: {
+    init() {
+      const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
+      this.loginForm = Object.assign(
+        { email: "", nick_name: "" },
+        {
+          ...user_info
+        }
+      );
+    },
+    handleUrl(url) {
+      if (url) {
+        const URL = url + this.tenant_prefix_url;
+        if (window.location.host !== URL) {
+          console.log(
+            window.location.protocol + "//" + URL + "/?token=" + this.Token
+          );
+          if(process.env.NODE_ENV === 'development') {
+            console.log(URL)
+            this.$router.push('/')
+          }else {
+            window.location.replace(
+              window.location.protocol + "//" + URL + "/?token=" + this.Token
+            );
+          }
+        } else {
+          this.$router.push("/?token=" + this.Token);
+        }
+      }
+    },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
+        }
+        return acc;
+      }, {});
+    },
+  },
+};
+</script>
 <style lang="scss" scoped>
 .index-module__container {
   height: 100vh;
@@ -121,234 +285,7 @@
   line-height: 1;
 }
 </style>
-    <template>
-  <div class="index-module__container">
-    <div class="index-module__content">
-      <div class="index-module__main">
-        <div class="arco-spin">
-          <div class="arco-spin-children">
-            <div class="index-module__form">
-              <el-form
-                ref="loginForm"
-                :model="loginForm"
-                :rules="loginRules"
-                class="login-form"
-                autocomplete="on"
-                label-position="left"
-              >
-                <div class="title-container">
-                  <h3 class="title">
-                    登录一个已存在的网络
-                    <!-- <p class="desc-box">
-                          告诉我们一些您的信息，以完成您的账号注册
-                        </p> -->
-                  </h3>
-                </div>
-
-                <div
-                  v-for="tenant in loginForm.tenant_list"
-                  :key="tenant.tenant_id"
-                  class="network-box"
-                  style="position: relative; display: flex"
-                >
-                  <div style="width: 450px;padding: 5px 20px;">
-                    <span class="name-box">{{ tenant.tenant_name }}</span
-                    ><br />
-                   <span class="url-box"> {{ tenant.tenant_prefix }}</span>
-                  </div>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    style="position: absolute; right: 7px; top: 13px"
-                    @click="handleUrl(tenant.tenant_prefix)"
-                    >登录</el-button
-                  >
-                </div>
-                <el-divider>or</el-divider>
-                <div
-                  class="desc-box"
-                  style="margin-bottom: 25px; color: #3d3d3d"
-                >
-                  新用户?<br />
-                  <a href="/register">创建一个新的网络--></a>
-                </div>
-              </el-form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-    
-    <script>
-import { validUsername, validEmail } from "@/utils/validate";
-function getQueryVariable(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-  var r = window.location.search.substr(1).match(reg);
-  if (r != null) return unescape(r[2]);
-  return null;
-}
-export default {
-  name: "Login",
-  components: {},
-  data() {
-    const validateNickname = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error("请输入昵称"));
-      } else {
-        callback();
-      }
-    };
-    const validateEmail = (rule, value, callback) => {
-      if (!validEmail(value)) callback(new Error("请输入邮箱"));
-      else callback();
-    };
-    return {
-      loginForm: {
-        email: "",
-        nick_name: "",
-        tenant_list: [],
-        // "ip": "",
-        // "password": "",
-        // "status": "1",
-        // "telephone": "",
-        // "user_name": ""
-      },
-      loginRules: {
-        nick_name: [
-          { required: true, trigger: "blur", validator: validateNickname },
-        ],
-        email: [{ required: true, trigger: "blur", validator: validateEmail }],
-      },
-      capsTooltip: false,
-      loading: false,
-      showDialog: false,
-      redirect: undefined,
-      otherQuery: {},
-      Token: "",
-    };
-  },
-  watch: {
-    $route: {
-      handler: function (route) {
-        const query = route.query;
-        if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
-        }
-      },
-      immediate: true,
-    },
-  },
-  mounted() {
-    this.Token = "";
-    let Token;
-    if (process.env.NODE_ENV !== "development") {
-      Token = getQueryVariable("token");
-    } else {
-      Token = localStorage.getItem("token");
-    }
-    if (Token) {
-      this.getUser(Token);
-    }
-  },
-  methods: {
-    checkCapslock(e) {
-      const { key } = e;
-      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
-    },
-    showPwd() {
-      this.$nextTick(() => {
-        this.$refs.nick_name.focus();
-      });
-    },
-
-    async getUser(Token) {
-      try {
-        const data = await this.FetchAccount.get("/user/info", {
-          token: Token,
-        });
-        this.loginForm = Object.assign(
-          { email: "", nick_name: "" },
-          {
-            ...data,
-          }
-        );
-        this.Token = Token;
-        console.log(data);
-      } catch (error) {
-        return;
-      }
-    },
-    handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          const params = {
-            email: this.loginForm.email,
-            id: this.loginForm.id,
-            nick_name: this.loginForm.nick_name,
-            user_name: this.loginForm.user_name,
-            token: this.Token,
-          };
-          this.FetchAccount.post("/user/modify", params)
-            .then((res) => {
-              this.$message.success("注册成功!");
-              console.log(res);
-
-              // window.open('?token'+this.Token,'_self')
-              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false;
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    handleUrl(url) {
-      if(url) {
-        window.open(url+'?token'+this.Token,'_self')
-      }
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
-          acc[cur] = query[cur];
-        }
-        return acc;
-      }, {});
-    },
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
-  },
-};
-</script>
-    
-    <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
+<style lang="scss">
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
@@ -392,7 +329,7 @@ $cursor: #fff;
 }
 </style>
     
-    <style lang="scss" scoped>
+<style lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;

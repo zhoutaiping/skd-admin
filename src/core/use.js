@@ -5,12 +5,16 @@ import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)
 
 import Fetch from '@/api/fetch'
+import FetchAccount from '@/api/fetch-account'
+import FetchApi from '@/api/fetch-api'
 import Message from '@/utils/message'
 import { installFilter } from '@/utils/filter'
 
 installFilter(Vue)
 
 Vue.prototype.Fetch = Fetch
+Vue.prototype.FetchAccount = FetchAccount
+Vue.prototype.FetchApi = FetchApi
 Vue.prototype.Message = Message
 
 // style

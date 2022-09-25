@@ -128,8 +128,8 @@
           <div class="arco-spin-children">
             <div class="index-module__form">
               <el-form
-                ref="loginForm"
-                :model="loginForm"
+                ref="form"
+                :model="form"
                 :rules="loginRules"
                 class="login-form"
                 autocomplete="on"
@@ -137,7 +137,7 @@
               >
                 <div class="title-container">
                   <h3 class="title">
-                    欢为您的新网络命名
+                    创建您的新网络命名
                     <p class="desc-box">
                       网络是虚拟环境，您可以在其中管理对各个位置资源的远程访问
                     </p>
@@ -147,7 +147,7 @@
                 <el-form-item prop="tenant_name" label="网络名称">
                   <el-input
                     ref="tenant_name"
-                    v-model="loginForm.tenant_name"
+                    v-model="form.tenant_name"
                     placeholder="网络名称"
                     name="tenant_name"
                     type="text"
@@ -159,7 +159,7 @@
                 <el-form-item prop="tenant_prefix" label="网络地址">
                   <el-input
                     ref="tenant_prefix"
-                    v-model="loginForm.tenant_prefix"
+                    v-model="form.tenant_prefix"
                     placeholder="网络地址"
                     name="tenant_prefix"
                     tabindex="2"
@@ -171,13 +171,13 @@
                   <template slot="append">{{tenant_prefix_url}}</template>
                   </el-input>
                 </el-form-item>
-                <div class="desc-box" style="margin-bottom: 25px">
-                  <span style="color:red">此团队名称已被占用。如果您想访问现有的andao网络</span><br/>
+                <div v-show="form.tenant_list &&form.tenant_list.length" class="desc-box" style="margin-bottom: 25px">
+                  <!-- <span style="color:red">此团队名称已被占用。如果您想访问现有的andao网络</span><br/> -->
                   请在此处登录：
-                  <a href="#">{{loginForm.tenant_list && loginForm.tenant_list[0].tenant_prefix}}</a>
+                  <a @click="handleReplace(form.tenant_list[0].tenant_prefix)">{{form.tenant_list && form.tenant_list[0].tenant_prefix}} {{tenant_prefix_url}}</a>
                 </div>
                 <el-button
-                v-show="loginForm.tenant_list && loginForm.tenant_list.length"
+                v-show="form.tenant_list && form.tenant_list.length"
                   :loading="loading"
                   type="primary"
                   style="
@@ -223,31 +223,28 @@ function getQueryVariable(name) {
   if (r != null) return unescape(r[2]);
   return null;
 }
+import defaultSettings from '@/settings'
 export default {
   name: "Login",
   components: {},
   data() {
     const validateNickname = (rule, value, callback) => {
-      if (!validAlphabets(value)) {
+      if (!value) {
         callback(new Error("请输入英文网络名称"));
       } else {
         callback();
       }
     };
     const validateEmail = (rule, value, callback) => {
-      if (!validAlphabets(value)) callback(new Error("请输入网络地址"));
+      if (!value) callback(new Error("请输入网络地址"));
       else callback();
     };
+    const tenant_prefix_url = defaultSettings.tenant_prefix_url
     return {
-      tenant_prefix_url:'.axisnow.io',
-      loginForm: {
+      tenant_prefix_url: tenant_prefix_url,
+      form: {
         tenant_prefix: "",
-        tenant_name: "",
-        // "ip": "",
-        // "password": "",
-        // "status": "1",
-        // "telephone": "",
-        // "user_name": ""
+        tenant_name: ""
       },
       loginRules: {
         tenant_name: [
@@ -259,35 +256,44 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {},
-      Token: "",
+      otherQuery: {}
     };
   },
-  watch: {
-    $route: {
-      handler: function (route) {
-        const query = route.query;
-        if (query) {
-          this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
-        }
-      },
-      immediate: true,
+  computed:{
+    userinfo() {
+      return this.$store.state.user.userinfo || {};
+    },
+    Token() {
+      return localStorage.getItem('token') || getQueryVariable('token')
     },
   },
-  mounted() {
-    this.Token = "";
-    let Token;
-    if (process.env.NODE_ENV !== "development") {
-      Token = getQueryVariable("token");
-    } else {
-      Token = localStorage.getItem("token");
-    }
-    if (Token) {
-      this.getUser(Token);
+  watch: {
+    userinfo: {
+      handler(val) {
+        this.init()
+      },
+      deep: true,
     }
   },
+  mounted() {
+    this.$nextTick(() =>{
+      this.init()
+    })
+  },
   methods: {
+    init() {
+      const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
+      console.log("userinfo", user_info)
+      this.form = Object.assign(
+        { tenant_prefix: "",tenant_name: "", },
+        {
+          ...user_info
+        }
+      );
+    },
+    handleReplace(url) {
+      location.href = url + this.tenant_prefix_url
+    },
     checkCapslock(e) {
       const { key } = e;
       this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
@@ -297,43 +303,27 @@ export default {
         this.$refs.nick_name.focus();
       });
     },
-
-    async getUser(Token) {
-      try {
-        const data = await this.FetchAccount.get("/user/info", {
-          token: Token,
-        });
-        this.loginForm = Object.assign(
-          { tenant_prefix: "",tenant_name: "", },
-          {
-            ...data,
-          }
-        );
-        this.Token = Token;
-        console.log(data);
-      } catch (error) {
-        return;
-      }
-    },
+    
     handleBack(){
       this.$router.push({ path: '/network'})
     },
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true;
           const params = {
-            tenant_name: this.loginForm.tenant_name,
-            id: this.loginForm.id,
-            tenant_prefix: this.loginForm.tenant_prefix + '.axisnow.io',
+            tenant_name: this.form.tenant_name,
+            id: this.form.id,
+            tenant_prefix: this.form.tenant_prefix,
             token: this.Token,
           };
           this.FetchAccount.post("/user/tenant/add", params)
             .then((res) => {
+              console.log(res)
               this.$message.success("创建成功!");
-              // window.open('?token'+this.Token,'_self')
-              this.$router.push({ path: '/network'})
+              const URL = res.tenant_prefix + this.tenant_prefix_url;
               this.loading = false;
+              window.location=window.location.protocol + "//" + URL + "/?token=" + this.Token;
             })
             .catch(() => {
               this.loading = false;
@@ -351,25 +341,7 @@ export default {
         }
         return acc;
       }, {});
-    },
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
+    }
   },
 };
 </script>

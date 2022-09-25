@@ -10,7 +10,6 @@
         <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip> -->
-
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
@@ -19,9 +18,12 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item >{{ name }}</el-dropdown-item>
-          <!-- <router-link to="/news">
-            <el-dropdown-item divided>新闻页</el-dropdown-item>
-          </router-link> -->
+          <router-link to="/register">
+            <el-dropdown-item divided>创建网络</el-dropdown-item>
+          </router-link>
+          <router-link to="/network">
+            <el-dropdown-item divided>网络切换</el-dropdown-item>
+          </router-link>
           <el-dropdown-item  @click.native="logout">
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
@@ -59,10 +61,7 @@ export default {
     ]),
 
     account_th() {
-      const th_url = {
-        'zhoutaiping': th
-      }
-      return this.avatar || th_url['zhoutaiping'] || th_default
+      return this.avatar || th_default
     }
   },
   methods: {
@@ -71,8 +70,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      const redirect_url = process.env.NODE_ENV !== 'development' ?  'http://www.axisnow.xyz/' : 'http://localhost:8080/'
-      if (defaultSettings.signOutUrl) window.open(defaultSettings.signOutUrl + '?redirect_url=' + redirect_url,'_self');
+      if (defaultSettings.signOutUrl) window.open(defaultSettings.signOutUrl + '?redirect_url=' + window.location.origin,'_self');
     }
   }
 }
