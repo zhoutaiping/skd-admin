@@ -8,7 +8,7 @@ import defaultSettings from '@/settings'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/network','/register'] // no redirect whitelist
+const whiteList = [] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -16,25 +16,62 @@ router.beforeEach(async(to, from, next) => {
 
   // set page title
   document.title = getPageTitle(to.meta.title)
-
-  // determine whether the user has logged in
-  const hasToken = getToken()
-  if (hasToken) {
+  let token = localStorage.getItem('token')
+  if(token) {
     const account_console = store.getters.account_console
     if (account_console && account_console.length > 0) {
       next()
     } else {
       await store.dispatch('user/getInfo')
-      const accessRoutes = await store.dispatch('permission/generateRoutes', ['admin'])
+      const accessRoutes = await store.dispatch('permission/generateRoutes', window.location.host)
       router.addRoutes(accessRoutes)
       next({ ...to, replace: true })
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next()
+    token = getQueryVariable('token')
+    if(token) {
+      const user_info = await store.dispatch('user/getUserInfo', token)
+      await store.dispatch('user/verifyToken', token)
+      await store.dispatch('user/getInfo')
+      const accessRoutes = await store.dispatch('permission/generateRoutes', window.location.host)
+      router.addRoutes(accessRoutes)
+      if(user_info && user_info.tenant_list.length) {
+        if(user_info.tenant_list && user_info.tenant_list.length === 1) {
+          if(window.location.host !=='console.axisnow.xyz') {
+            next('/dashboard')
+          } else {
+            const tenant = user_info.tenant_list[0]
+            store.dispatch('user/logout').then(res => {
+              window.location.replace(
+                "https://" +  tenant.tenant_prefix + defaultSettings.tenant_prefix_url + "/dashboard?token=" + token
+              );
+            })
+            next()
+          }
+        } else if(user_info.tenant_list && user_info.tenant_list.length > 1) {
+          const find = (user_info.tenant_list).find(i => (i.tenant_prefix + defaultSettings.tenant_prefix_url) === window.location.host )
+          if(window.location.host !=='console.axisnow.xyz' && find) {
+            next('/dashboard')
+          }else {
+            next('/network')
+          }
+        } else if(user_info.tenant_list && user_info.tenant_list.length === 0) {
+          if(window.location.host === 'console.axisnow.xyz') {
+            next('/register')
+          } else {
+            // next('dashboard')
+            next({ ...to, replace: true })
+          }
+        }
+      }
     } else {
-      next(`/network`)
-      NProgress.done()
+      if (whiteList.indexOf(to.path) !== -1) {
+        next()
+      } else {
+        store.dispatch('user/logout').then(res => {
+          window.location.href = defaultSettings.expireUrl + '?redirect_url=' + window.location.origin
+        })
+      }
     }
   }
 })

@@ -141,13 +141,15 @@ export default {
     handleUrl(url) {
       if (url) {
         const URL = url + this.tenant_prefix_url;
+        const token = getQueryVariable('token') || localStorage.getItem('token') || '';
         if (window.location.host !== URL) {
           if(process.env.NODE_ENV === 'development') {
             this.$router.push('/dashboard')
           }else {
-            window.location.replace(
-              window.location.protocol + "//" + URL + "/?token=" + this.Token
-            );
+            if(!token) return
+            this.$store.dispatch('user/logout').then(res => {
+              window.location.replace(window.location.href = "https://" + URL + "/?token=" + token);
+            })
           }
         } else {
           this.$router.push("/?token=" + this.Token);

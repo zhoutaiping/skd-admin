@@ -3,6 +3,8 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import Message from 'ant-design-vue/lib/message'
 import FetchAccount from '@/api/fetch-account'
+import defaultSettings from '@/settings'
+
 const state = {
   token: getToken(),
   name: '',
@@ -58,21 +60,7 @@ const actions = {
     })
   },
 
-  // get user info
-  getInfo({ commit, state,dispatch }, token) {
-    return new Promise((resolve, reject) => {
-      const user = JSON.parse(localStorage.getItem('user'))
-      console.log()
-      if(user  && Object.keys(user).length) {
-        const { nick_name, avatar } = user
-        commit('SET_ROLES', ['admin'])
-        commit('SET_NAME', nick_name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_USER_KK', ['andao-console'])
-        resolve(user)
-      }
-    })
-  },
+  
   initPage({ commit, state, dispatch }) {
     const userinfo = JSON.parse(localStorage.getItem('userinfo'))
     const user = JSON.parse(localStorage.getItem('user'))
@@ -98,10 +86,21 @@ const actions = {
         resetRouter()
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()
-      //     Message.success("退出成功!")
-      // }).catch(error => {
-      //   reject(error)
-      // })
+    })
+  },
+
+  // get user info
+  getInfo({ commit, state,dispatch }, token) {
+    return new Promise((resolve, reject) => {
+      const user = JSON.parse(localStorage.getItem('user'))
+      if(user  && Object.keys(user).length) {
+        const { nick_name, avatar } = user
+        commit('SET_ROLES', ['admin'])
+        commit('SET_NAME', nick_name)
+        commit('SET_AVATAR', avatar)
+        commit('SET_USER_KK', ['andao-console'])
+        resolve(user)
+      }
     })
   },
   getUserInfo({ commit, state, dispatch }, token) {
@@ -109,9 +108,16 @@ const actions = {
       FetchAccount.get('user/info', {token:token}).then(res => {
         commit('SET_USER_INFO', res)
         localStorage.setItem('userinfo', JSON.stringify(res))
+        // dispatch('verifyToken', token)
         resolve(res)
+      }).catch(e =>{
+        console.log(e)
+        if(e.code === 20007) {
+          window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + window.location.origin,'_self')
+        }
+        reject(e)
       })
-      dispatch('verifyToken', token)
+     
     })
   },
   verifyToken({ commit, state, dispatch }, token) {

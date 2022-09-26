@@ -75,9 +75,11 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + 'https://www.axisnow.xyz','_self');
+    logout() {
+      this.$store.dispatch('user/logout').then(res =>{
+        if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + 'https://www.axisnow.xyz','_self');
+      })
+      
     }
   }
 }

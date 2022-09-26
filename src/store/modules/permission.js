@@ -47,14 +47,14 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, host) {
     return new Promise(resolve => {
-      const accessedRoutes  = asyncRoutes || []
-      // if (roles.includes('admin')) {
-      //   accessedRoutes = asyncRoutes || []
-      // } else {
-      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, ['admin'])
-      // }
+      let accessedRoutes  = []
+      if(['console.axisnow.xyz'].includes(host)) {
+        accessedRoutes =  []
+      } else {
+        accessedRoutes = asyncRoutes || []
+      }
       commit('SET_ROUTES', asyncRoutes)
       resolve(accessedRoutes)
     })
