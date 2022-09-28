@@ -58,7 +58,7 @@ export default {
       let total
       this.resData = {}
       try {
-        const response = await this.Fetch[API_METHOD](this.API_INDEX, params)
+        const response = await this.FetchAccount[API_METHOD](this.API_INDEX, params)
         this.resData = response
         const data = this.formatResponse(response)
         const { list } = data

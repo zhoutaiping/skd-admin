@@ -89,12 +89,12 @@ export const asyncRoutes = [
     component: Layout,
     alwaysShow: true,
     meta: { title: 'SDK管理', icon: 'tab' },
-    redirect: '/meal-list',
+    redirect: '/app-list',
     children: [
       {
-        path: 'meal-list',
+        path: 'app-list',
         component: () => import('@/views/sdk/views/MealList/index'),
-        name: 'SDK_meal_list',
+        name: 'SDK_app_list',
         meta: { title: '应用列表', icon: 'component', noCache: true }
       },
       {
@@ -102,7 +102,7 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/views/sdk/views/MealList/Add'),
         name: 'SDK_meal_open',
-        meta: { title: '服务开通-AccessKey', icon: 'component', noCache: true, back: `SDK_meal_list` }
+        meta: { title: '服务开通-AccessKey', icon: 'component', noCache: true, back: `SDK_app_list` }
       },
       // 业务列表
       {
@@ -119,25 +119,25 @@ export const asyncRoutes = [
             path: 'applicationSecurity',
             name: `sdk_business__id__applicationSecurity`,
             component: () => import('@/views/sdk/views/Business/ApplicationSecurity/index'),
-            meta: { title: '应用安全', back: `SDK_meal_list` }
+            meta: { title: '应用安全', back: `SDK_app_list` }
           },
           {
             path: 'applicationAcceleration',
             name: `sdk_business__id__applicationAcceleration`,
             component: () => import('@/views/sdk/views/Business/ApplicationAcceleration'),
-            meta: { title: '应用加速', back: `SDK_meal_list` }
+            meta: { title: '应用加速', back: `SDK_app_list` }
           },
           {
             path: 'businessSecurity',
             name: `sdk_business__id__BusinessSecurity`,
             component: () => import('@/views/sdk/views/Business/BusinessSecurity'),
-            meta: { title: '业务安全', back: `SDK_meal_list` }
+            meta: { title: '业务安全', back: `SDK_app_list` }
           },
           {
             path: 'networkSecurity',
             name: `sdk_business__id__NetworkSecurity`,
             component: () => import('@/views/sdk/views/Business/NetworkSecurity'),
-            meta: { title: '网络安全', back: `SDK_meal_list` }
+            meta: { title: '网络安全', back: `SDK_app_list` }
           }
         ]
       },
@@ -146,7 +146,7 @@ export const asyncRoutes = [
         name: `SDK_meal__id`,
         hidden: true,
         component: () => import('@/views/sdk/views/MealList/Detail'),
-        meta: { title: '管理', back: `SDK_meal_list` }
+        meta: { title: '管理', back: `SDK_app_list` }
       },
       {
         path: 'explorer/:id',
@@ -161,13 +161,13 @@ export const asyncRoutes = [
             path: 'manage',
             name: `sdk_explorer__manage`,
             component: () => import('@/views/sdk/views/Explorer/Manage'),
-            meta: { title: '资源管理', back: `SDK_meal_list` }
+            meta: { title: '资源管理', back: `SDK_app_list` }
           },
           {
             path: 'logs',
             name: `sdk_explorer__logs`,
             component: () => import('@/views/sdk/views/Explorer/Logs'),
-            meta: { title: '资源分配日志', back: `SDK_meal_list` }
+            meta: { title: '资源分配日志', back: `SDK_app_list` }
           }
         ]
       },

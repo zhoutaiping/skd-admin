@@ -2,7 +2,7 @@
   <ConsolePageLayout style="padding:12px;">
     <DmToolbar>
       <!-- <router-link :to="'/sdk/meal-open'"> -->
-      <el-button type="primary" @click="$refs.Add.handleOpen()">添加应用</el-button>
+      <el-button type="primary"  @click="$refs.Add.handleOpen()">添加应用</el-button>
       <el-button  @click="$refs.DmData.initPage()">刷新</el-button>
       <!-- </router-link> -->
     </DmToolbar>
@@ -85,7 +85,7 @@
         </el-table>
       </DmTable>
     </DmData>
-    <Add ref="Add" @submit="$refs.DmData.initPage()"/>
+    <Add ref="Add" @init="$refs.DmData.initPage()"/>
   </ConsolePageLayout>
 </template>
 
@@ -94,6 +94,7 @@ import consoleData from '@/mixins/consoleData'
 import ColumnExpireTime from '@/components/Column/ColumnExpireTime'
 import DmToolbar from '@/components/Dm/DmToolbar.vue'
 import Add from './components/add.vue'
+
 export default {
   // inject: ['ModuleId'],
 
@@ -103,7 +104,11 @@ export default {
 
   data() {
     return {
-      API_INDEX: '/list'
+      API_INDEX: '/sdk/list',
+      bindParams:{
+        token: localStorage.getItem('token'),
+        user_id:JSON.parse(localStorage.getItem('user')).id
+      }
     }
   },
 

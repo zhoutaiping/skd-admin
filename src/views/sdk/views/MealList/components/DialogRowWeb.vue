@@ -162,6 +162,8 @@ export default createDialog({
         listView: []
       },
       formDefault: {
+        token: localStorage.getItem('token'),
+        user_id: JSON.parse(localStorage.getItem('user')).id,
         protocol: 1,
         domain: '',
         port: '',
@@ -197,14 +199,14 @@ export default createDialog({
     afterOpen(form) {
       this.$nextTick(async() => {
         this.$refs.Form.clearValidate()
-        const source_list = form.source_list
+        const source_list = JSON.parse(form.source_list)
         if (this.options.batch && this.options.mode === 'Edit') {
           source_list.forEach(_ => {
             _.port = ''
           })
         }
         this.$refs.TableSourceIP.setList(source_list || [])
-        if (form.channel_status) this.$refs.TableChannel.setList(form.channel_source_list || [])
+        if (form.channel_status) this.$refs.TableChannel.setList(JSON.parse(form.channel_source_list) || [])
         this.loading = false
       })
     },
@@ -217,24 +219,24 @@ export default createDialog({
       const source_list = await this.$refs.TableSourceIP.getList()
       form = {
         ...this.form,
-        source_list,
-        channel_source_list: form.channel_status ? source_list : []
+        source_list: JSON.stringify(source_list) ,
+        channel_source_list: form.channel_status ? JSON.stringify(source_list) : "[]"
       }
 
       try {
-        if (this.options.batch) {
+        // if (this.options.batch) {
+        //   if (this.options.mode === 'Create') {
+        //     await this.Fetch.post('V4/tjkd.app.domain.batch.add', form)
+        //   } else {
+        //     await this.Fetch.post('V4/tjkd.app.domain.batch.edit', form)
+        //   }
+        // } else {
           if (this.options.mode === 'Create') {
-            await this.Fetch.post('V4/tjkd.app.domain.batch.add', form)
+            await this.FetchAccount.post('/sdk_rule/add', form)
           } else {
-            await this.Fetch.post('V4/tjkd.app.domain.batch.edit', form)
+            await this.FetchAccount.post('/sdk_rule/modify', form)
           }
-        } else {
-          if (this.options.mode === 'Create') {
-            await this.Fetch.post('V4/tjkd.app.domain.add', form)
-          } else {
-            await this.Fetch.post('V4/tjkd.app.domain.edit', form)
-          }
-        }
+        // }
       } catch (e) {
         throw new Error()
       }

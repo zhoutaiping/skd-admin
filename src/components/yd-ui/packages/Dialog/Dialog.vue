@@ -68,7 +68,7 @@
     &__footer {
       text-align: center;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 16px;
+      padding: 6px;
       overflow: hidden;
     }
   }

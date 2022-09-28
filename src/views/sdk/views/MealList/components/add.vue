@@ -1,17 +1,13 @@
-<style scoped>
-.input-box {
-  width: 400px;
-}
-</style>
 <template>
   <DmDialog
     ref="Dialog"
     :fetch-submit="fetchSubmit"
     :mode="options.mode"
-    width="700px"
+    width="500px"
     title-label="应用"
     @submit="handleSubmit"
   >
+    
     <el-form
       ref="Form"
       :model="form"
@@ -25,25 +21,15 @@
       >
         <el-input
           v-model="form.app_name"
-          class="input-box"
+          style="width: 280px"
         />
       </el-form-item>
-      <!-- <el-form-item
-        prop="AccessKey"
-        label="AccessKey"
-      >
-        <el-input
-          v-model="form.ip"
-          class="input-box"
-        />
-        <a>生成AccessKey</a>
-      </el-form-item> -->
       <el-form-item label="备注">
         <el-input
           v-model="form.remark"
           placeholder="备注"
           type="textarea"
-          class="input-box"
+          style="width: 280px"
         />
       </el-form-item>
     </el-form>
@@ -52,39 +38,6 @@
 
 <script>
 import createDialog from '@/utils/createDialog'
-
-const Label = {
-  protocol: [
-    {
-      label: 'TCP',
-      value: 1
-    },
-    {
-      label: 'UDP',
-      value: 2
-    }
-  ],
-  loading: [
-    {
-      label: '轮询',
-      value: 1
-    },
-    {
-      label: 'IP哈希',
-      value: 2
-    }
-  ],
-  sourceType: [
-    {
-      label: 'IP',
-      value: 1
-    },
-    {
-      label: '域名',
-      value: 2
-    }
-  ]
-}
 
 function portValidator(rule, value, callback) {
   value = value.toString().replace('，', ',')
@@ -101,19 +54,17 @@ export default createDialog({
   data() {
     return {
       loading: true,
-      Label,
       optionsDefault: {
-        batch: false,
-        mode: 'Create',
-        listView: []
+        mode: 'Create'
       },
       formDefault: {
         app_name: '',
-        remark: ''
+        remark: '',
+        token: localStorage.getItem('token')
       },
       rules: {
         app_name: [
-          { required: true, message: '请输入应用名称', trigger: 'blur' }
+          { required: true, message: '请输入应用名称', trigger: 'blur' },
         ],
         remark: []
       }
@@ -124,6 +75,7 @@ export default createDialog({
     afterOpen(form) {
       this.$nextTick(async() => {
         this.$refs.Form.clearValidate()
+        
         this.loading = false
       })
     },
@@ -139,9 +91,9 @@ export default createDialog({
 
       try {
         if (this.options.mode === 'Create') {
-          await this.Fetch.post('/add', form)
+          await this.FetchAccount.post('/sdk/add', form)
         } else {
-          await this.Fetch.post('/modify', form)
+          await this.FetchAccount.post('/sdk/modify', form)
         }
       } catch (e) {
         throw new Error()
@@ -150,7 +102,7 @@ export default createDialog({
 
     async handleSubmit() {
       this.Message('ACTION_SUCCESS')
-      this.$emit('submit')
+      this.$emit('init')
       this.handleClose()
     }
   }

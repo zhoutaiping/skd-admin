@@ -125,6 +125,7 @@ export default {
     },
 
     async setList(list) {
+      console.log(list)
       this.list = list
     },
 

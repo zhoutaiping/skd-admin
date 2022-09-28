@@ -31,12 +31,6 @@ service.interceptors.response.use(
       code = _status.code
       msg = _status.msg || _status.message || msg
     }
-    // agw
-    if (code !== 0 && msg) {
-      Message.warning(msg)
-      return Promise.reject(body)
-    }
-
     console.log('code=======',code)
     if (code === 20007) {
       // 退出登录
@@ -45,6 +39,11 @@ service.interceptors.response.use(
       Lockr.rm('user_id')
       store.dispatch('user/logout')
       if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + window.location.origin,'_self');
+      return Promise.reject(body)
+    }
+    // agw
+    if (code !== 0 && msg) {
+      Message.warning(msg)
       return Promise.reject(body)
     }
     
