@@ -60,6 +60,8 @@ export default createDialog({
       formDefault: {
         app_name: '',
         remark: '',
+        tenant_id: localStorage.getItem('tenant_id'),
+        user_id: JSON.parse(localStorage.getItem('user')).id,
         token: localStorage.getItem('token')
       },
       rules: {
@@ -67,10 +69,11 @@ export default createDialog({
           { required: true, message: '请输入应用名称', trigger: 'blur' },
         ],
         remark: []
-      }
+      },
+      
     }
   },
-
+  
   methods: {
     afterOpen(form) {
       this.$nextTick(async() => {

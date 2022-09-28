@@ -51,6 +51,7 @@ router.beforeEach(async(to, from, next) => {
         } else if(user_info.tenant_list && user_info.tenant_list.length > 1) {
           const find = (user_info.tenant_list).find(i => (i.tenant_prefix + defaultSettings.tenant_prefix_url) === window.location.host )
           if(window.location.host !=='console.axisnow.xyz' && find) {
+            localStorage.setItem('tenant_id',find.tenant_id)
             next('/dashboard')
           }else {
             next('/network')

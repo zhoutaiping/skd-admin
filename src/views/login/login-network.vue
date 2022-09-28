@@ -38,7 +38,7 @@
                     size="mini"
                     type="primary"
                     style="position: absolute; right: 7px; top: 13px"
-                    @click="handleUrl(tenant.tenant_prefix)"
+                    @click="handleUrl(tenant.tenant_prefix, tenant.tenant_id)"
                     >登录</el-button
                   >
                 </div>
@@ -138,12 +138,13 @@ export default {
       }
     },
    
-    handleUrl(url) {
+    handleUrl(url, tenant_id) {
       if (url) {
         const URL = url + this.tenant_prefix_url;
         const token = getQueryVariable('token') || localStorage.getItem('token') || '';
         if (window.location.host !== URL) {
           if(process.env.NODE_ENV === 'development') {
+            localStorage.setItem('tenant_id',tenant_id)
             this.$router.push('/dashboard')
           }else {
             if(!token) return

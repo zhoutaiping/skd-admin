@@ -11,7 +11,8 @@ export default {
       optionsDefault: {}
     }
   },
-
+  computed:{
+  },
   methods: {
     validateForm() {
       this.$refs.Form.validate(valid => {
