@@ -119,9 +119,13 @@ export default {
     },
 
     async del(data) {
-      if(!data.id) return
+      if(!data.sdk_id) return
       try {
-        await this.Fetch.post('/delete', {id: data.id})
+        await this.Fetch.post('/delete', {
+          sdk_id: data.sdk_id,
+          user_id: JSON.parse(localStorage.getItem('user')).id,
+          token:localStorage.getItem('token')
+       })
         await this.$refs.DmData.initPage()
         this.Message('ACTION_SUCCESS')
       } catch (error) {
