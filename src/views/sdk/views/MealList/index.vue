@@ -59,7 +59,7 @@
                   编辑
                 </el-button>
                 <el-divider direction="vertical" />
-                <router-link :to="{name: `SDK_meal__id`, params: {id: scope.row.id}}">
+                <router-link :to="{name: `SDK_app_id`, params: {id: scope.row.sdk_id}}">
                 <el-button type="text">
                   管理
                 </el-button>
@@ -106,12 +106,24 @@ export default {
     return {
       API_INDEX: '/sdk/list',
       bindParams:{
+        tenant_id: localStorage.getItem('tenant_id'),
         token: localStorage.getItem('token'),
         user_id:JSON.parse(localStorage.getItem('user')).id
       }
     }
   },
-
+  computed: {
+    tenant_id() {
+      return localStorage.getItem('tenant_id') ? Number(localStorage.getItem('tenant_id') || 0): 0
+    },
+    user_id() {
+      return JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).id  || 0
+    },
+    token() {
+      return localStorage.getItem('token') || '' 
+    }
+  },
+    
   methods: {
     copyAccessKey(row) {
       this.Help.copyText(row.access_key)

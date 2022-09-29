@@ -59,10 +59,7 @@ export default createDialog({
       },
       formDefault: {
         app_name: '',
-        remark: '',
-        tenant_id: localStorage.getItem('tenant_id'),
-        user_id: JSON.parse(localStorage.getItem('user')).id,
-        token: localStorage.getItem('token')
+        remark: ''
       },
       rules: {
         app_name: [
@@ -73,7 +70,17 @@ export default createDialog({
       
     }
   },
-  
+  computed: {
+    tenant_id() {
+      return localStorage.getItem('tenant_id') ? Number(localStorage.getItem('tenant_id') || 0): 0
+    },
+    user_id() {
+      return JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).id  || 0
+    },
+    token() {
+      return localStorage.getItem('token') || '' 
+    }
+  },
   methods: {
     afterOpen(form) {
       this.$nextTick(async() => {
@@ -89,9 +96,11 @@ export default createDialog({
       })
 
       form = {
-        ...this.form
+        ...this.form,
+        tenant_id: this.tenant_id,
+        user_id: this.user_id,
+        token: this.token
       }
-
       try {
         if (this.options.mode === 'Create') {
           await this.FetchAccount.post('/sdk/add', form)

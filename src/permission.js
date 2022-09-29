@@ -37,10 +37,11 @@ router.beforeEach(async(to, from, next) => {
       router.addRoutes(accessRoutes)
       if(user_info && user_info.tenant_list.length) {
         if(user_info.tenant_list && user_info.tenant_list.length === 1) {
+          const tenant = user_info.tenant_list[0]
           if(window.location.host !=='console.axisnow.xyz') {
+            localStorage.setItem('tenant_id',tenant.tenant_id)
             next('/dashboard')
           } else {
-            const tenant = user_info.tenant_list[0]
             store.dispatch('user/logout').then(res => {
               window.location.replace(
                 "https://" +  tenant.tenant_prefix + defaultSettings.tenant_prefix_url + "/dashboard?token=" + token

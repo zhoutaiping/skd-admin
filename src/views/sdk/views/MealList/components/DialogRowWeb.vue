@@ -162,8 +162,7 @@ export default createDialog({
         listView: []
       },
       formDefault: {
-        token: localStorage.getItem('token'),
-        user_id: JSON.parse(localStorage.getItem('user')).id,
+       
         protocol: 1,
         domain: '',
         port: '',
@@ -219,6 +218,8 @@ export default createDialog({
       const source_list = await this.$refs.TableSourceIP.getList()
       form = {
         ...this.form,
+        sdk_id: this.$route.params.id,
+        token: localStorage.getItem('token'),
         source_list: JSON.stringify(source_list) ,
         channel_source_list: form.channel_status ? JSON.stringify(source_list) : "[]"
       }
