@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'SDK APP Admin',
-  logo:'',
+  title: "SDK APP Admin",
+  logo: "",
 
   /**
    * @type {boolean} true | false
@@ -32,8 +32,8 @@ module.exports = {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-  tenant_prefix_url:'.axisnow.xyz',
-  errorLog: 'production',
-  expireUrl: 'https://account.axisnow.xyz/user/sign-in',
-  signOutUrl: 'https://account.axisnow.xyz/user/sign-out'
-}
+  tenant_prefix_url: ".axisnow.xyz",
+  errorLog: "production",
+  expireUrl: "https://account.axisnow.xyz/user/sign-in",
+  signOutUrl: "https://account.axisnow.xyz/user/sign-out",
+};
