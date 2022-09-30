@@ -146,7 +146,7 @@ export const asyncRoutes = [
         name: `SDK_app_id`,
         hidden: true,
         component: () => import('@/views/sdk/views/MealList/Detail'),
-        meta: { title: '管理', back: `SDK_app_list` }
+        meta: { title: '应用管理', back: `SDK_app_list` }
       },
       {
         path: 'explorer/:id',

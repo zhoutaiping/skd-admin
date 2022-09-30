@@ -14,12 +14,16 @@
         :loading="loading"
         min-height
       >
-        <el-table :data="list" border>
+        <el-table :data="list" >
           <el-table-column
             label="应用名称"
             prop="app_name"
             min-width="150"
-          />
+          >
+            <template slot-scope="{ row }">
+              {{row.app_name || '--'}}
+            </template>
+          </el-table-column>
           <el-table-column
             label="AccessKey"
             min-width="150"
