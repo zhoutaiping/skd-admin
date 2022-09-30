@@ -93,3 +93,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "~@/styles/variables.scss";
+::v-deep .router-link-active {
+  border-right: 3px solid $menuActiveText;
+}
+</style>
