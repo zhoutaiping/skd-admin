@@ -242,25 +242,27 @@ export default {
     },
 
     handleBatchDelete(data) {
-      this.$confirm('确认操作', '提示', {
+      this.$confirm('确认删除规则操作', '提示', {
         type: 'warning'
       }).then(() => {
         this.fetchDelete(data)
       })
     },
 
-    async fetchDelete() {
+    async fetchDelete(data) {
       // const ids = []
       // this.multipleSelection.forEach(item => {
       //   ids.push(item.id)
       // })
 
       const form = {
-        rule_id:data.rule_id,
-        token:this.bindParams.token
+        rule_id: data.rule_id,
+        sdk_id: data.sdk_id,
+        user_id: JSON.parse(localStorage.getItem('user')).id,
+        token:localStorage.getItem('token')
       }
       try {
-        await this.FetchAccount.delete('/sdk_rule/delete', form)
+        await this.FetchAccount.post('/sdk_rule/delete', form)
       } catch (e) {
         return
       }

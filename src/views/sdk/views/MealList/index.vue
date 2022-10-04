@@ -136,9 +136,16 @@ export default {
 
     async del(data) {
       if(!data.sdk_id) return
-      try {
-        await this.Fetch.post('/delete', {
+      console.log({
           sdk_id: data.sdk_id,
+          tenant_id: this.tenant_id,
+          user_id: JSON.parse(localStorage.getItem('user')).id,
+          token:localStorage.getItem('token')
+       })
+      try {
+        await this.FetchAccount.post('/sdk/delete', {
+          sdk_id: data.sdk_id,
+          tenant_id: this.tenant_id,
           user_id: JSON.parse(localStorage.getItem('user')).id,
           token:localStorage.getItem('token')
        })
