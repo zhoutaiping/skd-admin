@@ -50,7 +50,7 @@
             width="55"
           />
           <el-table-column
-            label="端口"
+            label="域名/端口"
             prop="domain"
             min-width="200"
           >
