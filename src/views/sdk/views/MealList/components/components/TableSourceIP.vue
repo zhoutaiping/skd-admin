@@ -162,6 +162,13 @@ export default {
     async setList(list) {
       this.$nextTick(() => {
         this.list = list
+        if(this.sourceType === 2) {
+          this.list = list.map(i => {
+            i.domain =JSON.parse(JSON.stringify(i.ip))
+            delete i.ip
+            return i
+          })
+        }
       })
     },
 

@@ -51,7 +51,7 @@
       </el-form-item>
       <el-form-item label="负载均衡模式">
         <yd-form-radio
-          v-model="form.loading"
+          v-model="form.load_balance_type"
           :radios="Label.loading"
         />
       </el-form-item>
@@ -162,15 +162,15 @@ export default createDialog({
         listView: []
       },
       formDefault: {
-       
         protocol: 1,
         domain: '',
         port: '',
-        loading: 1,
+        load_balance_type: 1,
         channel_loading: 1,
         remark: '',
         channel_status: 0,
         source_type: 1,
+        roule_id:'',
         source: [
           {
             ip: '',
@@ -193,20 +193,27 @@ export default createDialog({
       }
     }
   },
-
+  computed: {
+    user_id() {
+      return JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).id  || 0
+    }
+  },
   methods: {
     afterOpen(form) {
       this.$nextTick(async() => {
         this.$refs.Form.clearValidate()
-        const source_list = JSON.parse(form.source_list)
+        const source_list = form.source_list
         if (this.options.batch && this.options.mode === 'Edit') {
           source_list.forEach(_ => {
             _.port = ''
           })
         }
+
         this.$refs.TableSourceIP.setList(source_list || [])
         if (form.channel_status) this.$refs.TableChannel.setList(JSON.parse(form.channel_source_list) || [])
         this.loading = false
+
+        console.log("init-----",this.form)
       })
     },
 
@@ -218,12 +225,13 @@ export default createDialog({
       const source_list = await this.$refs.TableSourceIP.getList()
       form = {
         ...this.form,
-        sdk_id: this.$route.params.id,
+        sdk_id: Number(this.$route.params.id),
+        user_id: this.user_id,
         token: localStorage.getItem('token'),
         source_list: JSON.stringify(source_list) ,
         channel_source_list: form.channel_status ? JSON.stringify(source_list) : "[]"
       }
-
+      
       try {
         // if (this.options.batch) {
         //   if (this.options.mode === 'Create') {

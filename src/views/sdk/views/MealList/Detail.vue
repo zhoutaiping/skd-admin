@@ -195,9 +195,10 @@ export default {
     handleRowEdit(form) {
       form = {
         id: form.id,
+        rule_id: form.rule_id,
         domain: form.domain,
         port: form.port,
-        loading: form.loading,
+        load_balance_type: form.load_balance_type,
         channel_loading: form.channel_loading,
         source_type: form.source_type,
         remark: form.remark,
