@@ -212,8 +212,6 @@ export default createDialog({
         this.$refs.TableSourceIP.setList(source_list || [])
         if (form.channel_status) this.$refs.TableChannel.setList(JSON.parse(form.channel_source_list) || [])
         this.loading = false
-
-        console.log("init-----",this.form)
       })
     },
 

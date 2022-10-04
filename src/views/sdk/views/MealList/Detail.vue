@@ -165,12 +165,12 @@ export default {
   methods: {
     formatResponse(response) {
       response.list.forEach(item => {
-        item.loading = Number(item.loading)
+        item.loading = Number(item.load_balance_type)
         item.loading_name = labelView(item.loading, Label.loading)
-        console.log(item.source_list, JSON.parse(item.source_list))
         const source_list = item.source_list && JSON.parse(item.source_list) || []
+        // console.log(item.source_list, source_list)
         const channel_source_list = item.channel_source_list && JSON.parse(item.channel_source_list) || []
-        item.sourceView = (JSON.parse(item.source_list)).map(_ => {
+        item.sourceView = source_list.map(_ => {
           return {
             value: _.ip,
             port: _.port,
@@ -202,7 +202,7 @@ export default {
         channel_loading: form.channel_loading,
         source_type: form.source_type,
         remark: form.remark,
-        source_list: form.source_list,
+        source_list: form.source_list && JSON.parse(form.source_list) || [],
         channel_source_list: form.channel_source_list,
         channel_status: form.channel_status
       }

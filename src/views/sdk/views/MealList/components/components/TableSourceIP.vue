@@ -91,6 +91,7 @@ import consoleTable from '@/mixins/consoleTable'
 import RULE from '@/utils/verify'
 import ColumnForm from '@/components/Column/ColumnForm'
 import packagesMixins from '../../../../mixins/packages'
+import { deepClone } from '../../../../../../utils'
 
 const IP_VIEW = [
   {
@@ -157,18 +158,23 @@ export default {
       }
     }
   },
-
+  watch:{
+    sourceType: {
+      handler(val) {
+        this.list = deepClone(this.list)
+      }
+    }
+  },
   methods: {
     async setList(list) {
       this.$nextTick(() => {
         this.list = list
-        if(this.sourceType === 2) {
-          this.list = list.map(i => {
-            i.domain =JSON.parse(JSON.stringify(i.ip))
-            delete i.ip
-            return i
-          })
-        }
+        this.list = list.map(i => {
+          const ip =JSON.parse(JSON.stringify(i.ip))
+          i.ip = Number(this.sourceType) === 1? ip :''
+          i.domain = Number(this.sourceType) === 2? ip :''
+          return i
+        })
       })
     },
 
