@@ -27,10 +27,7 @@
     <div class="DmData-table">
       <slot />
     </div>
-    <div
-      v-if="showPagination"
-      class="DmData-pagination"
-    >
+    <div v-if="showPagination" class="DmData-pagination">
       <div class="pull-left DmData-pagination__desc">
         <slot name="pagination-desc" />
       </div>
@@ -57,7 +54,7 @@ export default {
     pageSizes: {
       type: Array,
       default() {
-        return [10, 20, 50, 100]
+        return [10, 20, 50, 100];
       }
     },
     showPagination: {
@@ -81,29 +78,29 @@ export default {
         per_page: 10,
         total: 0
       }
-    }
+    };
   },
 
   mounted() {
-    if (this.autoInit) this.handleInit()
+    if (this.autoInit) this.handleInit();
   },
 
   methods: {
     handleInit() {
-      const pagination = this.pagePagination
+      const pagination = this.pagePagination;
       if (pagination && this.$route.meta.rememberPage) {
-        const { page, per_page = 10, total } = pagination
-        this.pagination.page = page
-        this.pagination.per_page = per_page
-        this.pagination.total = total
+        const { page, per_page = 10, total } = pagination;
+        this.pagination.page = page;
+        this.pagination.per_page = per_page;
+        this.pagination.total = total;
       }
-      const { page, per_page } = this.pagination
+      const { page, per_page } = this.pagination;
       this.$emit('init', {
         page,
-        per_page,
-        size: per_page,
-        pagesize: per_page
-      })
+        // per_page,
+        // size: per_page,
+        page_size: per_page
+      });
     },
 
     getPagination() {
@@ -111,45 +108,45 @@ export default {
         ...this.pagination,
         pagesize: this.pagination.per_page,
         size: this.pagination.per_page
-      }
+      };
     },
 
     getParams() {
-      return this.pagination
+      return this.pagination;
     },
 
     init(options) {
-      let { total = 0 } = options
-      if (isNaN(total)) total = 0
-      this.pagination.total = total
+      let { total = 0 } = options;
+      if (isNaN(total)) total = 0;
+      this.pagination.total = total;
     },
 
     initPage() {
-      this.handleCurrentChange(1)
+      this.handleCurrentChange(1);
     },
 
     handleSizeChange(per_page) {
-      this.pagination.per_page = per_page
-      this.pagination.page = 1
-      this.savePageNumber()
-      this.handleInit()
+      this.pagination.per_page = per_page;
+      this.pagination.page = 1;
+      this.savePageNumber();
+      this.handleInit();
     },
 
     handleCurrentChange(page) {
-      this.pagination.page = page
-      this.savePageNumber()
-      this.handleInit()
+      this.pagination.page = page;
+      this.savePageNumber();
+      this.handleInit();
     },
 
     savePageNumber() {
-      const { meta, name } = this.$route
+      const { meta, name } = this.$route;
       if (meta.rememberPage) {
         this.SET_PAGINATION({
           name,
           ...this.pagination
-        })
+        });
       }
     }
   }
-}
+};
 </script>
