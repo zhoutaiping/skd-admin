@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
@@ -9,7 +14,7 @@
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
+        </el-tooltip>-->
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
@@ -17,10 +22,10 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item >{{ name }}</el-dropdown-item>
-          <el-dropdown-item v-if="is_console" @click.native="handleOpen('register')"  divided>创建网络</el-dropdown-item>
+          <el-dropdown-item>{{ name }}</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('register')" divided>创建网络</el-dropdown-item>
           <el-dropdown-item v-if="is_console" @click.native="handleOpen('network')" divided>网络切换</el-dropdown-item>
-          <el-dropdown-item  @click.native="logout" divided>
+          <el-dropdown-item @click.native="logout" divided>
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -30,13 +35,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
-import th from '@/assets/images/th.png'
-import th_default from '@/assets/images/th.jpg'
-import defaultSettings from '@/settings'
+import { mapGetters } from 'vuex';
+import Breadcrumb from '@/components/Breadcrumb';
+import Hamburger from '@/components/Hamburger';
+import Screenfull from '@/components/Screenfull';
+import th from '@/assets/images/th.png';
+import th_default from '@/assets/images/th.jpg';
+import defaultSettings from '@/settings';
 export default {
   components: {
     Breadcrumb,
@@ -46,43 +51,50 @@ export default {
   data() {
     return {
       th_default
-    }
+    };
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-      'name',
-      'device'
-    ]),
+    ...mapGetters(['sidebar', 'avatar', 'name', 'device']),
     is_console() {
-      return window.location.host === 'console.axisnow.xyz'
+      return true; //window.location.host === 'console.axisnow.xyz'
     },
     account_th() {
-      return this.avatar || th_default
+      return this.avatar || th_default;
     }
   },
   methods: {
     handleOpen(type) {
-      if(!type) return
-      const Token = localStorage.getItem('token')
-      if (process.env.NODE_ENV === 'development'){
-        this.$router.push(type)
-        return
+      if (!type) return;
+      const Token = localStorage.getItem('token');
+      if (process.env.NODE_ENV === 'development') {
+        this.$router.push(type);
+        return;
       }
-      window.location.replace("https://console.axisnow.xyz/"+ type + '?token=' + Token,'_self');
+      window.location.replace(
+        'https://console.axisnow.xyz/' +
+          type +
+          '?token=' +
+          Token +
+          '&setting=true',
+        '_self'
+      );
     },
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch('app/toggleSideBar');
     },
     logout() {
-      this.$store.dispatch('user/logout').then(res =>{
-        if (defaultSettings.signOutUrl) window.location.replace(defaultSettings.signOutUrl + '?redirect_url=' + 'https://www.axisnow.xyz','_self');
-      })
-      
+      this.$store.dispatch('user/logout').then(res => {
+        if (defaultSettings.signOutUrl)
+          window.location.replace(
+            defaultSettings.signOutUrl +
+              '?redirect_url=' +
+              'https://www.axisnow.xyz',
+            '_self'
+          );
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -91,18 +103,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -134,10 +146,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

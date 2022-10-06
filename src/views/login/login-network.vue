@@ -18,7 +18,7 @@
                     登录一个已存在的网络
                     <!-- <p class="desc-box">
                           告诉我们一些您的信息，以完成您的账号注册
-                        </p> -->
+                    </p>-->
                   </h3>
                 </div>
                 <div
@@ -28,36 +28,27 @@
                   style="position: relative; display: flex"
                 >
                   <div style="width: 450px; padding: 5px 20px">
-                    <span class="name-box">{{ tenant.tenant_name }}</span
-                    ><br />
-                    <span class="url-box">
-                      {{ tenant.tenant_prefix }}{{ tenant_prefix_url }}</span
-                    >
+                    <span class="name-box">{{ tenant.tenant_name }}</span>
+                    <br />
+                    <span class="url-box">{{ tenant.tenant_prefix }}{{ tenant_prefix_url }}</span>
                   </div>
                   <el-button
                     size="mini"
                     type="primary"
                     style="position: absolute; right: 7px; top: 13px"
                     @click="handleUrl(tenant.tenant_prefix, tenant.tenant_id)"
-                    >登录</el-button
-                  >
+                  >登录</el-button>
                 </div>
                 <el-divider>or</el-divider>
-                <div
-                  class="desc-box"
-                  style="margin-bottom: 25px; color: #3d3d3d"
-                >
+                <div class="desc-box" style="margin-bottom: 25px; color: #3d3d3d">
                   <!-- 新用户?<br /> -->
                   <router-link
                     :to="{
                       path: '/register',
                       query: {
-                        token: Token,
                       },
                     }"
-                  >
-                    创建一个新的网络-->
-                  </router-link>
+                  >创建一个新的网络--></router-link>
                 </div>
               </el-form>
             </div>
@@ -69,96 +60,108 @@
 </template>
     
 <script>
-import defaultSettings from "@/settings";
+import defaultSettings from '@/settings';
 function getQueryVariable(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
   var r = window.location.search.substr(1).match(reg);
   if (r != null) return unescape(r[2]);
   return null;
 }
 export default {
-  name: "Login",
+  name: 'Login',
   components: {},
   data() {
     const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
       tenant_prefix_url: tenant_prefix_url,
-      routes:['/','register','network'],
+      routes: ['/', 'register', 'network'],
       hostList: ['console.axisnow.xyz'],
       loginForm: {
-        email: "",
-        nick_name: "",
-        tenant_list: [],
+        email: '',
+        nick_name: '',
+        tenant_list: []
       },
       loginRules: {
         nick_name: [],
-        email: [],
+        email: []
       },
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {},
+      otherQuery: {}
       // Token: "",
     };
   },
   computed: {
     userinfo() {
-      return JSON.parse(localStorage.getItem('userinfo')) || this.$store.state.user.userinfo || {};
+      return (
+        JSON.parse(localStorage.getItem('userinfo')) ||
+        this.$store.state.user.userinfo ||
+        {}
+      );
     },
     Token() {
-      return localStorage.getItem("token") || getQueryVariable("token");
-    },
+      return localStorage.getItem('token') || getQueryVariable('token');
+    }
   },
   watch: {
     userinfo: {
       handler(val) {
-        this.init()
+        this.init();
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   created() {
-    this.$nextTick(() =>{
-      if(this.Token) {
-        this.init()
+    this.$nextTick(() => {
+      if (this.Token) {
+        this.init();
       }
-    })
+    });
   },
   methods: {
     init() {
-      const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
-      if(Object.keys(user_info).length) {
+      const user_info = Object.keys(this.userinfo).length
+        ? this.userinfo
+        : JSON.parse(localStorage.getItem('userinfo')) || {};
+      if (Object.keys(user_info).length) {
         this.loginForm = Object.assign(
-          { email: "", nick_name: "" },
+          { email: '', nick_name: '' },
           { ...user_info }
         );
+        const tenant_list = user_info.tenant_list || [];
+        if (!tenant_list.length) {
+          this.$router.push('/register');
+        }
       } else {
-        this.$store.dispatch('user/getUserInfo',this.Token)
+        this.$store.dispatch('user/getUserInfo', this.Token);
       }
     },
-   
+
     handleUrl(url, tenant_id) {
       if (url) {
         const URL = url + this.tenant_prefix_url;
-        const token = getQueryVariable('token') || localStorage.getItem('token') || '';
+        const token =
+          getQueryVariable('token') || localStorage.getItem('token') || '';
         if (window.location.host !== URL) {
-          if(process.env.NODE_ENV === 'development') {
-            localStorage.setItem('tenant_id',tenant_id)
-            this.$router.push('/dashboard')
-          }else {
-            if(!token) return
+          if (process.env.NODE_ENV === 'development') {
+            localStorage.setItem('tenant_id', tenant_id);
+            this.$router.push('/dashboard');
+          } else {
+            if (!token) return;
             this.$store.dispatch('user/logout').then(res => {
-              window.location.replace(window.location.href = "https://" + URL + "/?token=" + token);
-            })
+              window.location.replace(
+                (window.location.href = 'https://' + URL + '/?token=' + token)
+              );
+            });
           }
         } else {
-          this.$router.push("/?token=" + this.Token);
+          this.$router.push('/?token=' + this.Token);
         }
       }
     }
-   
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -217,7 +220,7 @@ export default {
     align-items: center;
   }
   div:before {
-    content: "";
+    content: '';
     display: inline-block;
     width: 15px;
     height: 15px;
@@ -411,7 +414,7 @@ $light_gray: #eee;
   font-weight: bold;
 }
 .desc-box {
-  font-family: "Roboto-Regular";
+  font-family: 'Roboto-Regular';
   font-size: 14px;
   font-weight: normal;
   letter-spacing: 0em;

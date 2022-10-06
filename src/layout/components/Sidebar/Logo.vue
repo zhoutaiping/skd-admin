@@ -2,18 +2,19 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/dashboard">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
+        <h1 v-else class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
+        <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
+import defaulSetting from '@/settings';
 export default {
   name: 'SidebarLogo',
   props: {
@@ -24,11 +25,11 @@ export default {
   },
   data() {
     return {
-      title: 'SDK APP Admin',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
-    }
+      title: defaulSetting.title,
+      logo: defaulSetting.logo
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -55,8 +56,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       vertical-align: middle;
       margin-right: 12px;
     }
@@ -65,7 +66,6 @@ export default {
       display: inline-block;
       margin: 0;
       //color: #fff;
-      color: #1664ff;
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
@@ -76,6 +76,8 @@ export default {
 
   &.collapse {
     .sidebar-logo {
+      width: 40px;
+      height: 40px;
       margin-right: 0px;
     }
   }

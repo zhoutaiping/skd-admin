@@ -1,5 +1,18 @@
+function title() {
+  let title = "SDK Design";
+  // if(localStorage.getItem('userinfo') && localStorage.getItem('tanant_id')) {
+  //   const user_info = JSON.parse(localStorage.getItem('userinfo'))
+  //   const tanant = user_info.tanant_list.find(i => Number(i.tanant_id )=== Number(localStorage.getItem('tanant_id')))
+  //   if( tanant) {
+  //     title = tanant.tanant_name + ''
+  //   }
+  // }
+
+  return title;
+}
+
 module.exports = {
-  title: "SDK APP Admin",
+  title: title(),
   logo: "",
 
   /**
@@ -32,6 +45,7 @@ module.exports = {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
+  logo: "https://auth.axisnow.xyz/img/logo/logo-02.png",
   tenant_prefix_url: ".axisnow.xyz",
   errorLog: "production",
   expireUrl: "https://account.axisnow.xyz/user/sign-in",

@@ -54,7 +54,7 @@
     align-items: center;
   }
   div:before {
-    content: "";
+    content: '';
     display: inline-block;
     width: 15px;
     height: 15px;
@@ -138,9 +138,7 @@
                 <div class="title-container">
                   <h3 class="title">
                     创建您的新网络命名
-                    <p class="desc-box">
-                      网络是虚拟环境，您可以在其中管理对各个位置资源的远程访问
-                    </p>
+                    <p class="desc-box">网络是虚拟环境，您可以在其中管理对各个位置资源的远程访问</p>
                   </h3>
                 </div>
 
@@ -168,16 +166,23 @@
                     @keyup.enter.native="handleLogin"
                     style="border-radius: 8px"
                   >
-                  <template slot="append">{{tenant_prefix_url}}</template>
+                    <template slot="append">{{tenant_prefix_url}}</template>
                   </el-input>
                 </el-form-item>
-                <div v-show="form.tenant_list &&form.tenant_list.length" class="desc-box" style="margin-bottom: 25px">
+                <div
+                  v-if="false"
+                  v-show="form.tenant_list &&form.tenant_list.length"
+                  class="desc-box"
+                  style="margin-bottom: 25px"
+                >
                   <!-- <span style="color:red">此团队名称已被占用。如果您想访问现有的andao网络</span><br/> -->
                   请在此处登录：
-                  <a @click="handleReplace(form.tenant_list[0].tenant_prefix)">{{form.tenant_list && form.tenant_list[0].tenant_prefix}} {{tenant_prefix_url}}</a>
+                  <a
+                    @click="handleReplace(form.tenant_list[0].tenant_prefix)"
+                  >{{form.tenant_list && form.tenant_list[0].tenant_prefix}} {{tenant_prefix_url}}</a>
                 </div>
                 <el-button
-                v-show="form.tenant_list && form.tenant_list.length"
+                  v-show="form.tenant_list && form.tenant_list.length"
                   :loading="loading"
                   type="primary"
                   style="
@@ -190,8 +195,7 @@
                     border-color: #EEEEEE;
                   "
                   @click.native.prevent="handleBack"
-                  >返回登录</el-button
-                >
+                >返回登录</el-button>
                 <el-button
                   :loading="loading"
                   type="primary"
@@ -204,8 +208,7 @@
                     float: right;
                   "
                   @click.native.prevent="handleLogin"
-                  >创建网络</el-button
-                >
+                >创建网络</el-button>
               </el-form>
             </div>
           </div>
@@ -217,39 +220,41 @@
     
 <script>
 function getQueryVariable(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
   var r = window.location.search.substr(1).match(reg);
   if (r != null) return unescape(r[2]);
   return null;
 }
-import defaultSettings from '@/settings'
+import defaultSettings from '@/settings';
 export default {
-  name: "Login",
+  name: 'Login',
   components: {},
   data() {
     const validateNickname = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请输入英文网络名称"));
+        callback(new Error('请输入英文网络名称'));
       } else {
         callback();
       }
     };
     const validateEmail = (rule, value, callback) => {
-      if (!value) callback(new Error("请输入网络地址"));
+      if (!value) callback(new Error('请输入网络地址'));
       else callback();
     };
-    const tenant_prefix_url = defaultSettings.tenant_prefix_url
+    const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
       tenant_prefix_url: tenant_prefix_url,
       form: {
-        tenant_prefix: "",
-        tenant_name: ""
+        tenant_prefix: '',
+        tenant_name: ''
       },
       loginRules: {
         tenant_name: [
-          { required: true, trigger: "blur", validator: validateNickname },
+          { required: true, trigger: 'blur', validator: validateNickname }
         ],
-        tenant_prefix: [{ required: true, trigger: "blur", validator: validateEmail }],
+        tenant_prefix: [
+          { required: true, trigger: 'blur', validator: validateEmail }
+        ]
       },
       capsTooltip: false,
       loading: false,
@@ -258,95 +263,107 @@ export default {
       otherQuery: {}
     };
   },
-  computed:{
+  computed: {
     userinfo() {
-      return JSON.parse(localStorage.getItem('userinfo')) || this.$store.state.user.userinfo || {};
+      return (
+        JSON.parse(localStorage.getItem('userinfo')) ||
+        this.$store.state.user.userinfo ||
+        {}
+      );
     },
     Token() {
-      return localStorage.getItem('token') || getQueryVariable('token')
-    },
+      return localStorage.getItem('token') || getQueryVariable('token');
+    }
   },
   watch: {
     userinfo: {
       handler(val) {
-        this.init()
+        this.init();
       },
-      deep: true,
+      deep: true
     }
   },
   mounted() {
-    this.$nextTick(() =>{
-      this.init()
-    })
+    this.$nextTick(() => {
+      this.init();
+    });
   },
   methods: {
     init() {
-      const user_info = Object.keys(this.userinfo).length ? this.userinfo : JSON.parse(localStorage.getItem('userinfo')) || {}
-      if(Object.keys(user_info).length) {
-        this.loginForm = Object.assign(
-          { email: "", nick_name: "" },
+      const user_info = Object.keys(this.userinfo).length
+        ? this.userinfo
+        : JSON.parse(localStorage.getItem('userinfo')) || {};
+      if (Object.keys(user_info).length) {
+        this.form = Object.assign(
+          { email: '', nick_name: '' },
           {
             ...user_info
           }
         );
       } else {
-        this.$store.dispatch('user/getUserInfo',this.Token)
+        this.$store.dispatch('user/getUserInfo', this.Token);
       }
     },
     handleReplace(url) {
       window.location.replace(
-        window.location.protocol + "//" +  url + this.tenant_prefix_url + "/?token=" + this.Token
+        window.location.protocol +
+          '//' +
+          url +
+          this.tenant_prefix_url +
+          '/?token=' +
+          this.Token
       );
     },
     checkCapslock(e) {
       const { key } = e;
-      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
+      this.capsTooltip = key && key.length === 1 && key >= 'A' && key <= 'Z';
     },
     showPwd() {
       this.$nextTick(() => {
         this.$refs.nick_name.focus();
       });
     },
-    
-    handleBack(){
-      this.$router.push({ path: '/network'})
+
+    handleBack() {
+      this.$router.push({ path: '/network' });
     },
     handleLogin() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true;
           const params = {
             tenant_name: this.form.tenant_name,
             id: this.form.id,
             tenant_prefix: this.form.tenant_prefix,
-            token: this.Token,
+            token: this.Token
           };
-          this.FetchAccount.post("/user/tenant/add", params)
-            .then((res) => {
-              console.log(res)
-              this.$message.success("创建成功!");
+          this.FetchAccount.post('/user/tenant/add', params)
+            .then(res => {
+              console.log(res);
+              this.$message.success('创建成功!');
               const URL = res.tenant_prefix + this.tenant_prefix_url;
               this.loading = false;
-              window.location=window.location.protocol + "//" + URL + "/?token=" + this.Token;
+              window.location =
+                window.location.protocol + '//' + URL + '/?token=' + this.Token;
             })
             .catch(() => {
               this.loading = false;
             });
         } else {
-          console.log("error submit!!");
+          console.log('error submit!!');
           return false;
         }
       });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
+        if (cur !== 'redirect') {
           acc[cur] = query[cur];
         }
         return acc;
       }, {});
     }
-  },
+  }
 };
 </script>
     
@@ -480,7 +497,7 @@ $light_gray: #eee;
   font-weight: bold;
 }
 .desc-box {
-  font-family: "Roboto-Regular";
+  font-family: 'Roboto-Regular';
   font-size: 14px;
   font-weight: normal;
   letter-spacing: 0em;
