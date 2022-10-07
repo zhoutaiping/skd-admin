@@ -278,7 +278,7 @@ export default {
   watch: {
     userinfo: {
       handler(val) {
-        this.init();
+        // this.init();
       },
       deep: true
     }
@@ -290,19 +290,28 @@ export default {
   },
   methods: {
     init() {
-      const user_info = Object.keys(this.userinfo).length
-        ? this.userinfo
-        : JSON.parse(localStorage.getItem('userinfo')) || {};
-      if (Object.keys(user_info).length) {
-        this.form = Object.assign(
-          { email: '', nick_name: '' },
-          {
-            ...user_info
-          }
-        );
-      } else {
-        this.$store.dispatch('user/getUserInfo', this.Token);
-      }
+      this.$store.dispatch('user/getUserInfo', this.Token).then(res => {
+        this.form = Object.assign({ email: '', nick_name: '' }, { ...res });
+
+        const tenant_list = res.tenant_list || [];
+        if (!tenant_list.length) {
+          this.$message.warning('网络不存在，请创建！');
+          this.$router.push('/register');
+        }
+      });
+      // const user_info = Object.keys(this.userinfo).length
+      //   ? this.userinfo
+      //   : JSON.parse(localStorage.getItem('userinfo')) || {};
+      // if (Object.keys(user_info).length) {
+      //   this.form = Object.assign(
+      //     { email: '', nick_name: '' },
+      //     {
+      //       ...user_info
+      //     }
+      //   );
+      // } else {
+      //   this.$store.dispatch('user/getUserInfo', this.Token);
+      // }
     },
     handleReplace(url) {
       window.location.replace(

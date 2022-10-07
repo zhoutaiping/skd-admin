@@ -40,59 +40,72 @@ router.beforeEach(async (to, from, next) => {
       const user_info = await store.dispatch("user/getUserInfo", token);
       await store.dispatch("user/verifyToken", token);
       await store.dispatch("user/getInfo");
-      if (getQueryVariable("setting")) {
-        next();
-      }
       setRoute();
-      if (user_info && user_info.tenant_list && user_info.tenant_list.length) {
-        if (user_info.tenant_list && user_info.tenant_list.length === 1) {
-          const tenant = user_info.tenant_list[0];
-          if (window.location.host !== "console.axisnow.xyz") {
-            localStorage.setItem("tenant_id", tenant.tenant_id);
-            window.history.pushState(null, null, "/dashboard");
-            // next("/dashboard");
-            next();
-          } else {
-            store.dispatch("user/logout").then((res) => {
-              window.location.replace(
-                "https://" +
-                  tenant.tenant_prefix +
-                  defaultSettings.tenant_prefix_url +
-                  "/?token=" +
-                  token
-              );
-            });
-            next();
-          }
-        } else if (user_info.tenant_list && user_info.tenant_list.length > 1) {
-          const find = user_info.tenant_list.find(
-            (i) =>
-              i.tenant_prefix + defaultSettings.tenant_prefix_url ===
-              window.location.host
-          );
-          if (window.location.host !== "console.axisnow.xyz" && find) {
-            localStorage.setItem("tenant_id", find.tenant_id);
-            next("/dashboard");
-          } else {
-            if (to.path) {
-              next(to.path);
+      console.log("setting------", getQueryVariable("setting"));
+      if (
+        getQueryVariable("setting") === true ||
+        getQueryVariable("setting") === "true"
+      ) {
+        next(to.path);
+        NProgress.done();
+      } else {
+        if (
+          user_info &&
+          user_info.tenant_list &&
+          user_info.tenant_list.length
+        ) {
+          if (user_info.tenant_list && user_info.tenant_list.length === 1) {
+            const tenant = user_info.tenant_list[0];
+            if (window.location.host !== "console.axisnow.xyz") {
+              localStorage.setItem("tenant_id", tenant.tenant_id);
+              window.history.pushState(null, null, "/dashboard");
+              // next("/dashboard");
+              next();
             } else {
-              next("/network");
+              store.dispatch("user/logout").then((res) => {
+                window.location.replace(
+                  "https://" +
+                    tenant.tenant_prefix +
+                    defaultSettings.tenant_prefix_url +
+                    "/?token=" +
+                    token
+                );
+              });
+              next();
+            }
+          } else if (
+            user_info.tenant_list &&
+            user_info.tenant_list.length > 1
+          ) {
+            const find = user_info.tenant_list.find(
+              (i) =>
+                i.tenant_prefix + defaultSettings.tenant_prefix_url ===
+                window.location.host
+            );
+            if (window.location.host !== "console.axisnow.xyz" && find) {
+              localStorage.setItem("tenant_id", find.tenant_id);
+              next("/dashboard");
+            } else {
+              if (to.path) {
+                next(to.path);
+              } else {
+                next("/network");
+              }
+            }
+          } else if (
+            user_info.tenant_list &&
+            user_info.tenant_list.length === 0
+          ) {
+            if (window.location.host === "console.axisnow.xyz") {
+              next("/register");
+            } else {
+              // next('dashboard')
+              next({ ...to, replace: true });
             }
           }
-        } else if (
-          user_info.tenant_list &&
-          user_info.tenant_list.length === 0
-        ) {
-          if (window.location.host === "console.axisnow.xyz") {
-            next("/register");
-          } else {
-            // next('dashboard')
-            next({ ...to, replace: true });
-          }
+        } else {
+          next("/register");
         }
-      } else {
-        next("/register");
       }
     } else {
       if (whiteList.indexOf(to.path) !== -1) {

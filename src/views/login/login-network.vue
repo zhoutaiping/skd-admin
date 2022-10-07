@@ -6,6 +6,7 @@
           <div class="arco-spin-children">
             <div class="index-module__form">
               <el-form
+                v-loading="loading"
                 ref="loginForm"
                 :model="loginForm"
                 :rules="loginRules"
@@ -108,12 +109,12 @@ export default {
   watch: {
     userinfo: {
       handler(val) {
-        this.init();
+        // this.init();
       },
       deep: true
     }
   },
-  created() {
+  mounted() {
     this.$nextTick(() => {
       if (this.Token) {
         this.init();
@@ -122,21 +123,25 @@ export default {
   },
   methods: {
     init() {
-      const user_info = Object.keys(this.userinfo).length
-        ? this.userinfo
-        : JSON.parse(localStorage.getItem('userinfo')) || {};
-      if (Object.keys(user_info).length) {
-        this.loginForm = Object.assign(
-          { email: '', nick_name: '' },
-          { ...user_info }
-        );
-        const tenant_list = user_info.tenant_list || [];
-        if (!tenant_list.length) {
-          this.$router.push('/register');
-        }
-      } else {
-        this.$store.dispatch('user/getUserInfo', this.Token);
-      }
+      this.loading = true;
+      this.$store
+        .dispatch('user/getUserInfo', this.Token)
+        .then(res => {
+          this.loading = false;
+          this.loginForm = Object.assign(
+            { email: '', nick_name: '' },
+            { ...res }
+          );
+
+          const tenant_list = res.tenant_list || [];
+          if (!tenant_list.length) {
+            this.$message.warning('网络不存在，请创建！');
+            this.$router.push('/register');
+          }
+        })
+        .catch(e => {
+          this.loading = false;
+        });
     },
 
     handleUrl(url, tenant_id) {
