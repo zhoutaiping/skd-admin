@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /* Router Modules */
 
@@ -36,48 +36,47 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/register',
-    component: () => import('@/views/login/register'),
-    hidden: true
+    path: "/register",
+    component: () => import("@/views/login/register"),
+    hidden: true,
   },
   {
-    path: '/network',
-    component: () => import('@/views/login/login-network'),
-    hidden: true
+    path: "/network",
+    component: () => import("@/views/login/login-network"),
+    hidden: true,
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/error-page/404"),
+    hidden: true,
   },
   {
-    path: '/icon',
+    path: "/icon",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
+        path: "index",
+        component: () => import("@/views/icons/index"),
+        name: "Icons",
+        meta: { title: "Icons", icon: "icon", noCache: true },
+      },
+    ],
   },
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: '/dashboard',
+    redirect: "/dashboard",
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  }
-
-]
+        path: "dashboard",
+        component: () => import("@/views/dashboard/index"),
+        name: "Dashboard",
+        meta: { title: "首页", icon: "shouye", affix: true },
+      },
+    ],
+  },
+];
 
 /**
  * asyncRoutes
@@ -85,101 +84,108 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/sdk',
+    path: "/sdk",
     component: Layout,
     alwaysShow: true,
-    meta: { title: 'SDK管理', icon: 'tab' },
-    redirect: '/app-list',
+    meta: { title: "SDK管理", icon: "yingyong" },
+    redirect: "/app-list",
     children: [
       {
-        path: 'app-list',
-        component: () => import('@/views/sdk/views/MealList/index'),
-        name: 'SDK_app_list',
-        meta: { title: '应用列表', icon: 'component', noCache: true }
+        path: "app-list",
+        component: () => import("@/views/sdk/views/MealList/index"),
+        name: "SDK_app_list",
+        meta: { title: "应用列表", icon: "yingyong", noCache: true },
       },
       {
-        path: 'meal-open',
+        path: "meal-open",
         hidden: true,
-        component: () => import('@/views/sdk/views/MealList/Add'),
-        name: 'SDK_meal_open',
-        meta: { title: '服务开通-AccessKey', icon: 'component', noCache: true, back: `SDK_app_list` }
+        component: () => import("@/views/sdk/views/MealList/Add"),
+        name: "SDK_meal_open",
+        meta: {
+          title: "服务开通-AccessKey",
+          icon: "component",
+          noCache: true,
+          back: `SDK_app_list`,
+        },
       },
       // 业务列表
       {
-        path: 'business/:id',
+        path: "business/:id",
         name: `sdk_business__id`,
         hidden: true,
-        component: () => import('@/views/sdk/views/Business/Detail'),
+        component: () => import("@/views/sdk/views/Business/Detail"),
         redirect: {
-          name: `sdk_business__id__applicationAcceleration`
+          name: `sdk_business__id__applicationAcceleration`,
         },
-        meta: { title: '控制台' },
+        meta: { title: "控制台" },
         children: [
           {
-            path: 'applicationSecurity',
+            path: "applicationSecurity",
             name: `sdk_business__id__applicationSecurity`,
-            component: () => import('@/views/sdk/views/Business/ApplicationSecurity/index'),
-            meta: { title: '应用安全', back: `SDK_app_list` }
+            component: () =>
+              import("@/views/sdk/views/Business/ApplicationSecurity/index"),
+            meta: { title: "应用安全", back: `SDK_app_list` },
           },
           {
-            path: 'applicationAcceleration',
+            path: "applicationAcceleration",
             name: `sdk_business__id__applicationAcceleration`,
-            component: () => import('@/views/sdk/views/Business/ApplicationAcceleration'),
-            meta: { title: '应用加速', back: `SDK_app_list` }
+            component: () =>
+              import("@/views/sdk/views/Business/ApplicationAcceleration"),
+            meta: { title: "应用加速", back: `SDK_app_list` },
           },
           {
-            path: 'businessSecurity',
+            path: "businessSecurity",
             name: `sdk_business__id__BusinessSecurity`,
-            component: () => import('@/views/sdk/views/Business/BusinessSecurity'),
-            meta: { title: '业务安全', back: `SDK_app_list` }
+            component: () =>
+              import("@/views/sdk/views/Business/BusinessSecurity"),
+            meta: { title: "业务安全", back: `SDK_app_list` },
           },
           {
-            path: 'networkSecurity',
+            path: "networkSecurity",
             name: `sdk_business__id__NetworkSecurity`,
-            component: () => import('@/views/sdk/views/Business/NetworkSecurity'),
-            meta: { title: '网络安全', back: `SDK_app_list` }
-          }
-        ]
+            component: () =>
+              import("@/views/sdk/views/Business/NetworkSecurity"),
+            meta: { title: "网络安全", back: `SDK_app_list` },
+          },
+        ],
       },
       {
-        path: 'app-list/:id',
+        path: "app-list/:id",
         name: `SDK_app_id`,
         hidden: true,
-        component: () => import('@/views/sdk/views/MealList/Detail'),
-        meta: { title: '应用管理', back: `SDK_app_list` }
+        component: () => import("@/views/sdk/views/MealList/Detail"),
+        meta: { title: "应用管理", back: `SDK_app_list` },
       },
       {
-        path: 'explorer/:id',
+        path: "explorer/:id",
         name: `sdk_explorer`,
         hidden: true,
-        component: () => import('@/views/sdk/views/Explorer/index'),
+        component: () => import("@/views/sdk/views/Explorer/index"),
         redirect: {
-          name: `sdk_explorer__manage`
+          name: `sdk_explorer__manage`,
         },
         children: [
           {
-            path: 'manage',
+            path: "manage",
             name: `sdk_explorer__manage`,
-            component: () => import('@/views/sdk/views/Explorer/Manage'),
-            meta: { title: '资源管理', back: `SDK_app_list` }
+            component: () => import("@/views/sdk/views/Explorer/Manage"),
+            meta: { title: "资源管理", back: `SDK_app_list` },
           },
           {
-            path: 'logs',
+            path: "logs",
             name: `sdk_explorer__logs`,
-            component: () => import('@/views/sdk/views/Explorer/Logs'),
-            meta: { title: '资源分配日志', back: `SDK_app_list` }
-          }
-        ]
+            component: () => import("@/views/sdk/views/Explorer/Logs"),
+            meta: { title: "资源分配日志", back: `SDK_app_list` },
+          },
+        ],
       },
       {
-        path: 'report',
+        path: "report",
         name: `sdk.router.report`,
-        component: () => import('@/views/sdk/views/Report/index'),
-        redirect: {
-          name: `sdk.router.report__visit`
-        },
+        component: () => import("@/views/sdk/views/Report/index"),
+        redirect: "visit",
         alwaysShow: true,
-        meta: { title: '数据报表',icon: 'component' },
+        meta: { title: "数据报表", icon: "fenxi" },
         children: [
           // {
           //   path: 'cc',
@@ -188,10 +194,11 @@ export const asyncRoutes = [
           //   meta: { title: 'CC攻击统计' }
           // },
           {
-            path: 'visit',
+            path: "visit",
+            // hidden: true,
             name: `sdk.router.report__visit`,
-            component: () => import('@/views/sdk/views/Report/Visit'),
-            meta: { title: '访问分析'  }
+            component: () => import("@/views/sdk/views/Report/Visit"),
+            meta: { title: "访问分析" },
           },
           // {
           //   path: 'waf',
@@ -205,33 +212,34 @@ export const asyncRoutes = [
           //   component: () => import('@/views/sdk/views/Report/Waf/Detail'),
           //   meta: { title: '业务安全分析' }
           // }
-        ]
+        ],
       },
       {
-        path: 'logs',
+        path: "logs",
         name: `SDK_Log`,
-        component: () => import('@/views/sdk/views/Log/index'),
-        meta: { title: '操作记录', icon: 'component' }
-      }
-    ]
+        component: () => import("@/views/sdk/views/Log/index"),
+        meta: { title: "操作记录", icon: "cz-jl" },
+      },
+    ],
   },
-  
+
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  { path: "*", redirect: "/404", hidden: true },
+];
 
-const createRouter = () => new Router({
-  mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    mode: "history", // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;

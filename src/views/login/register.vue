@@ -158,7 +158,7 @@
                   <el-input
                     ref="tenant_prefix"
                     v-model="form.tenant_prefix"
-                    placeholder="网络地址"
+                    placeholder="网络地址(英文字母须小写)"
                     name="tenant_prefix"
                     tabindex="2"
                     autocomplete="on"
@@ -343,14 +343,15 @@ export default {
           const params = {
             tenant_name: this.form.tenant_name,
             id: this.form.id,
-            tenant_prefix: this.form.tenant_prefix,
+            tenant_prefix: this.form.tenant_prefix.toLowerCase(),
             token: this.Token
           };
           this.FetchAccount.post('/user/tenant/add', params)
             .then(res => {
               console.log(res);
               this.$message.success('创建成功!');
-              const URL = res.tenant_prefix + this.tenant_prefix_url;
+              const URL =
+                res.tenant_prefix.toLowerCase() + this.tenant_prefix_url;
               this.loading = false;
               window.location =
                 window.location.protocol + '//' + URL + '/?token=' + this.Token;
