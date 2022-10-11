@@ -11,13 +11,7 @@
       已选择：
       <ColumnListMore v-model="options.listView" />
     </DmAlert>
-    <el-form
-      ref="Form"
-      :model="form"
-      :rules="rules"
-      label-position="right"
-      label-width="150px"
-    >
+    <el-form ref="Form" :model="form" :rules="rules" label-position="right" label-width="150px">
       <el-form-item
         v-if="form.protocol === 1 && (options.batch === false || (options.batch === true && options.mode==='Create'))"
         prop="domain"
@@ -30,10 +24,7 @@
           type="textarea"
         />
       </el-form-item>
-      <el-form-item
-        prop="port"
-        label="转发端口"
-      >
+      <el-form-item prop="port" label="转发端口">
         <el-input
           v-if="options.batch"
           v-model="form.port"
@@ -42,54 +33,28 @@
           placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加1000条）"
           style="width: 280px"
         />
-        <el-input
-          v-else
-          v-model="form.port"
-          placeholder="端口"
-          style="width: 280px"
-        />
+        <el-input v-else v-model="form.port" placeholder="端口" style="width: 280px" />
       </el-form-item>
       <el-form-item label="负载均衡模式">
-        <yd-form-radio
-          v-model="form.load_balance_type"
-          :radios="Label.loading"
-        />
+        <yd-form-radio v-model="form.load_balance_type" :radios="Label.loading" />
       </el-form-item>
       <el-form-item label="备注">
-        <el-input
-          v-model="form.remark"
-          placeholder="备注"
-          type="textarea"
-          style="width: 280px"
-        />
+        <el-input v-model="form.remark" placeholder="备注" type="textarea" style="width: 280px" />
       </el-form-item>
       <el-form-item label="源类型">
-        <yd-form-radio-button
-          v-model="form.source_type"
-          :radios="Label.sourceType"
-        />
+        <yd-form-radio-button v-model="form.source_type" :radios="Label.sourceType" />
       </el-form-item>
       <el-form-item label="源配置">
-        <TableSourceIP
-          ref="TableSourceIP"
-          :source-type="form.source_type"
-        />
+        <TableSourceIP ref="TableSourceIP" :source-type="form.source_type" />
       </el-form-item>
       <!-- 加速通道 -->
       <template v-if="packageChannelList.length > 0">
         <el-form-item>
-          <el-checkbox
-            v-model="form.channel_status"
-            :true-label="1"
-            :false-label="0"
-          >启用加速通道</el-checkbox>
+          <el-checkbox v-model="form.channel_status" :true-label="1" :false-label="0">启用加速通道</el-checkbox>
         </el-form-item>
         <template v-if="form.channel_status === 1">
           <el-form-item label="加速通道负载均衡模式">
-            <yd-form-radio
-              v-model="form.channel_loading"
-              :radios="Label.loading"
-            />
+            <yd-form-radio v-model="form.channel_loading" :radios="Label.loading" />
           </el-form-item>
           <el-form-item label="加速通道">
             <TableChannel ref="TableChannel" />
@@ -101,12 +66,12 @@
 </template>
 
 <script>
-import createDialog from '@/utils/createDialog'
-import ColumnListMore from '@/components/Column/ColumnListMore'
-import TableSourceIP from './components/TableSourceIP'
-import TableChannel from './components/TableChannel'
-import packagesMixins from '../../../mixins/packages'
-
+import createDialog from '@/utils/createDialog';
+import ColumnListMore from '@/components/Column/ColumnListMore';
+import TableSourceIP from './components/TableSourceIP';
+import TableChannel from './components/TableChannel';
+import packagesMixins from '../../../mixins/packages';
+import RULE from '@/utils/verify';
 const Label = {
   protocol: [
     {
@@ -138,13 +103,21 @@ const Label = {
       value: 2
     }
   ]
-}
+};
 
 function portValidator(rule, value, callback) {
-  value = value.toString().replace('，', ',')
-  value = value.toString().split(',')
-  if (value.length > 1000) callback(new Error('最多同时添加1000个端口'))
-  callback()
+  if (typeof value === 'string') {
+    value = [value];
+  } else {
+    if (!value[0]) callback(new Error('请填写'));
+  }
+
+  value.forEach(item => {
+    if (!RULE.port.test(item)) {
+      callback(new Error('端口不正确 1-65535'));
+    }
+  });
+  callback();
 }
 
 export default createDialog({
@@ -170,7 +143,7 @@ export default createDialog({
         remark: '',
         channel_status: 0,
         source_type: 1,
-        roule_id:'',
+        roule_id: '',
         source: [
           {
             ip: '',
@@ -185,51 +158,56 @@ export default createDialog({
           { required: true, message: '请输入端口', trigger: 'blur' },
           { validator: portValidator, trigger: 'blur' }
         ],
-        domain: [
-          {
-
-          }
-        ]
+        domain: [{}]
       }
-    }
+    };
   },
   computed: {
     user_id() {
-      return JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).id  || 0
+      return (
+        (JSON.parse(localStorage.getItem('user')) &&
+          JSON.parse(localStorage.getItem('user')).id) ||
+        0
+      );
     }
   },
   methods: {
     afterOpen(form) {
-      this.$nextTick(async() => {
-        this.$refs.Form.clearValidate()
-        const source_list = form.source_list
+      this.$nextTick(async () => {
+        this.$refs.Form.clearValidate();
+        const source_list = form.source_list;
         if (this.options.batch && this.options.mode === 'Edit') {
           source_list.forEach(_ => {
-            _.port = ''
-          })
+            _.port = '';
+          });
         }
 
-        this.$refs.TableSourceIP.setList(source_list || [])
-        if (form.channel_status) this.$refs.TableChannel.setList(JSON.parse(form.channel_source_list) || [])
-        this.loading = false
-      })
+        this.$refs.TableSourceIP.setList(source_list || []);
+        if (form.channel_status)
+          this.$refs.TableChannel.setList(
+            JSON.parse(form.channel_source_list) || []
+          );
+        this.loading = false;
+      });
     },
 
     async fetchSubmit(form) {
       this.$refs.Form.validate(valid => {
-        if (!valid) throw new Error()
-      })
+        if (!valid) throw new Error();
+      });
 
-      const source_list = await this.$refs.TableSourceIP.getList()
+      const source_list = await this.$refs.TableSourceIP.getList();
       form = {
         ...this.form,
         sdk_id: Number(this.$route.params.id),
         user_id: this.user_id,
         token: localStorage.getItem('token'),
-        source_list: JSON.stringify(source_list) ,
-        channel_source_list: form.channel_status ? JSON.stringify(source_list) : "[]"
-      }
-      
+        source_list: JSON.stringify(source_list),
+        channel_source_list: form.channel_status
+          ? JSON.stringify(source_list)
+          : '[]'
+      };
+
       try {
         // if (this.options.batch) {
         //   if (this.options.mode === 'Create') {
@@ -238,22 +216,22 @@ export default createDialog({
         //     await this.Fetch.post('V4/tjkd.app.domain.batch.edit', form)
         //   }
         // } else {
-          if (this.options.mode === 'Create') {
-            await this.FetchAccount.post('/sdk_rule/add', form)
-          } else {
-            await this.FetchAccount.post('/sdk_rule/modify', form)
-          }
+        if (this.options.mode === 'Create') {
+          await this.FetchAccount.post('/sdk_rule/add', form);
+        } else {
+          await this.FetchAccount.post('/sdk_rule/modify', form);
+        }
         // }
       } catch (e) {
-        throw new Error()
+        throw new Error();
       }
     },
 
     async handleSubmit() {
-      this.Message('ACTION_SUCCESS')
-      this.$emit('init')
-      this.handleClose()
+      this.Message('ACTION_SUCCESS');
+      this.$emit('init');
+      this.handleClose();
     }
   }
-})
+});
 </script>
