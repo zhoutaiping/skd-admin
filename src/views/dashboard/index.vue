@@ -7,7 +7,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import adminDashboard from './admin';
-import defaultSettings from '@/settings';
+import defaultSettings from '@public/settings';
 import { removeToken } from '@/utils/auth';
 function getQueryVariable(name) {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');

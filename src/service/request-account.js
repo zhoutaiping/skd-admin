@@ -5,7 +5,7 @@ import store from "@/store";
 import * as Lockr from "lockr";
 import router from "@/router";
 import { removeToken } from "@/utils/auth";
-import defaultSettings from "@/settings";
+import defaultSettings from "@public/settings";
 const service = axios.create({
   baseURL:
     process.env.NODE_ENV !== "development"

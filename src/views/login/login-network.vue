@@ -61,7 +61,7 @@
 </template>
     
 <script>
-import defaultSettings from '@/settings';
+import defaultSettings from '@public/settings';
 function getQueryVariable(name) {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
   var r = window.location.search.substr(1).match(reg);
@@ -72,9 +72,9 @@ export default {
   name: 'Login',
   components: {},
   data() {
-    const tenant_prefix_url = defaultSettings.tenant_prefix_url;
+    // const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
-      tenant_prefix_url: tenant_prefix_url,
+      // tenant_prefix_url: tenant_prefix_url,
       routes: ['/', 'register', 'network'],
       hostList: ['console.axisnow.xyz'],
       loginForm: {
@@ -101,6 +101,9 @@ export default {
         this.$store.state.user.userinfo ||
         {}
       );
+    },
+    tenant_prefix_url() {
+      return this.$store.getters.tenant_prefix_url;
     },
     Token() {
       return localStorage.getItem('token') || getQueryVariable('token');

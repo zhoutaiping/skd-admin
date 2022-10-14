@@ -5,7 +5,7 @@ import * as Lockr from "lockr";
 import store from "@/store";
 import router from "@/router";
 import { getToken } from "@/utils/auth";
-import defaultSettings from "@/settings";
+import defaultSettings from "@public/settings";
 const service = axios.create({
   // baseURL: '/api',
   timeout: 300000,

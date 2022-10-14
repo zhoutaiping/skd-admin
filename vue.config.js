@@ -1,6 +1,6 @@
 "use strict";
 const path = require("path");
-const defaultSettings = require("./src/settings.js");
+const defaultSettings = require("./public/settings.js");
 
 function resolve(dir) {
   return path.join(__dirname, dir);
@@ -43,14 +43,14 @@ module.exports = {
     port: port,
     open: true,
     proxy: {
-      "/account/": {
+      "/account": {
         // https://account.axisnow.xyz/user/sign-in-callback
         target: "https://account.axisnow.xyz", // 目标路径，别忘了加http和端口号
         pathRewrite: {
           "^/account": "/", // 重写路径
         },
       },
-      "/api/": {
+      "/api": {
         // https://account.axisnow.xyz/user/sign-in-callback
         target: "https://api.axisnow.xyz", // 目标路径，别忘了加http和端口号
         pathRewrite: {
@@ -72,6 +72,7 @@ module.exports = {
     resolve: {
       alias: {
         "@": resolve("src"),
+        "@public": resolve("public"),
       },
     },
   },

@@ -47,6 +47,7 @@ module.exports = {
    */
   logo: "https://auth.axisnow.xyz/img/logo/logo-02.png",
   tenant_prefix_url: ".axisnow.xyz",
+  domain_suffix: "axisnow.xyz",
   default_host: "console.axisnow.xyz",
   errorLog: "production",
   expireUrl: "https://account.axisnow.xyz/user/sign-in",

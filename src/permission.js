@@ -4,7 +4,7 @@ import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css"; // progress bar style
 import { getToken, removeToken } from "@/utils/auth"; // get token from cookie
 import getPageTitle from "@/utils/get-page-title";
-import defaultSettings from "@/settings";
+import defaultSettings from "@public/settings";
 import { Message } from "element-ui";
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -23,7 +23,7 @@ router.beforeEach(async (to, from, next) => {
 
     if (checkHost(user_info.tenant_list || [])) {
       if (account_console && account_console.length > 0) {
-        if ("console.axisnow.xyz" === window.location.host) {
+        if (store.getters.default_host === window.location.host) {
           if (["/register", "/network"].includes(to.path)) {
             next();
           } else {
@@ -42,6 +42,11 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     token = getQueryVariable("token");
+    const default_host =
+      store.getters.default_host || defaultSettings.default_host;
+    const tenant_prefix_url =
+      store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
+    const expireUrl = store.getters.expireUrl || defaultSettings.expireUrl;
     if (token) {
       const user_info = await store.dispatch("user/getUserInfo", token);
       await store.dispatch("user/verifyToken", token);
@@ -66,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
           ) {
             if (user_info.tenant_list && user_info.tenant_list.length === 1) {
               const tenant = user_info.tenant_list[0];
-              if (window.location.host !== "console.axisnow.xyz") {
+              if (window.location.host !== default_host) {
                 localStorage.setItem("tenant_id", tenant.tenant_id);
                 window.history.pushState(null, null, "/dashboard");
                 // next("/dashboard");
@@ -76,7 +81,7 @@ router.beforeEach(async (to, from, next) => {
                   window.location.replace(
                     "https://" +
                       tenant.tenant_prefix.toLowerCase() +
-                      defaultSettings.tenant_prefix_url +
+                      tenant_prefix_url +
                       "/?token=" +
                       token
                   );
@@ -89,11 +94,10 @@ router.beforeEach(async (to, from, next) => {
             ) {
               const find = user_info.tenant_list.find(
                 (i) =>
-                  i.tenant_prefix.toLowerCase() +
-                    defaultSettings.tenant_prefix_url ===
+                  i.tenant_prefix.toLowerCase() + tenant_prefix_url ===
                   window.location.host
               );
-              if (window.location.host !== "console.axisnow.xyz" && find) {
+              if (window.location.host !== default_host && find) {
                 localStorage.setItem("tenant_id", find.tenant_id);
                 next("/dashboard");
               } else {
@@ -107,7 +111,7 @@ router.beforeEach(async (to, from, next) => {
               user_info.tenant_list &&
               user_info.tenant_list.length === 0
             ) {
-              if (window.location.host === "console.axisnow.xyz") {
+              if (window.location.host === default_host) {
                 next("/register");
               } else {
                 // next('dashboard')
@@ -125,11 +129,10 @@ router.beforeEach(async (to, from, next) => {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {
+        console.log("expireUrl----", expireUrl);
         store.dispatch("user/logout").then((res) => {
           window.location.href =
-            defaultSettings.expireUrl +
-            "?redirect_url=" +
-            window.location.origin;
+            expireUrl + "?redirect_url=" + window.location.origin;
         });
       }
     }
@@ -144,30 +147,41 @@ router.afterEach(() => {
 function redirectHost() {
   Message.warning("当前账号未注册当前网络，请登录正确的账号！");
   localStorage.clear();
+  const signOutUrl = store.getters.signOutUrl || defaultSettings.signOutUrl;
+  const domain_suffix =
+    store.getters.domain_suffix || defaultSettings.domain_suffix;
+
   store.dispatch("user/logout").then((res) => {
-    if (defaultSettings.signOutUrl)
+    if (signOutUrl)
       window.location.replace(
-        defaultSettings.signOutUrl +
-          "?redirect_url=" +
-          "https://www.axisnow.xyz",
+        signOutUrl + "?redirect_url=" + "https://www." + domain_suffix,
         "_self"
       );
   });
 }
 function checkHost(tenant_list = []) {
+  const default_host =
+    store.getters.default_host || defaultSettings.default_host;
+  const tenant_prefix_url =
+    store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
+
   if (process.env.NODE_ENV === "development") return true;
-  if (window.location.host === defaultSettings.default_host) return true;
+  if (window.location.host === default_host) return true;
   const host = tenant_list.map(
-    (i) => i.tenant_prefix.toLowerCase() + defaultSettings.tenant_prefix_url
+    (i) => i.tenant_prefix.toLowerCase() + tenant_prefix_url
   );
   return host.includes(window.location.host) || false;
 }
 
 function redirecRouter(user_info, to, next) {
+  const default_host =
+    store.getters.default_host || defaultSettings.default_host;
+  const tenant_prefix_url =
+    store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
   if (user_info && user_info.tenant_list && user_info.tenant_list.length) {
     if (user_info.tenant_list && user_info.tenant_list.length === 1) {
       const tenant = user_info.tenant_list[0];
-      if (window.location.host !== "console.axisnow.xyz") {
+      if (window.location.host !== default_host) {
         localStorage.setItem("tenant_id", tenant.tenant_id);
         window.history.pushState(null, null, "/dashboard");
         // next("/dashboard");
@@ -177,7 +191,7 @@ function redirecRouter(user_info, to, next) {
           window.location.replace(
             "https://" +
               tenant.tenant_prefix.toLowerCase() +
-              defaultSettings.tenant_prefix_url +
+              tenant_prefix_url +
               "/?token=" +
               token
           );
@@ -187,10 +201,10 @@ function redirecRouter(user_info, to, next) {
     } else if (user_info.tenant_list && user_info.tenant_list.length > 1) {
       const find = user_info.tenant_list.find(
         (i) =>
-          i.tenant_prefix.toLowerCase() + defaultSettings.tenant_prefix_url ===
+          i.tenant_prefix.toLowerCase() + tenant_prefix_url ===
           window.location.host
       );
-      if (window.location.host !== "console.axisnow.xyz" && find) {
+      if (window.location.host !== default_host && find) {
         localStorage.setItem("tenant_id", find.tenant_id);
         next("/dashboard");
       } else {
@@ -201,7 +215,7 @@ function redirecRouter(user_info, to, next) {
         }
       }
     } else if (user_info.tenant_list && user_info.tenant_list.length === 0) {
-      if (window.location.host === "console.axisnow.xyz") {
+      if (window.location.host === default_host) {
         next("/register");
       } else {
         // next('dashboard')

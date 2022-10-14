@@ -1,4 +1,4 @@
-import defaultSettings from "@/settings";
+import defaultSettings from "@public/settings";
 
 const title = defaultSettings.title || "";
 

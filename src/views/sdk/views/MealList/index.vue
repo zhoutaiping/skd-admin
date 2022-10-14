@@ -1,10 +1,10 @@
 <template>
   <ConsolePageLayout style="padding: 12px">
     <DmToolbar>
-      <!-- <router-link :to="'/sdk/meal-open'"> -->
+      <div slot="right">
+        <InputSearch v-model="bindParams.app_name" style="width: 200px;" @submit="handleSearch()" />
+      </div>
       <el-button type="primary" @click="$refs.Add.handleOpen()">添加应用</el-button>
-      <el-button @click="$refs.DmData.initPage()">刷新</el-button>
-      <!-- </router-link> -->
     </DmToolbar>
     <DmData ref="DmData" @init="fetchList">
       <DmTable :loading="loading" min-height>

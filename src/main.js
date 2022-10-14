@@ -5,7 +5,7 @@ import router from "./router";
 import Element from "element-ui";
 import Cookies from "js-cookie";
 import * as filters from "./filters"; // global filters
-
+import Bootstrap from "@/core/bootstrap";
 import "@/core/use";
 import "@/core/use-console";
 import "@/core/use-stage";
@@ -14,7 +14,7 @@ import "normalize.css/normalize.css"; // a modern alternative to CSS resets
 import "@/styles/theme/index.css"; // global css
 import "@/styles/index.scss"; // global css
 
-import "./icons"; // icon
+import "./icons/index.js"; // icon
 import "./permission"; // permission control
 
 Vue.use(Element, {
@@ -32,5 +32,8 @@ new Vue({
   el: "#app",
   router,
   store,
+  created() {
+    Bootstrap();
+  },
   render: (h) => h(App),
 });

@@ -225,7 +225,7 @@ function getQueryVariable(name) {
   if (r != null) return unescape(r[2]);
   return null;
 }
-import defaultSettings from '@/settings';
+import defaultSettings from '@public/settings';
 export default {
   name: 'Login',
   components: {},
@@ -241,9 +241,9 @@ export default {
       if (!value) callback(new Error('请输入网络地址'));
       else callback();
     };
-    const tenant_prefix_url = defaultSettings.tenant_prefix_url;
+    // const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
-      tenant_prefix_url: tenant_prefix_url,
+      // tenant_prefix_url: tenant_prefix_url,
       form: {
         tenant_prefix: '',
         tenant_name: ''
@@ -270,6 +270,9 @@ export default {
         this.$store.state.user.userinfo ||
         {}
       );
+    },
+    tenant_prefix_url() {
+      return this.$store.getters.tenant_prefix_url;
     },
     Token() {
       return localStorage.getItem('token') || getQueryVariable('token');

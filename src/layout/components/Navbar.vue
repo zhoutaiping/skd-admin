@@ -39,9 +39,8 @@ import { mapGetters } from 'vuex';
 import Breadcrumb from '@/components/Breadcrumb';
 import Hamburger from '@/components/Hamburger';
 import Screenfull from '@/components/Screenfull';
-import th from '@/assets/images/th.png';
 import th_default from '@/assets/images/th.jpg';
-import defaultSettings from '@/settings';
+import defaultSettings from '@public/settings';
 export default {
   components: {
     Breadcrumb,
@@ -58,6 +57,9 @@ export default {
     is_console() {
       return true; //window.location.host === 'console.axisnow.xyz'
     },
+    tenant_prefix_url() {
+      return this.$store.getters.tenant_prefix_url;
+    },
     account_th() {
       return this.avatar || th_default;
     }
@@ -71,7 +73,9 @@ export default {
         return;
       }
       window.location.replace(
-        'https://console.axisnow.xyz/' +
+        'https://' +
+          this.$store.getters.default_host +
+          '/' +
           type +
           '?token=' +
           Token +
@@ -84,9 +88,9 @@ export default {
     },
     logout() {
       this.$store.dispatch('user/logout').then(res => {
-        if (defaultSettings.signOutUrl)
+        if (this.$store.getters.signOutUrl)
           window.location.replace(
-            defaultSettings.signOutUrl +
+            this.$store.getters.signOutUrl +
               '?redirect_url=' +
               'https://www.axisnow.xyz',
             '_self'
