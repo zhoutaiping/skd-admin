@@ -33,18 +33,18 @@ export default {
   created() {
     if (!this.Token) {
       removeToken();
-      localStorage.clear();
-      if (defaultSettings.expireUrl)
+      const expireUrl =
+        this.$store.getters.expireUrl || defaultSettings.expireUrl;
+      if (defaultSettings.expireUrl) {
+        localStorage.clear();
         window.open(
-          defaultSettings.expireUrl + '?redirect_url=' + window.location.origin,
+          expireUrl + '?redirect_url=' + window.location.origin,
           '_self'
         );
+      }
     } else {
       window.history.pushState(null, null, '/dashboard');
     }
-    // if (!this.roles.includes('admin')) {
-    //   this.currentRole = 'adminDashboard'
-    // }
   }
 };
 </script>

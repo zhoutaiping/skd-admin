@@ -72,6 +72,7 @@ import TableSourceIP from './components/TableSourceIP';
 import TableChannel from './components/TableChannel';
 import packagesMixins from '../../../mixins/packages';
 import RULE from '@/utils/verify';
+import { deepClone } from '../../../../../utils';
 const Label = {
   protocol: [
     {
@@ -175,17 +176,28 @@ export default createDialog({
     afterOpen(form) {
       this.$nextTick(async () => {
         this.$refs.Form.clearValidate();
-        const source_list = form.source_list;
+        const data = deepClone({ ...form });
+        let source_list = [].concat(data.source_list);
+        const sourceType = data.source_type;
+        source_list = source_list.map(i => {
+          const ip = JSON.parse(JSON.stringify(i.ip));
+          return {
+            ...i,
+            ip: sourceType === 1 ? ip : '',
+            domain: sourceType === 2 ? ip : ''
+          };
+        });
+        if (this.$refs.TableSourceIP) {
+          this.$refs.TableSourceIP.setList(source_list || []);
+        }
         if (this.options.batch && this.options.mode === 'Edit') {
           source_list.forEach(_ => {
             _.port = '';
           });
         }
-
-        this.$refs.TableSourceIP.setList(source_list || []);
-        if (form.channel_status)
+        if (data.channel_status)
           this.$refs.TableChannel.setList(
-            JSON.parse(form.channel_source_list) || []
+            JSON.parse(data.channel_source_list) || []
           );
         this.loading = false;
       });
