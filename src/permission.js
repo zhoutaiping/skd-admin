@@ -20,10 +20,12 @@ router.beforeEach(async (to, from, next) => {
   if (token) {
     const account_console = store.getters.account_console;
     const user_info = JSON.parse(localStorage.getItem("userinfo"));
-
+    const default_host =
+      (store.getters.default_host && store.getters.default_host) ||
+      defaultSettings.default_host;
     if (checkHost(user_info.tenant_list || [])) {
       if (account_console && account_console.length > 0) {
-        if (store.getters.default_host === window.location.host) {
+        if (default_host === window.location.host) {
           if (["/register", "/network"].includes(to.path)) {
             next();
           } else {
@@ -43,10 +45,13 @@ router.beforeEach(async (to, from, next) => {
   } else {
     token = getQueryVariable("token");
     const default_host =
-      store.getters.default_host || defaultSettings.default_host;
+      (store.getters.default_host && store.getters.default_host) ||
+      defaultSettings.default_host;
     const tenant_prefix_url =
-      store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
-    const expireUrl = store.getters.expireUrl || defaultSettings.expireUrl;
+      (store.getters.tenant_prefix_url && store.getters.tenant_prefix_url) ||
+      defaultSettings.tenant_prefix_url;
+    const signIn =
+      (store.getters.signIn && store.getters.signIn) || defaultSettings.signIn;
     if (token) {
       const user_info = await store.dispatch("user/getUserInfo", token);
       await store.dispatch("user/verifyToken", token);
@@ -129,10 +134,10 @@ router.beforeEach(async (to, from, next) => {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {
-        console.log("expireUrl----", expireUrl);
+        console.log("signIn----", signIn);
         store.dispatch("user/logout").then((res) => {
           window.location.href =
-            expireUrl + "?redirect_url=" + window.location.origin;
+            signIn + "?redirect_url=" + window.location.origin;
         });
       }
     }
@@ -147,9 +152,12 @@ router.afterEach(() => {
 function redirectHost() {
   Message.warning("当前账号未注册当前网络，请登录正确的账号！");
   localStorage.clear();
-  const signOutUrl = store.getters.signOutUrl || defaultSettings.signOutUrl;
+  const signOutUrl =
+    (store.getters.signOutUrl && store.getters.signOutUrl) ||
+    defaultSettings.signOutUrl;
   const domain_suffix =
-    store.getters.domain_suffix || defaultSettings.domain_suffix;
+    (store.getters.domain_suffix && store.getters.domain_suffix) ||
+    defaultSettings.domain_suffix;
 
   store.dispatch("user/logout").then((res) => {
     if (signOutUrl)
@@ -161,9 +169,11 @@ function redirectHost() {
 }
 function checkHost(tenant_list = []) {
   const default_host =
-    store.getters.default_host || defaultSettings.default_host;
+    (store.getters.default_host && store.getters.default_host) ||
+    defaultSettings.default_host;
   const tenant_prefix_url =
-    store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
+    (store.getters.tenant_prefix_url && store.getters.tenant_prefix_url) ||
+    defaultSettings.tenant_prefix_url;
 
   if (process.env.NODE_ENV === "development") return true;
   if (window.location.host === default_host) return true;
@@ -175,9 +185,11 @@ function checkHost(tenant_list = []) {
 
 function redirecRouter(user_info, to, next) {
   const default_host =
-    store.getters.default_host || defaultSettings.default_host;
+    (store.getters.default_host && store.getters.default_host) ||
+    defaultSettings.default_host;
   const tenant_prefix_url =
-    store.getters.tenant_prefix_url || defaultSettings.tenant_prefix_url;
+    (store.getters.tenant_prefix_url && store.getters.tenant_prefix_url) ||
+    defaultSettings.tenant_prefix_url;
   if (user_info && user_info.tenant_list && user_info.tenant_list.length) {
     if (user_info.tenant_list && user_info.tenant_list.length === 1) {
       const tenant = user_info.tenant_list[0];

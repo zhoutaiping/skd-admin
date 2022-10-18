@@ -33,12 +33,11 @@ export default {
   created() {
     if (!this.Token) {
       removeToken();
-      const expireUrl =
-        this.$store.getters.expireUrl || defaultSettings.expireUrl;
-      if (defaultSettings.expireUrl) {
+      const signIn = this.$store.getters.signIn || defaultSettings.signIn;
+      if (signIn) {
         localStorage.clear();
         window.open(
-          expireUrl + '?redirect_url=' + window.location.origin,
+          signIn + '?redirect_url=' + window.location.origin,
           '_self'
         );
       }

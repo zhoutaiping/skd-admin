@@ -50,6 +50,6 @@ module.exports = {
   domain_suffix: "axisnow.xyz",
   default_host: "console.axisnow.xyz",
   errorLog: "production",
-  expireUrl: "https://account.axisnow.xyz/user/sign-in",
+  signIn: "https://account.axisnow.xyz/user/sign-in",
   signOutUrl: "https://account.axisnow.xyz/user/sign-out",
 };

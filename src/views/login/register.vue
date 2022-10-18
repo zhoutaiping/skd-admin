@@ -298,7 +298,7 @@ export default {
 
         const tenant_list = res.tenant_list || [];
         if (!tenant_list.length) {
-          this.$message.warning('网络不存在，请创建！');
+          // this.$message.warning('创建您的新网络！');
           this.$router.push('/register');
         }
       });

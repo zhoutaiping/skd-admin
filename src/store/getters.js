@@ -18,7 +18,7 @@ const getters = {
   domain_suffix: (state) => state.settings.domain_suffix,
   tenant_prefix_url: (state) => state.settings.tenant_prefix_url,
   default_host: (state) => state.settings.default_host,
-  expireUrl: (state) => state.settings.expireUrl, //"https://account.axisnow.xyz/user/sign-in",
+  signIn: (state) => state.settings.signIn, //"https://account.axisnow.xyz/user/sign-in",
   signOutUrl: (state) => state.settings.signOutUrl,
 };
 export default getters;

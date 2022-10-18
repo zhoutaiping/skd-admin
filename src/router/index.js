@@ -217,6 +217,7 @@ export const asyncRoutes = [
       {
         path: "logs",
         name: `SDK_Log`,
+        hidden: true,
         component: () => import("@/views/sdk/views/Log/index"),
         meta: { title: "操作记录", icon: "cz-jl" },
       },
