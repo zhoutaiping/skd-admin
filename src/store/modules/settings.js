@@ -15,6 +15,7 @@ const state = {
   default_host: "",
   signIn: "", //"https://account.axisnow.xyz/user/sign-in",
   signOutUrl: "", //"https://account.axisnow.xyz/user/sign-out",
+  user_role_type_list: [],
 };
 
 const mutations = {
@@ -32,6 +33,9 @@ const mutations = {
       state.signIn = "https://account." + domain_suffix + "/user/sign-in";
       state.signOutUrl = "https://account." + domain_suffix + "/user/sign-out";
     }
+  },
+  USER_ROLE_TYPE_LIST: (state, list) => {
+    state.user_role_type_list = list;
   },
 };
 
