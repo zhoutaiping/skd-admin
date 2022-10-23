@@ -177,7 +177,7 @@ export default createDialog({
       this.$nextTick(async () => {
         this.$refs.Form.clearValidate();
         const data = deepClone({ ...form });
-        let source_list = [].concat(data.source_list);
+        let source_list = [].concat(data.source_list || []);
         const sourceType = data.source_type;
         source_list = source_list.map(i => {
           const ip = JSON.parse(JSON.stringify(i.ip));
