@@ -18,6 +18,38 @@ const service = axios.create({
 });
 
 service.interceptors.request.use((config) => {
+  const customer_user_id = localStorage.getItem("customer_user_id") || null;
+  const token = localStorage.getItem("token") || null;
+  if (["GET", "get"].includes(config.method)) {
+    let params = {
+      ...config.params,
+    };
+    if (!!customer_user_id) {
+      params.customer_user_id = Number(customer_user_id);
+    }
+    if (!!token) {
+      params.token = token;
+    }
+    config.params = {
+      ...params,
+    };
+  }
+  if (
+    ["post", "put", "delete", "POST", "PUT", "DELETE"].includes(config.method)
+  ) {
+    let data = {
+      ...config.data,
+    };
+    if (!!customer_user_id) {
+      data.customer_user_id = Number(customer_user_id);
+    }
+    if (!!token) {
+      data.token = token;
+    }
+    config.data = {
+      ...data,
+    };
+  }
   return config;
 });
 

@@ -149,7 +149,8 @@ export default {
 
     handleUrl(url, tenant_id) {
       if (url) {
-        const URL = url + this.tenant_prefix_url;
+        let URL = url + this.tenant_prefix_url;
+
         const token =
           getQueryVariable('token') || localStorage.getItem('token') || '';
         if (window.location.host !== URL) {
@@ -158,10 +159,13 @@ export default {
             this.$router.push('/dashboard');
           } else {
             if (!token) return;
+            URL = 'https://' + URL + '/?token=' + token;
+            const customer_user_id = localStorage.getItem('customer_user_id');
+            if (customer_user_id) {
+              URL = URL + '&customer_user_id=' + customer_user_id;
+            }
             this.$store.dispatch('user/logout').then(res => {
-              window.location.replace(
-                (window.location.href = 'https://' + URL + '/?token=' + token)
-              );
+              window.location.replace(URL);
             });
           }
         } else {

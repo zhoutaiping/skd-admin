@@ -17,6 +17,7 @@ router.beforeEach(async (to, from, next) => {
   // set page title
   document.title = getPageTitle(to.meta.title);
   let token = localStorage.getItem("token");
+  let customer_user_id = getQueryVariable("customer_user_id");
   if (token) {
     const account_console = store.getters.account_console;
     const user_info = JSON.parse(localStorage.getItem("userinfo"));
@@ -25,7 +26,7 @@ router.beforeEach(async (to, from, next) => {
       defaultSettings.default_host;
     if (checkHost(user_info.tenant_list || [])) {
       if (account_console && account_console.length > 0) {
-        if (default_host === window.location.host) {
+        if (window.location.host === default_host) {
           if (["/register", "/network"].includes(to.path)) {
             next();
           } else {
@@ -44,6 +45,9 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     token = getQueryVariable("token");
+    if (customer_user_id) {
+      localStorage.setItem("customer_user_id", customer_user_id);
+    }
     const default_host =
       (store.getters.default_host && store.getters.default_host) ||
       defaultSettings.default_host;
@@ -82,14 +86,17 @@ router.beforeEach(async (to, from, next) => {
                 // next("/dashboard");
                 next();
               } else {
+                let url =
+                  "https://" +
+                  tenant.tenant_prefix.toLowerCase() +
+                  tenant_prefix_url +
+                  "/?token=" +
+                  token;
+                if (customer_user_id) {
+                  url = url + "&customer_user_id=" + customer_user_id;
+                }
                 store.dispatch("user/logout").then((res) => {
-                  window.location.replace(
-                    "https://" +
-                      tenant.tenant_prefix.toLowerCase() +
-                      tenant_prefix_url +
-                      "/?token=" +
-                      token
-                  );
+                  window.location.replace(url);
                 });
                 next();
               }
