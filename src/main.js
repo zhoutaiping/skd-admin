@@ -35,5 +35,8 @@ new Vue({
   created() {
     Bootstrap();
   },
+  destroyed() {
+    localStorage.clear();
+  },
   render: (h) => h(App),
 });
