@@ -106,11 +106,11 @@ const actions = {
   },
   getUserInfo({ commit, state, dispatch }, token) {
     return new Promise((resolve, reject) => {
-      FetchAccount.get("user/info", { token: token })
+      FetchAccount.get("/user/info", { token: token })
         .then((res) => {
           commit("SET_USER_INFO", res);
           localStorage.setItem("userinfo", JSON.stringify(res));
-          // dispatch('verifyToken', token)
+          localStorage.setItem("token", token);
           resolve(res);
         })
         .catch((e) => {
@@ -131,7 +131,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       verifyToken(token)
         .then((data) => {
-          localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(data));
           setToken(token);
           commit("SET_TOKEN", token);

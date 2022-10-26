@@ -44,6 +44,8 @@ router.beforeEach(async (to, from, next) => {
       redirectHost();
     }
   } else {
+    localStorage.clear();
+    removeToken();
     token = getQueryVariable("token");
     if (customer_user_id) {
       localStorage.setItem("customer_user_id", customer_user_id);
@@ -57,6 +59,7 @@ router.beforeEach(async (to, from, next) => {
     const signIn =
       (store.getters.signIn && store.getters.signIn) || defaultSettings.signIn;
     if (token) {
+      localStorage.setItem("token", token);
       const user_info = await store.dispatch("user/getUserInfo", token);
       await store.dispatch("user/verifyToken", token);
       await store.dispatch("user/getInfo");
@@ -65,6 +68,7 @@ router.beforeEach(async (to, from, next) => {
         getQueryVariable("setting") === true ||
         getQueryVariable("setting") === "true"
       ) {
+        console.log(getQueryVariable("setting"));
         if (checkHost((user_info.tenant_list && user_info.tenant_list) || [])) {
           next(to.path);
           NProgress.done();
@@ -72,69 +76,86 @@ router.beforeEach(async (to, from, next) => {
           redirectHost();
         }
       } else {
-        if (checkHost((user_info.tenant_list && user_info.tenant_list) || [])) {
+        const is_inner =
+          (!!user_info.logged_user_info &&
+            user_info.logged_user_info.is_inner) ||
+          false;
+        if (
+          is_inner &&
+          customer_user_id &&
+          window.location.host !== default_host
+        ) {
+          console.log(1, is_inner);
+          localStorage.setItem("tenant_id", getQueryVariable("tenant_id"));
+          next("/dashboard");
+        } else {
           if (
-            user_info &&
-            user_info.tenant_list &&
-            user_info.tenant_list.length
+            checkHost((user_info.tenant_list && user_info.tenant_list) || [])
           ) {
-            if (user_info.tenant_list && user_info.tenant_list.length === 1) {
-              const tenant = user_info.tenant_list[0];
-              if (window.location.host !== default_host) {
-                localStorage.setItem("tenant_id", tenant.tenant_id);
-                window.history.pushState(null, null, "/dashboard");
-                // next("/dashboard");
-                next();
-              } else {
-                let url =
-                  "https://" +
-                  tenant.tenant_prefix.toLowerCase() +
-                  tenant_prefix_url +
-                  "/?token=" +
-                  token;
-                if (customer_user_id) {
-                  url = url + "&customer_user_id=" + customer_user_id;
-                }
-                store.dispatch("user/logout").then((res) => {
-                  window.location.replace(url);
-                });
-                next();
-              }
-            } else if (
+            if (
+              user_info &&
               user_info.tenant_list &&
-              user_info.tenant_list.length > 1
+              user_info.tenant_list.length
             ) {
-              const find = user_info.tenant_list.find(
-                (i) =>
-                  i.tenant_prefix.toLowerCase() + tenant_prefix_url ===
-                  window.location.host
-              );
-              if (window.location.host !== default_host && find) {
-                localStorage.setItem("tenant_id", find.tenant_id);
-                next("/dashboard");
-              } else {
-                if (to.path) {
-                  next(to.path);
+              if (user_info.tenant_list && user_info.tenant_list.length === 1) {
+                const tenant = user_info.tenant_list[0];
+                if (window.location.host !== default_host) {
+                  console.log(2, is_inner);
+                  localStorage.setItem("tenant_id", tenant.tenant_id);
+                  window.history.pushState(null, null, "/dashboard");
+                  // next("/dashboard");
+                  next();
                 } else {
-                  next("/network");
+                  let url =
+                    "https://" +
+                    tenant.tenant_prefix.toLowerCase() +
+                    tenant_prefix_url +
+                    "/?token=" +
+                    token;
+                  if (customer_user_id) {
+                    url = url + "&customer_user_id=" + customer_user_id;
+                  }
+                  store.dispatch("user/logout").then((res) => {
+                    window.location.replace(url);
+                  });
+                  next();
+                }
+              } else if (
+                user_info.tenant_list &&
+                user_info.tenant_list.length > 1
+              ) {
+                const find = user_info.tenant_list.find(
+                  (i) =>
+                    i.tenant_prefix.toLowerCase() + tenant_prefix_url ===
+                    window.location.host
+                );
+                if (window.location.host !== default_host && find) {
+                  localStorage.setItem("tenant_id", find.tenant_id);
+                  next("/dashboard");
+                } else {
+                  if (to.path) {
+                    next(to.path);
+                  } else {
+                    next("/network");
+                  }
+                }
+              } else if (
+                user_info.tenant_list &&
+                user_info.tenant_list.length === 0
+              ) {
+                if (window.location.host === default_host) {
+                  next("/register");
+                } else {
+                  // next('dashboard')
+                  next({ ...to, replace: true });
                 }
               }
-            } else if (
-              user_info.tenant_list &&
-              user_info.tenant_list.length === 0
-            ) {
-              if (window.location.host === default_host) {
-                next("/register");
-              } else {
-                // next('dashboard')
-                next({ ...to, replace: true });
-              }
+            } else {
+              next("/register");
             }
           } else {
-            next("/register");
+            redirectHost();
           }
-        } else {
-          redirectHost();
         }
       }
     } else {
@@ -175,18 +196,34 @@ function redirectHost() {
   });
 }
 function checkHost(tenant_list = []) {
+  const customer_user_id =
+    localStorage.getItem("customer_user_id") ||
+    getQueryVariable("customer_user_id") ||
+    null;
+  const user_info = JSON.parse(localStorage.getItem("userinfo")) || null;
+  // console.log("user_info------", user_info);
+  // 管理员跳转  不校验
+  if (!!customer_user_id && user_info && !!user_info.logged_user_info) {
+    console.log({
+      ...user_info.logged_user_info,
+    });
+    return user_info.logged_user_info.is_inner || false;
+  }
+
   const default_host =
     (store.getters.default_host && store.getters.default_host) ||
     defaultSettings.default_host;
   const tenant_prefix_url =
     (store.getters.tenant_prefix_url && store.getters.tenant_prefix_url) ||
     defaultSettings.tenant_prefix_url;
-
+  // 当前 host 不校验
+  if (window.location.host === default_host) return true; // 开发环境 不校验
   if (process.env.NODE_ENV === "development") return true;
-  if (window.location.host === default_host) return true;
+  // 其他 校验
   const host = tenant_list.map(
     (i) => i.tenant_prefix.toLowerCase() + tenant_prefix_url
   );
+
   return host.includes(window.location.host) || false;
 }
 

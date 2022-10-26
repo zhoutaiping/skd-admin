@@ -23,8 +23,8 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>{{ name }}</el-dropdown-item>
-          <el-dropdown-item v-if="is_console" @click.native="handleOpen('register')" divided>创建网络</el-dropdown-item>
-          <el-dropdown-item v-if="is_console" @click.native="handleOpen('network')" divided>网络切换</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('/register')" divided>创建网络</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('/network')" divided>网络切换</el-dropdown-item>
           <el-dropdown-item @click.native="logout" divided>
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
@@ -55,7 +55,9 @@ export default {
   computed: {
     ...mapGetters(['sidebar', 'avatar', 'name', 'device']),
     is_console() {
-      return true; //window.location.host === 'console.axisnow.xyz'
+      // const customer_user_id = localStorage.getItem('customer_user_id') || null;
+      // return !!customer_user_id ? false : true;
+      return true;
     },
     tenant_prefix_url() {
       return this.$store.getters.tenant_prefix_url;
@@ -72,16 +74,18 @@ export default {
         this.$router.push(type);
         return;
       }
-      window.location.replace(
+      let url =
         'https://' +
-          this.$store.getters.default_host +
-          '/' +
-          type +
-          '?token=' +
-          Token +
-          '&setting=true',
-        '_self'
-      );
+        this.$store.getters.default_host +
+        type +
+        '?token=' +
+        Token +
+        '&setting=true';
+      const customer_user_id = localStorage.getItem('customer_user_id') || null;
+      if (!!customer_user_id) {
+        url = url + '&customer_user_id' + Number(customer_user_id);
+      }
+      window.location.replace(url, '_self');
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar');
