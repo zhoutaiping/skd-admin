@@ -30,10 +30,10 @@ router.beforeEach(async (to, from, next) => {
 
   if (url_token) {
     if (!local_token) {
-      console.log(1, local_token, url_token);
+      // console.log(1, local_token, url_token);
       _url_route_init(to, from, next);
     } else {
-      console.log(4, local_token, url_token);
+      // console.log(4, local_token, url_token);
       if (local_token === url_token) {
         return link_route_init(to, from, next);
       } else {
@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
     return;
   } else {
     if (local_token) {
-      console.log(2, local_token, url_token);
+      // console.log(2, local_token, url_token);
       return _token_route_init(to, from, next);
     } else {
       store.dispatch("user/logout").then((res) => {

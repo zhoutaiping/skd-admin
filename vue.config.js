@@ -63,6 +63,9 @@ module.exports = {
         //   '^/monitor': '/' // 重写路径
         // }
       },
+      "/statistic/": {
+        target: " http://121.196.201.20:65080",
+      },
     },
   },
   configureWebpack: {
@@ -77,8 +80,6 @@ module.exports = {
     },
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
-    // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin("preload").tap(() => [
       {
         rel: "preload",

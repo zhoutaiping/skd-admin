@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import DateSelection from '@/components/DateSelect/DateSelection'
-import packageMixins from '../../../mixins/packages'
+import DateSelection from '@/components/DateSelect/DateSelection';
+import packageMixins from '../../../mixins/packages';
 
 export default {
   components: { DateSelection },
@@ -35,40 +35,52 @@ export default {
   data() {
     return {
       params: {
-        rule_id: '',
+        key: '',
         package_id: '',
         start_time: '',
         end_time: ''
       },
       selectPackages: []
-    }
+    };
   },
 
   created() {
-    this.params.rule_id = this.$route.query.rule_id
-    this.init()
+    // this.params.rule_id = this.$route.query.rule_id;
+    this.init();
   },
 
   methods: {
     handleTimeChange(startTime, endTime) {
-      this.params.start_time = startTime
-      this.params.end_time = endTime
-      this.handleUpdate()
+      this.params.start_time = startTime;
+      this.params.end_time = endTime;
+      this.handleUpdate();
     },
 
     handleUpdate() {
-      this.$emit('change', this.params)
+      const { package_id } = this.params;
+      if (package_id) {
+        let key = '';
+        const item = this.selectPackages.find(
+          i => Number(i.value) === Number(package_id)
+        );
+        key = (item && item.key) || '';
+        this.params.key = key;
+      }
+
+      this.$emit('change', this.params);
     },
 
     init() {
       this.selectPackages = this.packageList.map(_ => {
         return {
-          label: _.package_name,
-          value: _.id
-        }
-      })
-      this.params.package_id = this.selectPackages[0].value
+          label: _.app_name,
+          value: _.sdk_id + '',
+          key: _.access_key
+        };
+      });
+      this.params.package_id = this.selectPackages[0].value;
+      this.params.key = this.selectPackages[0].key;
     }
   }
-}
+};
 </script>

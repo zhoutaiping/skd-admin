@@ -20,6 +20,7 @@ const service = axios.create({
 service.interceptors.request.use((config) => {
   const customer_user_id = localStorage.getItem("customer_user_id") || null;
   const token = localStorage.getItem("token") || null;
+  const tenant_id = localStorage.getItem("tenant_id") || null;
   if (["GET", "get"].includes(config.method)) {
     let params = {
       ...config.params,
@@ -29,6 +30,9 @@ service.interceptors.request.use((config) => {
     }
     if (!!token) {
       params.token = token;
+    }
+    if (!!tenant_id) {
+      params.tenant_id = Number(tenant_id);
     }
     config.params = {
       ...params,
