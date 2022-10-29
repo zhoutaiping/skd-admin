@@ -2,7 +2,12 @@
   <ConsolePageLayout style="padding: 12px">
     <DmToolbar>
       <div slot="right">
-        <InputSearch v-model="bindParams.app_name" style="width: 200px;" @submit="handleSearch()" />
+        <InputSearch
+          v-model="bindParams.app_name"
+          placeholder="应用名称"
+          style="width: 200px;"
+          @submit="handleSearch()"
+        />
       </div>
       <el-button type="primary" @click="$refs.Add.handleOpen()">添加应用</el-button>
     </DmToolbar>
@@ -16,7 +21,17 @@
             <template slot-scope="scope">
               <span>{{ scope.row.access_key }}</span>
               <el-tooltip content="点击可复制到粘贴板">
-                <el-button type="text" @click="copyAccessKey(scope.row)">
+                <el-button type="text" @click="copyAccessKey(scope.row,'access_key')">
+                  <i class="el-icon-copy-document" style="margin-left: 8px" />
+                </el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="UUID" width="120" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-tooltip content="点击可复制到粘贴板">
+                <el-button type="text" @click="copyAccessKey(scope.row,'uuid')">
+                  copy-uuid
                   <i class="el-icon-copy-document" style="margin-left: 8px" />
                 </el-button>
               </el-tooltip>
@@ -101,9 +116,23 @@ export default {
   },
 
   methods: {
-    copyAccessKey(row) {
-      this.Help.copyText(row.access_key);
-      this.$message.success('复制成功');
+    copyAccessKey(row, type) {
+      if (type === 'access_key') {
+        this.Help.copyText(row[type]);
+        this.$message.success('复制成功');
+      } else if (type === 'uuid') {
+        this.FetchAccount.get('/sdk/builtin_config', {
+          sdk_id: row.sdk_id,
+          tenant_id: row.tenant_id
+        })
+          .then(res => {
+            this.Help.copyText(res.uuid);
+            this.$message.success('复制成功');
+          })
+          .catch(e => {
+            this.$message.warning('复制失败');
+          });
+      }
     },
 
     async del(data) {
