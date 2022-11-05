@@ -37,7 +37,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" prop="created_at" />
+          <el-table-column label="创建时间" prop="created_at">
+            <template slot-scope="{row}">{{formartTime(row.created_at)}}</template>
+          </el-table-column>
           <el-table-column v-if="false" label="更新时间" min-width="100">
             <template slot-scope="scope">
               {{ scope.row.updated_at }}

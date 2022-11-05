@@ -93,12 +93,7 @@ export default {
     logout() {
       this.$store.dispatch('user/logout').then(res => {
         if (this.$store.getters.signOutUrl)
-          window.location.replace(
-            this.$store.getters.signOutUrl +
-              '?redirect_url=' +
-              'https://www.axisnow.xyz',
-            '_self'
-          );
+          window.location.replace(this.$store.getters.signOutUrl, '_self');
       });
     }
   }

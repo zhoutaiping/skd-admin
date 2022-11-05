@@ -72,11 +72,8 @@ export default {
   name: 'Login',
   components: {},
   data() {
-    // const tenant_prefix_url = defaultSettings.tenant_prefix_url;
     return {
-      // tenant_prefix_url: tenant_prefix_url,
       routes: ['/', 'register', 'network'],
-      hostList: ['console.axisnow.xyz'],
       loginForm: {
         email: '',
         nick_name: '',

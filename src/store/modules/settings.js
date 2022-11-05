@@ -13,8 +13,8 @@ const state = {
   domain_suffix: "",
   tenant_prefix_url: "",
   default_host: "",
-  signIn: "", //"https://account.axisnow.xyz/user/sign-in",
-  signOutUrl: "", //"https://account.axisnow.xyz/user/sign-out",
+  signIn: "",
+  signOutUrl: "",
   user_role_type_list: [],
 };
 

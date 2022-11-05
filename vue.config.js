@@ -44,14 +44,12 @@ module.exports = {
     open: true,
     proxy: {
       "/account": {
-        // https://account.axisnow.xyz/user/sign-in-callback
         target: "https://account.axisnow.xyz", // 目标路径，别忘了加http和端口号
         pathRewrite: {
           "^/account": "/", // 重写路径
         },
       },
       "/api": {
-        // https://account.axisnow.xyz/user/sign-in-callback
         target: "https://api.axisnow.xyz", // 目标路径，别忘了加http和端口号
         pathRewrite: {
           "^/api": "/", // 重写路径
