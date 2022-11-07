@@ -1,73 +1,60 @@
 <template>
-  <ConsolePageLayout style="padding:12px;">
+  <ConsolePageLayout style="padding: 12px">
     <DmToolbar>
-      <!-- <router-link :to="'/sdk/meal-open'"> -->
+      <div slot="right">
+        <InputSearch
+          v-model="bindParams.app_name"
+          placeholder="应用名称"
+          style="width: 200px;"
+          @submit="handleSearch()"
+        />
+      </div>
       <el-button type="primary" @click="$refs.Add.handleOpen()">添加应用</el-button>
-      <el-button  @click="$refs.DmData.initPage()">刷新</el-button>
-      <!-- </router-link> -->
     </DmToolbar>
-    <DmData
-      ref="DmData"
-      @init="fetchList"
-    >
-      <DmTable
-        :loading="loading"
-        min-height
-      >
-        <el-table :data="list" border>
-          <el-table-column
-            label="应用名称"
-            prop="app_name"
-            min-width="150"
-          />
-          <el-table-column
-            label="AccessKey"
-            min-width="150"
-          >
+    <DmData ref="DmData" @init="fetchList">
+      <DmTable :loading="loading" min-height>
+        <el-table :data="list">
+          <el-table-column label="应用名称" prop="app_name" min-width="150">
+            <template slot-scope="{ row }">{{ row.app_name || "--" }}</template>
+          </el-table-column>
+          <el-table-column label="AccessKey" min-width="150">
             <template slot-scope="scope">
               <span>{{ scope.row.access_key }}</span>
               <el-tooltip content="点击可复制到粘贴板">
-                <el-button
-                  type="text"
-                  @click="copyAccessKey(scope.row)"
-                ><i
-                  class="el-icon-copy-document"
-                  style="margin-left: 8px"
-                /></el-button>
+                <el-button type="text" @click="copyAccessKey(scope.row,'access_key')">
+                  <i class="el-icon-copy-document" style="margin-left: 8px" />
+                </el-button>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" prop="created_at" />
-          <el-table-column
-            v-if="false"
-            label="更新时间"
-            min-width="100"
-          >
+          <el-table-column label="UUID" width="120" show-overflow-tooltip>
             <template slot-scope="scope">
-              {{scope.row.updated_at}}
+              <el-tooltip content="点击可复制到粘贴板">
+                <el-button type="text" @click="copyAccessKey(scope.row,'uuid')">
+                  copy-uuid
+                  <i class="el-icon-copy-document" style="margin-left: 8px" />
+                </el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间" prop="created_at">
+            <template slot-scope="{row}">{{formartTime(row.created_at)}}</template>
+          </el-table-column>
+          <el-table-column v-if="false" label="更新时间" min-width="100">
+            <template slot-scope="scope">
+              {{ scope.row.updated_at }}
               <ColumnExpireTime :expire-time="scope.row.updated_at" />
             </template>
           </el-table-column>
-          <el-table-column
-            label="操作"
-            width="200"
-            align="right"
-          >
+          <el-table-column label="操作" width="200" align="right">
             <template slot-scope="scope">
-              
-               <el-button type="text" @click="$refs.Add.handleOpen(scope.row, {mode:'Edit'})">
-                  编辑
-                </el-button>
-                <el-divider direction="vertical" />
-                <router-link :to="{name: `SDK_meal__id`, params: {id: scope.row.id}}">
-                <el-button type="text">
-                  管理
-                </el-button>
+              <el-button type="text" @click="$refs.Add.handleOpen(scope.row, { mode: 'Edit' })">编辑</el-button>
+              <el-divider direction="vertical" />
+              <router-link :to="{ name: `SDK_app_id`, params: { id: scope.row.sdk_id } }">
+                <el-button type="text">管理</el-button>
               </router-link>
               <el-divider direction="vertical" />
-              <el-button type="text" @click="del(scope.row)">
-                  删除
-              </el-button>
+              <el-button type="text" @click="del(scope.row)">删除</el-button>
               <!-- <el-divider direction="vertical" />
               <router-link :to="{name: `sdk_explorer`, params: {id: scope.row.id}}">
                 <el-button type="text">
@@ -79,21 +66,22 @@
                 <el-button type="text">
                   控制台
                 </el-button>
-              </router-link> -->
+              </router-link>-->
             </template>
           </el-table-column>
         </el-table>
       </DmTable>
     </DmData>
-    <Add ref="Add" @submit="$refs.DmData.initPage()"/>
+    <Add ref="Add" @init="$refs.DmData.initPage()" />
   </ConsolePageLayout>
 </template>
 
 <script>
-import consoleData from '@/mixins/consoleData'
-import ColumnExpireTime from '@/components/Column/ColumnExpireTime'
-import DmToolbar from '@/components/Dm/DmToolbar.vue'
-import Add from './components/add.vue'
+import consoleData from '@/mixins/consoleData';
+import ColumnExpireTime from '@/components/Column/ColumnExpireTime';
+import DmToolbar from '@/components/Dm/DmToolbar.vue';
+import Add from './components/add.vue';
+
 export default {
   // inject: ['ModuleId'],
 
@@ -103,27 +91,74 @@ export default {
 
   data() {
     return {
-      API_INDEX: '/list'
+      API_INDEX: '/sdk/list',
+      bindParams: {
+        tenant_id: localStorage.getItem('tenant_id'),
+        token: localStorage.getItem('token'),
+        user_id: JSON.parse(localStorage.getItem('user')).id
+      }
+    };
+  },
+  computed: {
+    tenant_id() {
+      return localStorage.getItem('tenant_id')
+        ? Number(localStorage.getItem('tenant_id') || 0)
+        : 0;
+    },
+    user_id() {
+      return (
+        (JSON.parse(localStorage.getItem('user')) &&
+          JSON.parse(localStorage.getItem('user')).id) ||
+        0
+      );
+    },
+    token() {
+      return localStorage.getItem('token') || '';
     }
   },
 
   methods: {
-    copyAccessKey(row) {
-      this.Help.copyText(row.access_key)
-      this.$message.success('复制成功')
+    copyAccessKey(row, type) {
+      if (type === 'access_key') {
+        this.Help.copyText(row[type]);
+        this.$message.success('复制成功');
+      } else if (type === 'uuid') {
+        this.FetchAccount.get('/sdk/builtin_config', {
+          sdk_id: row.sdk_id,
+          tenant_id: row.tenant_id
+        })
+          .then(res => {
+            this.Help.copyText(res.uuid);
+            this.$message.success('复制成功');
+          })
+          .catch(e => {
+            this.$message.warning('复制失败');
+          });
+      }
     },
 
     async del(data) {
-      if(!data.id) return
+      if (!data.sdk_id) return;
+      console.log({
+        sdk_id: data.sdk_id,
+        tenant_id: this.tenant_id,
+        // user_id: JSON.parse(localStorage.getItem('user')).id,
+        token: localStorage.getItem('token')
+      });
       try {
-        await this.Fetch.post('/delete', {id: data.id})
-        await this.$refs.DmData.initPage()
-        this.Message('ACTION_SUCCESS')
+        await this.FetchAccount.post('/sdk/delete', {
+          sdk_id: data.sdk_id,
+          tenant_id: this.tenant_id,
+          user_id: JSON.parse(localStorage.getItem('user')).id,
+          token: localStorage.getItem('token')
+        });
+        await this.$refs.DmData.initPage();
+        this.Message('ACTION_SUCCESS');
       } catch (error) {
-        this.Message('ACTION_ERROR')
-        return
+        this.Message('ACTION_ERROR');
+        return;
       }
     }
   }
-}
+};
 </script>

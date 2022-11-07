@@ -6,7 +6,6 @@
       border
       @click-add-button="handleRowAdd"
     >
-
       <!-- <template slot="btnAdd">
       <el-tooltip
         :disabled="!containUpstreamStatus"
@@ -17,13 +16,10 @@
           <yd-icon name="el-icon-plus" /> 新增
         </span>
       </el-tooltip>
-    </template> -->
+      </template>-->
 
       <el-table :data="list">
-        <el-table-column
-          label="匹配类型"
-          min-width="120"
-        >
+        <el-table-column label="匹配类型" min-width="120">
           <template slot-scope="scope">
             <ColumnForm
               :ref="`type-${scope.$index}`"
@@ -40,21 +36,12 @@
             </ColumnForm>
           </template>
         </el-table-column>
-        <el-table-column
-          label="逻辑"
-          min-width="80"
-        >
+        <el-table-column label="逻辑" min-width="80">
           <template slot-scope="scope">
-            <yd-form-select
-              v-model="scope.row.logic"
-              :selects="wafLogicMap[scope.row.rule_type]"
-            />
+            <yd-form-select v-model="scope.row.logic" :selects="wafLogicMap[scope.row.rule_type]" />
           </template>
         </el-table-column>
-        <el-table-column
-          label="匹配目标"
-          min-width="300"
-        >
+        <el-table-column label="匹配目标" min-width="300">
           <template slot-scope="scope">
             <ColumnForm
               :ref="`data-${scope.$index}`"
@@ -74,10 +61,7 @@
               </template>
               <!-- 请求端口 -->
               <template v-else-if="scope.row.rule_type === 'target_port'">
-                <yd-input-multiple
-                  v-model="scope.row.data"
-                  placeholder="请输入端口"
-                />
+                <yd-input-multiple v-model="scope.row.data" placeholder="请输入端口" />
               </template>
               <!-- 访客区域 -->
               <template v-if="scope.row.rule_type === 'region'">
@@ -149,17 +133,10 @@
             </ColumnForm>
           </template>
         </el-table-column>
-        <el-table-column
-          align="right"
-          label="操作"
-          width="80px"
-        >
+        <el-table-column align="right" label="操作" width="80px">
           <template slot-scope="scope">
             <ColumnAction>
-              <el-button
-                type="text"
-                @click="handleRowDelete(scope.$index)"
-              >删除</el-button>
+              <el-button type="text" @click="handleRowDelete(scope.$index)">删除</el-button>
             </ColumnAction>
           </template>
         </el-table-column>
@@ -169,78 +146,78 @@
 </template>
 
 <script>
-import consoleTable from '@/mixins/consoleTable'
-import RULE from '@/utils/verify'
-import ColumnForm from '@/components/Column/ColumnForm'
-import InputArea from '@/components/Input/InputArea'
-import InputRuleLimit from '@/components/Input/InputRuleLimit'
-import wafMixins from '@/views/sdk/mixins/waf'
+import consoleTable from '@/mixins/consoleTable';
+import RULE from '@/utils/verify';
+import ColumnForm from '@/components/Column/ColumnForm';
+import InputArea from '@/components/Input/InputArea';
+import InputRuleLimit from '@/components/Input/InputRuleLimit';
+import wafMixins from '@/views/sdk/mixins/waf';
 
 function portVaildate(rule, value, callback) {
   if (typeof value === 'string') {
-    value = [value]
+    value = [value];
   } else {
-    if (!value[0]) callback(new Error('请填写'))
+    if (!value[0]) callback(new Error('请填写'));
   }
 
   value.forEach(item => {
     if (!RULE.port.test(item)) {
-      callback(new Error('端口不正确'))
+      callback(new Error('端口不正确 1-65535'));
     }
-  })
-  callback()
+  });
+  callback();
 }
 
 function ipVaildate(rule, value, callback) {
   if (typeof value === 'string') {
-    value = [value]
+    value = [value];
   } else {
-    if (!value[0]) callback(new Error('请填写 IP'))
+    if (!value[0]) callback(new Error('请填写 IP'));
   }
 
   value.forEach(item => {
     if (!RULE.cidrREG.test(item) && !RULE.ipRangeReg.test(item)) {
-      callback(new Error('IP 地址不正确'))
+      callback(new Error('IP 地址不正确'));
     }
-  })
-  callback()
+  });
+  callback();
 }
 
 function validateArr(rule, value, callback) {
   if (value.length === 0) {
-    callback(new Error(' '))
+    callback(new Error(' '));
   } else {
-    callback()
+    callback();
   }
 }
 
 function validateRegion(rule, value, callback) {
   if (!value || typeof value !== 'object' || value.country.length === 0) {
-    callback(new Error(' '))
+    callback(new Error(' '));
   } else {
-    callback()
+    callback();
   }
 }
 
 function validatorNumber(val, min, max) {
-  val = parseInt(val)
-  if (isNaN(val)) return false
+  val = parseInt(val);
+  if (isNaN(val)) return false;
   if (min <= val && val <= max) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
 }
 
 function validateLimit(rule, value, callback) {
-  if (!value || (typeof value !== 'object')) {
-    callback(new Error(' '))
+  if (!value || typeof value !== 'object') {
+    callback(new Error(' '));
   } else {
-    const { interval, reqs } = value
+    const { interval, reqs } = value;
     if (!validatorNumber(interval, 1, 20) || !validatorNumber(reqs, 1, 1000)) {
-      callback(new Error(' '))
+      callback(new Error(' '));
     }
-    callback()
+    callback();
   }
 }
 
@@ -274,56 +251,56 @@ export default {
         logic: '',
         data: []
       }
-    }
+    };
   },
 
   mounted() {
-    this.init()
+    this.init();
   },
 
   methods: {
     init() {
-      this.list = []
+      this.list = [];
     },
 
     formatTypeSelect(list, focus) {
-      const selected = this.list.map(_ => _.rule_type)
+      const selected = this.list.map(_ => _.rule_type);
       list.forEach(_ => {
-        _.disabled = selected.includes(_.value)
-      })
-      return list
+        _.disabled = selected.includes(_.value);
+      });
+      return list;
     },
 
     handleTypeChange(type, row) {
-      row.logic = this.wafLogicMap[type][0].value
+      row.logic = this.wafLogicMap[type][0].value;
 
       if (['device_rate_limit'].includes(type)) {
         row.data = {
           reqs: '',
           interval: ''
-        }
+        };
       } else if (['region'].includes(type)) {
         row.data = {
           country: [],
           province: []
-        }
+        };
       } else {
-        row.data = []
+        row.data = [];
       }
     },
 
     async setList(list) {
-      this.list = list
+      this.list = list;
     },
 
     async getList() {
       try {
-        await this.handleCheckList()
+        await this.handleCheckList();
       } catch (e) {
-        throw new Error()
+        throw new Error();
       }
-      return this.list
+      return this.list;
     }
   }
-}
+};
 </script>

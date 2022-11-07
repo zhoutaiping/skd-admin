@@ -11,15 +11,15 @@
       :height="height"
       :tooltip="tooltip"
       :legend-visible="legendVisible"
-      theme-name="yundun"
+      theme-name="andao"
     />
   </div>
   <!-- :data-empty="!loading && nData.rows.length === 0" -->
 </template>
 
 <script>
-import create from '@/utils/create-basic'
-import Color from '@/utils/color'
+import create from '@/utils/create-basic';
+import Color from '@/utils/color';
 
 export default create({
   name: 'Chart',
@@ -58,7 +58,7 @@ export default create({
         return {
           rows: [],
           columns: []
-        }
+        };
       }
     },
     grid: {
@@ -69,7 +69,7 @@ export default create({
           left: 100,
           right: 20,
           bottom: 30
-        }
+        };
       }
     },
     legendVisible: {
@@ -85,9 +85,9 @@ export default create({
   watch: {
     data(val) {
       if (!val || !val.columns || !val.rows) {
-        this.clear()
+        this.clear();
       } else {
-        this.nData = val
+        this.nData = val;
       }
     }
   },
@@ -99,11 +99,11 @@ export default create({
         rows: [],
         columnss: []
       }
-    }
+    };
   },
 
   created() {
-    this.nData = this.data
+    this.nData = this.data;
   },
 
   methods: {
@@ -111,8 +111,8 @@ export default create({
       this.nData = {
         rows: [],
         columnss: []
-      }
+      };
     }
   }
-})
+});
 </script>

@@ -55,12 +55,14 @@
       <slot name="footer" />
       <template v-if="actionVisible">
         <el-button
+          size="mini"
           v-if="showSubmit"
           :loading="submitLoading"
           :type="aside ? 'text' : 'primary'"
           @click="handleSubmit"
         >{{ submitText }}</el-button>
         <el-button
+          size="mini"
           v-if="showCancel"
           :type="aside ? 'text' : 'default'"
           @click="handleClose"

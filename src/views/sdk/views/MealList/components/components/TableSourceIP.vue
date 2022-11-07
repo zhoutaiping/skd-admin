@@ -1,15 +1,8 @@
 <template>
   <div>
-    <DmTable
-      add-button
-      border
-      @click-add-button="handleRowAdd"
-    >
+    <DmTable add-button border @click-add-button="handleRowAdd">
       <el-table :data="list">
-        <el-table-column
-          :label="sourceType === 1 ? 'IP' : '域名'"
-          min-width="150px"
-        >
+        <el-table-column :label="sourceType === 1 ? 'IP' : '域名'" min-width="150px">
           <template slot-scope="scope">
             <ColumnForm
               v-if="sourceType === 1"
@@ -18,10 +11,7 @@
               :model="scope.row"
               prop="ip"
             >
-              <el-input
-                v-model="scope.row.ip"
-                placeholder="8.8.8.8"
-              />
+              <el-input v-model="scope.row.ip" placeholder="8.8.8.8" />
             </ColumnForm>
             <ColumnForm
               v-if="sourceType === 2"
@@ -30,54 +20,27 @@
               :model="scope.row"
               prop="domain"
             >
-              <el-input
-                v-model="scope.row.domain"
-                placeholder="www.demo.com"
-              />
+              <el-input v-model="scope.row.domain" placeholder="www.demo.com" />
             </ColumnForm>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="showPort"
-          label="端口"
-          min-width="100px"
-        >
+        <el-table-column v-if="showPort" label="端口" min-width="100px">
           <template slot-scope="scope">
             <!-- :rules="rowRules" -->
-            <ColumnForm
-              :ref="`port-${scope.$index}`"
-              :model="scope.row"
-              prop="port"
-            >
-              <el-input
-                v-model="scope.row.port"
-                placeholder="8080"
-              />
+            <ColumnForm :ref="`port-${scope.$index}`" :model="scope.row" prop="port">
+              <el-input v-model="scope.row.port" placeholder="8080" />
             </ColumnForm>
           </template>
         </el-table-column>
-        <el-table-column
-          label="线路"
-          width="140px"
-        >
+        <el-table-column label="线路" width="140px">
           <template slot-scope="scope">
-            <yd-form-select
-              v-model="scope.row.backup"
-              :selects="IP_VIEW"
-            />
+            <yd-form-select v-model="scope.row.backup" :selects="IP_VIEW" />
           </template>
         </el-table-column>
-        <el-table-column
-          align="right"
-          label="操作"
-          width="80px"
-        >
+        <el-table-column align="right" label="操作" width="80px">
           <template slot-scope="scope">
             <ColumnAction>
-              <el-button
-                type="text"
-                @click="handleRowDelete(scope.$index)"
-              >删除</el-button>
+              <el-button type="text" @click="handleRowDelete(scope.$index)">删除</el-button>
             </ColumnAction>
           </template>
         </el-table-column>
@@ -87,10 +50,11 @@
 </template>
 
 <script>
-import consoleTable from '@/mixins/consoleTable'
-import RULE from '@/utils/verify'
-import ColumnForm from '@/components/Column/ColumnForm'
-import packagesMixins from '../../../../mixins/packages'
+import consoleTable from '@/mixins/consoleTable';
+import RULE from '@/utils/verify';
+import ColumnForm from '@/components/Column/ColumnForm';
+import packagesMixins from '../../../../mixins/packages';
+import { deepClone } from '../../../../../../utils';
 
 const IP_VIEW = [
   {
@@ -101,7 +65,7 @@ const IP_VIEW = [
     label: '备线路',
     value: 2
   }
-]
+];
 
 export default {
   components: { ColumnForm },
@@ -151,47 +115,54 @@ export default {
             required: true,
             pattern: RULE.port,
             message: ' ',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }
         ]
+      },
+      list: [{ ip: '', domain: '', port: '', backup: 1 }]
+    };
+  },
+  watch: {
+    sourceType: {
+      handler(val) {
+        console.log(1, this.list);
       }
     }
   },
-
   methods: {
     async setList(list) {
       this.$nextTick(() => {
-        this.list = list
-      })
+        this.list = list;
+      });
     },
 
     async getList() {
       try {
-        await this.handleCheckList()
+        await this.handleCheckList();
       } catch (e) {
-        throw new Error()
+        throw new Error();
       }
 
       const list = this.list.map(_ => {
         const item = {
           ip: Number(this.sourceType) === 1 ? _.ip : _.domain,
           backup: _.backup
-        }
-        if (this.showPort) item.port = _.port
-        return item
-      })
+        };
+        if (this.showPort) item.port = _.port;
+        return item;
+      });
 
       if (list.length === 0) {
-        this.$message.warning('请配置源数据')
-        throw new Error()
+        this.$message.warning('请配置源数据');
+        throw new Error();
       }
       if (!list.map(_ => _.backup).includes(1)) {
-        this.$message.warning('至少需要一条主线路')
-        throw new Error()
+        this.$message.warning('至少需要一条主线路');
+        throw new Error();
       }
 
-      return list
+      return list;
     }
   }
-}
+};
 </script>

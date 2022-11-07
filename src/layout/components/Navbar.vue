@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
@@ -9,21 +14,18 @@
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
-
+        </el-tooltip>-->
       </template>
-
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar :src="th_default" size="medium" />
-          <!-- <img :src="th_default+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <i class="el-icon-caret-bottom" />
+          <el-avatar :src="account_th" size="medium" />
+          <!-- <i class="el-icon-caret-bottom" /> -->
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item>{{ name }}</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('/register')" divided>创建网络</el-dropdown-item>
+          <el-dropdown-item v-if="is_console" @click.native="handleOpen('/network')" divided>网络切换</el-dropdown-item>
+          <el-dropdown-item @click.native="logout" divided>
             <span style="display:block;">退 出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -33,11 +35,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
-import th_default from '@/assets/images/th.jpg'
+import { mapGetters } from 'vuex';
+import Breadcrumb from '@/components/Breadcrumb';
+import Hamburger from '@/components/Hamburger';
+import Screenfull from '@/components/Screenfull';
+import th_default from '@/assets/images/th.jpg';
+import defaultSettings from '@public/settings';
 export default {
   components: {
     Breadcrumb,
@@ -47,25 +50,54 @@ export default {
   data() {
     return {
       th_default
-    }
+    };
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-      'device'
-    ])
+    ...mapGetters(['sidebar', 'avatar', 'name', 'device']),
+    is_console() {
+      // const customer_user_id = localStorage.getItem('customer_user_id') || null;
+      // return !!customer_user_id ? false : true;
+      return true;
+    },
+    tenant_prefix_url() {
+      return this.$store.getters.tenant_prefix_url;
+    },
+    account_th() {
+      return this.avatar || th_default;
+    }
   },
   methods: {
-    toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+    handleOpen(type) {
+      if (!type) return;
+      const Token = localStorage.getItem('token');
+      if (process.env.NODE_ENV === 'development') {
+        this.$router.push(type);
+        return;
+      }
+      let url =
+        'https://' +
+        this.$store.getters.default_host +
+        type +
+        '?token=' +
+        Token +
+        '&setting=true';
+      const customer_user_id = localStorage.getItem('customer_user_id') || null;
+      if (!!customer_user_id) {
+        url = url + '&customer_user_id' + Number(customer_user_id);
+      }
+      window.location.replace(url, '_self');
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    toggleSideBar() {
+      this.$store.dispatch('app/toggleSideBar');
+    },
+    logout() {
+      this.$store.dispatch('user/logout').then(res => {
+        if (this.$store.getters.signOutUrl)
+          window.location.replace(this.$store.getters.signOutUrl, '_self');
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -74,18 +106,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -117,16 +149,16 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 10px;
 
       .avatar-wrapper {
         margin-top: 5px;

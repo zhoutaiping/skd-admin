@@ -162,7 +162,6 @@ export default create({
 
     reset() {
       this.$nextTick(() => {
-        console.log(this.defaultValue)
         if (this.defaultValue) this.$emit('input', this.defaultValue)
       })
     },

@@ -211,11 +211,11 @@ $table-border-color: rgb(223, 229, 236);
 
     th {
       background: #fafafa;
-      color: rgba(0,0,0,.85);
+      // color: rgba(0,0,0,.85);
       font-weight: 500;
-      // background: $--color-primary;
-      // color: #fff;
-      // border-top: 1px solid rgb(223, 229, 236);
+      background: $--color-primary;
+      color: #fff;
+      border-top: 1px solid rgb(223, 229, 236);
 
       div {
         font-weight: 600;

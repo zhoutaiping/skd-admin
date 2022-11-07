@@ -254,7 +254,6 @@ export function countByteLen(val = '') {
 }
 
 export function cutStr(str = '', L) {
-  console.log(str)
   var result = ''
   var strlen = str.length
   var chrlen = str.replace(/[^x00-\xff]/g, '**').length
