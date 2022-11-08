@@ -47,14 +47,14 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200" align="right">
-            <template slot-scope="scope">
-              <el-button type="text" @click="$refs.Add.handleOpen(scope.row, { mode: 'Edit' })">编辑</el-button>
+            <template slot-scope="{row}">
+              <!-- <el-button type="text" @click="$refs.Add.handleOpen(scope.row, { mode: 'Edit' })">编辑</el-button>
               <el-divider direction="vertical" />
               <router-link :to="{ name: `SDK_app_id`, params: { id: scope.row.sdk_id } }">
                 <el-button type="text">管理</el-button>
               </router-link>
               <el-divider direction="vertical" />
-              <el-button type="text" @click="del(scope.row)">删除</el-button>
+              <el-button type="text" @click="del(scope.row)">删除</el-button>-->
               <!-- <el-divider direction="vertical" />
               <router-link :to="{name: `sdk_explorer`, params: {id: scope.row.id}}">
                 <el-button type="text">
@@ -67,6 +67,26 @@
                   控制台
                 </el-button>
               </router-link>-->
+              <el-dropdown
+                type="primary"
+                @command="
+                  (e) => {
+                    handleOption(e, row);
+                  }
+                "
+              >
+                <span class="el-dropdown-link">
+                  <i class="el-icon-more" />
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="edit">编辑</el-dropdown-item>
+                  <el-dropdown-item command="rule">规则管理</el-dropdown-item>
+                  <el-dropdown-item command="delete">
+                    <span style="color: red">删除</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="console">控制台</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -136,7 +156,19 @@ export default {
           });
       }
     },
-
+    handleOption(key, data) {
+      if (key === 'edit') this.$refs.Add.handleOpen(data, { mode: 'Edit' });
+      if (key === 'delete') this.del(data);
+      if (key === 'rule')
+        this.$router.push({ name: `SDK_app_id`, params: { id: data.sdk_id } });
+      if (key === 'console') {
+        this.$router.push({
+          name: `sdk_business__id`,
+          params: { id: data.sdk_id },
+          query: { title: data.app_name }
+        });
+      }
+    },
     async del(data) {
       if (!data.sdk_id) return;
       console.log({

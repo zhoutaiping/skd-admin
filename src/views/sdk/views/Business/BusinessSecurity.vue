@@ -1,6 +1,6 @@
 <template>
   <yd-card-list>
-    <CardItemForm
+    <!-- <CardItemForm
       :loading="false"
       is-support
       is-init
@@ -33,17 +33,17 @@
         disabled
       />
     </CardItemForm>
-    <CardDeviceReputation />
+    <CardDeviceReputation />-->
     <CardWAF />
   </yd-card-list>
 </template>
 
 <script>
-import SelectSwitch from '@/components/Select/SelectSwitch'
-import CardDeviceReputation from './components/CardDeviceReputation'
-import CardWAF from './ApplicationSecurity/components/CardWAF'
+import SelectSwitch from '@/components/Select/SelectSwitch';
+import CardDeviceReputation from './components/CardDeviceReputation';
+import CardWAF from './ApplicationSecurity/components/CardWAF';
 
 export default {
   components: { SelectSwitch, CardDeviceReputation, CardWAF }
-}
+};
 </script>

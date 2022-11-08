@@ -115,24 +115,24 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import("@/views/sdk/views/Business/Detail"),
         redirect: {
-          name: `sdk_business__id__applicationAcceleration`,
+          name: `sdk_business__id__BusinessSecurity`,
         },
         meta: { title: "控制台" },
         children: [
-          {
-            path: "applicationSecurity",
-            name: `sdk_business__id__applicationSecurity`,
-            component: () =>
-              import("@/views/sdk/views/Business/ApplicationSecurity/index"),
-            meta: { title: "应用安全", back: `SDK_app_list` },
-          },
-          {
-            path: "applicationAcceleration",
-            name: `sdk_business__id__applicationAcceleration`,
-            component: () =>
-              import("@/views/sdk/views/Business/ApplicationAcceleration"),
-            meta: { title: "应用加速", back: `SDK_app_list` },
-          },
+          // {
+          //   path: "applicationSecurity",
+          //   name: `sdk_business__id__applicationSecurity`,
+          //   component: () =>
+          //     import("@/views/sdk/views/Business/ApplicationSecurity/index"),
+          //   meta: { title: "应用安全", back: `SDK_app_list` },
+          // },
+          // {
+          //   path: "applicationAcceleration",
+          //   name: `sdk_business__id__applicationAcceleration`,
+          //   component: () =>
+          //     import("@/views/sdk/views/Business/ApplicationAcceleration"),
+          //   meta: { title: "应用加速", back: `SDK_app_list` },
+          // },
           {
             path: "businessSecurity",
             name: `sdk_business__id__BusinessSecurity`,
@@ -140,13 +140,13 @@ export const asyncRoutes = [
               import("@/views/sdk/views/Business/BusinessSecurity"),
             meta: { title: "业务安全", back: `SDK_app_list` },
           },
-          {
-            path: "networkSecurity",
-            name: `sdk_business__id__NetworkSecurity`,
-            component: () =>
-              import("@/views/sdk/views/Business/NetworkSecurity"),
-            meta: { title: "网络安全", back: `SDK_app_list` },
-          },
+          // {
+          //   path: "networkSecurity",
+          //   name: `sdk_business__id__NetworkSecurity`,
+          //   component: () =>
+          //     import("@/views/sdk/views/Business/NetworkSecurity"),
+          //   meta: { title: "网络安全", back: `SDK_app_list` },
+          // },
         ],
       },
       {
