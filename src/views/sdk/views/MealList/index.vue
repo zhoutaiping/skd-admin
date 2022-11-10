@@ -46,27 +46,8 @@
               <ColumnExpireTime :expire-time="scope.row.updated_at" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="200" align="right">
+          <el-table-column label="操作" width="140" fixed="right" align="right">
             <template slot-scope="{row}">
-              <!-- <el-button type="text" @click="$refs.Add.handleOpen(scope.row, { mode: 'Edit' })">编辑</el-button>
-              <el-divider direction="vertical" />
-              <router-link :to="{ name: `SDK_app_id`, params: { id: scope.row.sdk_id } }">
-                <el-button type="text">管理</el-button>
-              </router-link>
-              <el-divider direction="vertical" />
-              <el-button type="text" @click="del(scope.row)">删除</el-button>-->
-              <!-- <el-divider direction="vertical" />
-              <router-link :to="{name: `sdk_explorer`, params: {id: scope.row.id}}">
-                <el-button type="text">
-                  资源管理
-                </el-button>
-              </router-link>
-              <el-divider direction="vertical" />
-              <router-link :to="{name: `sdk_business__id`, params: {id: scope.row.id}, query: {title: scope.row.package_name}}">
-                <el-button type="text">
-                  控制台
-                </el-button>
-              </router-link>-->
               <el-dropdown
                 type="primary"
                 @command="
@@ -157,26 +138,28 @@ export default {
       }
     },
     handleOption(key, data) {
-      if (key === 'edit') this.$refs.Add.handleOpen(data, { mode: 'Edit' });
-      if (key === 'delete') this.del(data);
-      if (key === 'rule')
-        this.$router.push({ name: `SDK_app_id`, params: { id: data.sdk_id } });
-      if (key === 'console') {
-        this.$router.push({
-          name: `sdk_business__id`,
-          params: { id: data.sdk_id },
-          query: { title: data.app_name }
-        });
-      }
+      const optionMap = {
+        edit: val => this.$refs.Add.handleOpen(val, { mode: 'Edit' }),
+        delete: val => this.del(data),
+        rule: val => {
+          return this.$router.push({
+            name: `SDK_app_id`,
+            params: { id: val.sdk_id }
+          });
+        },
+        console: val => {
+          return this.$router.push({
+            name: `sdk_business__id`,
+            params: { id: val.sdk_id },
+            query: { title: val.app_name }
+          });
+        }
+      };
+
+      return optionMap[key](data);
     },
     async del(data) {
       if (!data.sdk_id) return;
-      console.log({
-        sdk_id: data.sdk_id,
-        tenant_id: this.tenant_id,
-        // user_id: JSON.parse(localStorage.getItem('user')).id,
-        token: localStorage.getItem('token')
-      });
       try {
         await this.FetchAccount.post('/sdk/delete', {
           sdk_id: data.sdk_id,

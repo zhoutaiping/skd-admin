@@ -9,25 +9,17 @@
     @submit="handleSubmit"
   >
     <DmAlert>
-      1. 同一条规则中多个匹配条件为 “与” 逻辑，即必须多个条件同时满足才算匹配中规则<br>
-      2. 匹配目标具有多个时，用 “|” 隔开<br>
-      3. 同一条规则最多 5个 匹配条件组合<br>
+      1. 同一条规则中多个匹配条件为 “与” 逻辑，即必须多个条件同时满足才算匹配中规则
+      <br />2. 匹配目标具有多个时，用 “|” 隔开
+      <br />3. 同一条规则最多 5个 匹配条件组合
+      <br />
     </DmAlert>
-    <el-form
-      :model="form"
-      label-position="top"
-    >
+    <el-form :model="form" label-position="top">
       <el-form-item label="匹配条件">
         <TableRules ref="TableRules" />
       </el-form-item>
-      <el-form-item
-        label="处置方式"
-        prop="title"
-      >
-        <yd-form-radio
-          v-model="form.action"
-          :radios="actionType"
-        />
+      <el-form-item label="处置方式" prop="title">
+        <yd-form-radio v-model="form.action" :radios="actionType" />
       </el-form-item>
       <el-form-item v-if="form.action === 'block'">
         <el-form-item
@@ -89,8 +81,8 @@
 </template>
 
 <script>
-import createDialog from '@/utils/createDialog'
-import TableRules from './TableRules'
+import createDialog from '@/utils/createDialog';
+import TableRules from './TableRules';
 
 const actionType = [
   {
@@ -109,14 +101,16 @@ const actionType = [
     label: '封禁',
     value: 'block'
   }
-]
+];
 
 export default createDialog({
   components: { TableRules },
 
   data() {
     return {
-      id: '',
+      Fetch: this.FetchAccount,
+
+      rule_id: '',
       actionType,
       mode: 'Create',
       timeType: [
@@ -144,7 +138,7 @@ export default createDialog({
           interval: 0
         }
       }
-    }
+    };
   },
 
   methods: {
@@ -153,49 +147,49 @@ export default createDialog({
         this.form.action_data = {
           time_unit: 'second',
           interval: 0
-        }
+        };
       }
-      this.mode = form.id ? 'Edit' : 'Create'
+      this.mode = form.rule_id ? 'Edit' : 'Create';
       if (this.mode === 'Edit') {
-        this.id = form.id
+        this.rule_id = form.rule_id;
 
-        const rules = Array.isArray(form.rules) ? form.rules : []
-        this.$refs.TableRules.setList(rules)
+        const rules = Array.isArray(form.rules) ? form.rules : [];
+        this.$refs.TableRules.setList(rules);
       } else {
-        this.id = ''
-        this.$refs.TableRules.setList([])
+        this.rule_id = '';
+        this.$refs.TableRules.setList([]);
       }
     },
 
     async fetchSubmit() {
-      const rules = await this.$refs.TableRules.getList()
+      const rules = await this.$refs.TableRules.getList();
       if (rules.length === 0) {
-        this.$message.warning('至少添加一条规则')
-        throw new Error()
+        this.$message.warning('至少添加一条规则');
+        throw new Error();
       }
       const form = {
-        tjkd_app_id: this.$route.params.id,
+        sdk_id: this.$route.params.id,
         rules,
         type: 'app',
         ...this.form
-      }
+      };
       try {
         if (this.mode === 'Create') {
-          await this.Fetch.post('V4/firewall.policy.save', form)
+          await this.FetchAccount.post('/sdk_acl/rule/add', form);
         } else {
-          form.id = this.id
-          await this.Fetch.post(`V4/firewall.policy.save`, form)
+          form.rule_id = this.rule_id;
+          await this.FetchAccount.post(`/sdk_acl/rule/modify`, form);
         }
       } catch (e) {
-        throw new Error()
+        throw new Error();
       }
     },
 
     async handleSubmit(form) {
-      this.Message('ACTION_SUCCESS')
-      this.$emit('init')
-      this.handleClose()
+      this.Message('ACTION_SUCCESS');
+      this.$emit('init');
+      this.handleClose();
     }
   }
-})
+});
 </script>
