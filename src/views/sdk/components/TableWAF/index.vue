@@ -12,9 +12,9 @@
           <el-table-column type="selection" width="55" />
           <el-table-column label="规则ID/创建时间" min-width="200">
             <template slot-scope="scope">
-              {{ scope.row.code }}
+              {{ scope.row.uuid }}
               <br />
-              {{ scope.row.create_at }}
+              {{ formartTime(scope.row.created_at)}}
             </template>
           </el-table-column>
           <el-table-column min-width="300" label="匹配条件" prop="active">
@@ -55,7 +55,7 @@
             <template slot-scope="scope">
               <ColumnAction>
                 <el-button type="text" @click="$refs.DialogRow.handleOpen(scope.row)">编辑</el-button>
-                <el-button type="text" @click="$refs.DialogLog.handleOpen(scope.row)">修改记录</el-button>
+                <!-- <el-button type="text" @click="$refs.DialogLog.handleOpen(scope.row)">修改记录</el-button>
                 <router-link
                   :to="{
                     name: 'taichi-app.router.report__waf',
@@ -65,7 +65,7 @@
                   }"
                 >
                   <el-button type="text">匹配记录</el-button>
-                </router-link>
+                </router-link>-->
               </ColumnAction>
             </template>
           </el-table-column>
@@ -123,16 +123,18 @@ export default {
         type: 'warning'
       }).then(async () => {
         if (type === 'open') {
-          await this.Fetch.post('/sdk_acl/rule/open', {
-            ids: this.selectionId
+          await this.Fetch.post('/sdk_acl/rule/statusSet', {
+            status: 1,
+            rule_ids: this.selectionId
           });
         } else if (type === 'stop') {
-          await this.Fetch.post('/sdk_acl/rule/stop', {
-            ids: this.selectionId
+          await this.Fetch.post('/sdk_acl/rule/statusSet', {
+            status: 2,
+            rule_ids: this.selectionId
           });
         } else if (type === 'delete') {
           await this.Fetch.post('/sdk_acl/rule/delete', {
-            ids: this.selectionId
+            rule_ids: this.selectionId
           });
         }
         this.$message.success('操作成功');
@@ -146,8 +148,8 @@ export default {
         return;
       }
       try {
-        data.sdk_id = this.$route.params.id;
-        await this.Fetch.post('//sdk_acl/rule/save', data);
+        data.sdk_id = Number(this.$route.params.id);
+        await this.Fetch.post('/sdk_acl/rule/modify', data);
       } catch (e) {
         return;
       }

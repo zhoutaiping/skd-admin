@@ -168,7 +168,7 @@ export default createDialog({
         throw new Error();
       }
       const form = {
-        sdk_id: this.$route.params.id,
+        sdk_id: Number(this.$route.params.id),
         rules,
         type: 'app',
         ...this.form
