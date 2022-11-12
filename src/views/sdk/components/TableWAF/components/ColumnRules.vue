@@ -1,13 +1,8 @@
 <template>
   <div :class="b()">
-    <div
-      v-for="(item, index) in list"
-      :key="index"
-    >
+    <div v-for="(item, index) in list" :key="index">
       {{ item.title }}：
-      <template v-if="item.view">
-        {{ item.view }}
-      </template>
+      <template v-if="item.view">{{ item.view }}</template>
       <template v-else>
         <ColumnListMore :value="item.list" />
       </template>
@@ -16,19 +11,19 @@
 </template>
 
 <script>
-import create from '@/utils/create-basic'
-import column from '@/mixins/column'
-import ColumnListMore from '@/components/Column/ColumnListMore'
-import wafMixins from '@/views/sdk/mixins/waf'
-import { labelView } from '@/utils/filter'
-import { formatRegionView } from '@/utils/format'
-import { province as Province } from '@/constants/city-data'
+import create from '@/utils/create-basic';
+import column from '@/mixins/column';
+import ColumnListMore from '@/components/Column/ColumnListMore';
+import wafMixins from '@/views/sdk/mixins/waf';
+import { labelView } from '@/utils/filter';
+import { formatRegionView } from '@/utils/format';
+import { province as Province } from '@/constants/city-data';
 
 const itemMap = {
   cpu_arch: 'cpuArch',
   device_os: 'deviceOS',
   device_risk: 'deviceRisk'
-}
+};
 
 export default create({
   name: 'ColumnRules',
@@ -43,65 +38,71 @@ export default create({
 
   computed: {
     selectRegion() {
-      return this.$store.state.select.region
+      return this.$store.state.select.region;
     },
     selectRegionMap() {
-      return this.$store.state.select.regionMap
+      return this.$store.state.select.regionMap;
     }
   },
 
   data() {
     return {
       list: []
-    }
+    };
   },
 
   watch: {
     items(val) {
-      this.init()
+      this.init();
     }
   },
 
   created() {
-    this.init()
+    this.init();
   },
 
   methods: {
     init() {
-      const nList = []
+      const nList = [];
 
-      if (!Array.isArray(this.items)) return
+      if (!Array.isArray(this.items)) return;
       this.items.forEach(_ => {
-        const data = _.data
-        const type = _.rule_type
+        const data = (checkIsJSON(_.data) && JSON.parse(_.data)) || _.data;
+        const type = _.rule_type;
 
-        let list = []
-        let view = ''
+        let list = [];
+        let view = '';
 
-        const title = `${labelView(type, this.wafRules)}[${labelView(_.logic, this.wafLogics)}]`
+        const title = `${labelView(type, this.wafRules)}[${labelView(
+          _.logic,
+          this.wafLogics
+        )}]`;
         if (Array.isArray(data)) {
-          const selectName = itemMap[type]
+          const selectName = itemMap[type];
           if (selectName) {
-            list = data.map(_ => labelView(_, this.wafSelects[selectName]))
+            list = data.map(_ => labelView(_, this.wafSelects[selectName]));
           } else {
-            list = data
+            list = data;
           }
         }
 
         if (type === 'device_rate_limit') {
-          view = `${data.interval} 秒内请求头频率大于 ${data.reqs} 次`
+          view = `${data.interval} 秒内请求头频率大于 ${data.reqs} 次`;
         } else if (type === 'region') {
           if (data.country.includes('CN') && !data.province.length) {
-            data.province.push(...Province.map(_ => _.value))
+            data.province.push(...Province.map(_ => _.value));
           }
 
-          const valueMap = formatRegionView([...data.country, ...data.province], this.selectRegionMap)
+          const valueMap = formatRegionView(
+            [...data.country, ...data.province],
+            this.selectRegionMap
+          );
           for (const [key, item] of valueMap) {
-            const title = labelView(key, this.selectRegion.list)
+            const title = labelView(key, this.selectRegion.list);
             if (item === 'all') {
-              list.push(title)
+              list.push(title);
             } else {
-              list.push(...item.map(_ => labelView(_, this.selectRegion.list)))
+              list.push(...item.map(_ => labelView(_, this.selectRegion.list)));
             }
           }
         }
@@ -110,10 +111,26 @@ export default create({
           title,
           list,
           view
-        })
-      })
-      this.list = nList
+        });
+      });
+      this.list = nList;
     }
   }
-})
+});
+
+function checkIsJSON(str) {
+  if (typeof str == 'string') {
+    try {
+      var obj = JSON.parse(str);
+      if (typeof obj == 'object' && obj) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+  return false;
+}
 </script>

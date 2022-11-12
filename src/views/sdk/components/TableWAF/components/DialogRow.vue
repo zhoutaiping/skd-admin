@@ -153,7 +153,12 @@ export default createDialog({
       if (this.mode === 'Edit') {
         this.rule_id = form.rule_id;
 
-        const rules = Array.isArray(form.rules) ? form.rules : [];
+        let rules = Array.isArray(form.rules) ? form.rules : [];
+        rules = rules.map(i => {
+          i.data = (checkIsJSON(i.data) && JSON.parse(i.data)) || i.data;
+          return i;
+        });
+
         this.$refs.TableRules.setList(rules);
       } else {
         this.rule_id = '';
@@ -163,13 +168,19 @@ export default createDialog({
 
     async fetchSubmit() {
       const rules = await this.$refs.TableRules.getList();
+
       if (rules.length === 0) {
         this.$message.warning('至少添加一条规则');
         throw new Error();
       }
       const form = {
         sdk_id: Number(this.$route.params.id),
-        rules,
+        rules: rules.map(i => {
+          i.data = JSON.stringify(i.data, null, 0);
+          return {
+            ...i
+          };
+        }),
         type: 'app',
         ...this.form
       };
@@ -192,4 +203,20 @@ export default createDialog({
     }
   }
 });
+
+function checkIsJSON(str) {
+  if (typeof str == 'string') {
+    try {
+      var obj = JSON.parse(str);
+      if (typeof obj == 'object' && obj) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+  return false;
+}
 </script>
