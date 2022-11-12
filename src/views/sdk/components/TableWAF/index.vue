@@ -125,11 +125,13 @@ export default {
         if (type === 'open') {
           await this.Fetch.post('/sdk_acl/rule/statusSet', {
             status: 1,
+            sdk_id: Number(this.$route.params.id),
             rule_ids: this.selectionId
           });
         } else if (type === 'stop') {
           await this.Fetch.post('/sdk_acl/rule/statusSet', {
             status: 2,
+            sdk_id: Number(this.$route.params.id),
             rule_ids: this.selectionId
           });
         } else if (type === 'delete') {
@@ -187,9 +189,11 @@ export default {
       }
 
       const arg = arrToSortObj(list);
-
       try {
-        await this.Fetch.post('/sdk_acl/rule/sort', { new_sorts: arg });
+        await this.Fetch.post('/sdk_acl/rule/sort', {
+          sdk_id: Number(this.$route.params.id),
+          new_sorts: arg
+        });
       } catch (e) {
         return;
       } finally {
