@@ -136,6 +136,7 @@ export default {
           });
         } else if (type === 'delete') {
           await this.Fetch.post('/sdk_acl/rule/delete', {
+            sdk_id: Number(this.$route.params.id),
             rule_ids: this.selectionId
           });
         }
