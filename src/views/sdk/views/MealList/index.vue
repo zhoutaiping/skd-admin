@@ -144,14 +144,20 @@ export default {
         rule: val => {
           return this.$router.push({
             name: `SDK_app_id`,
-            params: { id: val.sdk_id }
+            params: { id: val.sdk_id },
+            query: {
+              is_using_center_pool:
+                val.is_using_center_pool > 0 || val.center_pool_id > 0 ? 1 : 0
+            }
           });
         },
         console: val => {
           return this.$router.push({
             name: `sdk_business__id`,
             params: { id: val.sdk_id },
-            query: { title: val.app_name }
+            query: {
+              title: val.app_name
+            }
           });
         }
       };

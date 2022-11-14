@@ -30,10 +30,16 @@
           v-model="form.port"
           :disabled="options.mode === 'Edit'"
           type="textarea"
-          placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加1000条）"
+          placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加100条）"
           style="width: 280px"
         />
-        <el-input v-else v-model="form.port" placeholder="端口" style="width: 280px" />
+        <el-input
+          v-else
+          v-model="form.port"
+          type="textarea"
+          placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加100条）"
+          style="width: 280px"
+        />
       </el-form-item>
       <el-form-item label="负载均衡模式">
         <yd-form-radio v-model="form.load_balance_type" :radios="Label.loading" />
@@ -44,8 +50,21 @@
       <el-form-item label="源类型">
         <yd-form-radio-button v-model="form.source_type" :radios="Label.sourceType" />
       </el-form-item>
+
       <el-form-item label="源配置">
-        <TableSourceIP ref="TableSourceIP" :source-type="form.source_type" />
+        <TableSourceIP ref="TableSourceIP" :source-type="form.source_type" :showPort="false" />
+      </el-form-item>
+      <el-form-item prop="source_port_type" label="源端口">
+        <el-radio-group v-model="form.source_port_type" @change="changeSourcePortType">
+          <el-radio :label="0">跟随监听端口</el-radio>
+          <el-radio :label="1">指定端口</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="Number(form.source_port_type) === 1" prop="source_port" label="指定源端口">
+        <el-input v-model="form.source_port" placeholder="例：80" style="width: 280px" />
+      </el-form-item>
+      <el-form-item v-if="is_using_center_pool" label="启用中心节点" prop="is_using_center_pool">
+        <el-checkbox v-model="form.is_using_center_pool" :true-label="1" :false-label="0"></el-checkbox>
       </el-form-item>
       <!-- 加速通道 -->
       <template v-if="packageChannelList.length > 0">
@@ -106,18 +125,30 @@ const Label = {
   ]
 };
 
-function portValidator(rule, value, callback) {
-  if (typeof value === 'string') {
-    value = [value];
-  } else {
-    if (!value[0]) callback(new Error('请填写'));
-  }
-
+function portsValidator(rule, value, callback) {
+  // if (typeof value === 'string') {
+  //   value = [value];
+  // } else {
+  //   if (!value[0]) callback(new Error('请填写'));
+  // }
+  value = value.toString().split(',');
+  if (value.length > 100) callback(new Error('最多同时添加100个端口'));
   value.forEach(item => {
-    if (!RULE.port.test(item)) {
-      callback(new Error('端口不正确 1-65535'));
+    if (!RULE.port.test(item) && !RULE.portRangeReg.test(item)) {
+      callback(new Error('端口不正确 范围:1-65535'));
     }
   });
+  callback();
+}
+
+function portValidator(rule, value, callback) {
+  value = value.trim();
+  if (!value) {
+    callback(new Error('请填写'));
+  }
+  if (!RULE.port.test(value)) {
+    callback(new Error('端口不正确 1-65535'));
+  }
   callback();
 }
 
@@ -152,14 +183,25 @@ export default createDialog({
             backup: 1
           }
         ],
+        is_using_center_pool: 0, // 启用中心节点
+        source_port_type: 0, //0 跟随 1 自定义
+        source_port: '',
         package_id: this.$route.params.id
       },
       rules: {
         port: [
           { required: true, message: '请输入端口', trigger: 'blur' },
-          { validator: portValidator, trigger: 'blur' }
+          { validator: portsValidator, trigger: 'blur' }
         ],
-        domain: [{}]
+        domain: [{}],
+        is_using_center_pool: [],
+        source_port_type: [
+          { required: true, message: '请选择', trigger: 'blur' }
+        ],
+        source_port: [
+          { required: true, message: '请输入端口', trigger: 'blur' },
+          { validator: portValidator, trigger: 'blur' }
+        ]
       }
     };
   },
@@ -170,6 +212,9 @@ export default createDialog({
           JSON.parse(localStorage.getItem('user')).id) ||
         0
       );
+    },
+    is_using_center_pool() {
+      return this.$route.query.is_using_center_pool > 0 || false;
     }
   },
   methods: {
@@ -202,7 +247,9 @@ export default createDialog({
         this.loading = false;
       });
     },
-
+    changeSourcePortType(val) {
+      this.form.source_port = '';
+    },
     async fetchSubmit(form) {
       this.$refs.Form.validate(valid => {
         if (!valid) throw new Error();
