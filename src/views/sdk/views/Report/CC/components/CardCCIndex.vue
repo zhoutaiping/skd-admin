@@ -1,23 +1,15 @@
 <template>
   <el-row :gutter="12">
-    <el-col
-      v-for="(item, index) in items"
-      :span="12"
-      :key="index"
-    >
+    <el-col v-for="(item, index) in items" :span="12" :key="index">
       <yd-card>
-        <BlockItemNumber
-          :height="120"
-          :ref="`Index${item.key}`"
-          :options="item"
-        />
+        <BlockItemNumber :height="120" :ref="`Index${item.key}`" :options="item" />
       </yd-card>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import BlockItemNumber from '@/components/Block/BlockItemNumber'
+import BlockItemNumber from '@/components/Block/BlockItemNumber';
 
 export default {
   components: {
@@ -38,17 +30,31 @@ export default {
           unit: '个'
         }
       ]
-    }
+    };
   },
 
   methods: {
     async init(params) {
-      this.$refs.IndexTotal[0].startLoading()
-      this.$refs.IndexRemoteHost[0].startLoading()
-      const data = await this.Fetch.get('V4/statistic.tjkd.app.tcp.cc.line', params)
-      this.$refs.IndexTotal[0].updateValue(data.cc_total)
-      this.$refs.IndexRemoteHost[0].updateValue(data.cc_remote_addr_total)
+      this.$refs.IndexTotal[0].startLoading();
+      this.$refs.IndexRemoteHost[0].startLoading();
+      let CC_TOTAL = 0;
+      let CC_IPTOTAL = 0;
+      try {
+        const data = await this.Fetch.get(
+          '/statistic/app/tcp_ccqps_line',
+          params
+        );
+        const { cc_total = 0, CCIPTotal = 0 } = data || {};
+        CC_TOTAL = cc_total;
+        CC_IPTOTAL = CCIPTotal;
+      } catch (error) {
+        CC_TOTAL = 0;
+        CC_IPTOTAL = 0;
+      } finally {
+        this.$refs.IndexTotal[0].updateValue(CC_TOTAL);
+        this.$refs.IndexRemoteHost[0].updateValue(CC_IPTOTAL);
+      }
     }
   }
-}
+};
 </script>

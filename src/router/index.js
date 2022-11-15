@@ -183,19 +183,21 @@ export const asyncRoutes = [
         path: "report",
         name: `sdk.router.report`,
         component: () => import("@/views/sdk/views/Report/index"),
-        redirect: "visit",
-        alwaysShow: true,
+        redirect: {
+          name: "sdk.router.report__cc",
+        },
         meta: { title: "数据报表", icon: "fenxi" },
         children: [
-          // {
-          //   path: 'cc',
-          //   name: `sdk.router.report__cc`,
-          //   component: () => import('@/views/sdk/views/Report/CC'),
-          //   meta: { title: 'CC攻击统计' }
-          // },
+          {
+            path: "cc",
+            name: `sdk.router.report__cc`,
+            hidden: true,
+            component: () => import("@/views/sdk/views/Report/CC"),
+            meta: { title: "CC攻击统计" },
+          },
           {
             path: "visit",
-            // hidden: true,
+            hidden: true,
             name: `sdk.router.report__visit`,
             component: () => import("@/views/sdk/views/Report/Visit"),
             meta: { title: "访问分析" },

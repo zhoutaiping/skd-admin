@@ -1,22 +1,13 @@
 <template>
-  <yd-card
-    :loading="loading"
-    title="CC攻击趋势"
-    height="400"
-  >
-    <Chart
-      :loading="false"
-      :data="data"
-      :settings="settings"
-      height="350px"
-    />
+  <yd-card :loading="loading" title="CC攻击趋势" height="400">
+    <Chart :loading="false" :data="data" :settings="settings" height="350px" />
   </yd-card>
 </template>
 
 <script>
-import chartMixins from '@/mixins/chart'
-import Chart from '@/components/Chart/Chart'
-import { formatData, tooltipAlone } from '@/utils/chart'
+import chartMixins from '@/mixins/chart';
+import Chart from '@/components/Chart/Chart';
+import { formatData, tooltipAlone } from '@/utils/chart';
 
 export default {
   components: {
@@ -31,11 +22,11 @@ export default {
 
   data() {
     return {
-      API_URI: 'GET V4/statistic.tjkd.app.tcp.cc.line',
+      API_URI: 'GET /statistic/app/tcp_ccqps_line',
       settings: {
         type: 'line'
       }
-    }
+    };
   },
 
   methods: {
@@ -43,13 +34,32 @@ export default {
       params = {
         ...params,
         ...this.bindParams
+      };
+      try {
+        const data = await this.fetchData(params);
+        const unit =
+          data.trend && data.trend.y_data ? data.trend.y_data.unit : '';
+        this.settings.yAxisName = [`单位（${unit}）`];
+        this.data = formatData(data.trend, ['时间', '攻击QPS']);
+        this.data.tooltip = tooltipAlone(unit);
+      } catch (error) {
+        const unit = 'QPS';
+        this.settings.yAxisName = [`单位（${unit}）`];
+        this.data = formatData(
+          {
+            x_data: [0],
+            y_data: {
+              data: [0],
+              unit: 'QPS'
+            }
+          },
+          ['时间', '攻击QPS']
+        );
+        this.data.tooltip = tooltipAlone(unit);
+      } finally {
+        this.loading = false;
       }
-      const data = await this.fetchData(params)
-      const unit = data.trend && data.trend.y_data ? data.trend.y_data.unit : ''
-      this.settings.yAxisName = [`单位（${unit}）`]
-      this.data = formatData(data.trend, ['时间', '攻击QPS'])
-      this.data.tooltip = tooltipAlone(unit)
     }
   }
-}
+};
 </script>

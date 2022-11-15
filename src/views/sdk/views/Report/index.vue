@@ -14,17 +14,17 @@ export default {
   data() {
     return {
       navbar: [
-        // {
-        //   title: 'CC攻击统计',
-        //   name: 'taichi-app.router.report__cc'
-        // },
+        {
+          title: 'CC攻击统计',
+          name: 'sdk.router.report__cc'
+        },
         {
           title: '访问分析',
           name: 'sdk.router.report__visit'
         }
         // {
         //   title: '业务安全分析',
-        //   name: 'taichi-app.router.report__waf'
+        //   name: 'sdk.router.report__waf'
         // }
       ]
     };

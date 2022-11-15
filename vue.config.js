@@ -62,7 +62,7 @@ module.exports = {
         // }
       },
       "/statistic/": {
-        target: " http://121.196.201.20:65080",
+        target: "http://121.196.201.20:65080",
       },
     },
   },
