@@ -30,7 +30,7 @@
           v-model="form.port"
           :disabled="options.mode === 'Edit'"
           type="textarea"
-          placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加100条）"
+          placeholder="多个端口以“，”隔开（支持端口范围 eg: 1000-1020，单次最多添加50条）"
           style="width: 280px"
         />
         <el-input
@@ -133,7 +133,7 @@ function portsValidator(rule, value, callback) {
   // }
   value = value.toString().replace('，', ',');
   value = value.toString().split(',');
-  if (value.length > 100) callback(new Error('最多同时添加100个端口'));
+  if (value.length > 100) callback(new Error('最多同时添加50个端口'));
   value.forEach(item => {
     const port = item.split('-');
     if (port.length === 1) {
