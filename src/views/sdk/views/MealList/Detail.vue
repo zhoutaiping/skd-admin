@@ -159,7 +159,10 @@ export default {
         remark: form.remark,
         source_list: (form.source_list && JSON.parse(form.source_list)) || [],
         channel_source_list: form.channel_source_list,
-        channel_status: form.channel_status
+        channel_status: form.channel_status,
+        source_port: form.source_port,
+        source_port_type: form.source_port_type,
+        is_using_center_pool: form.is_using_center_pool
       };
 
       this.$refs.DialogRowWeb.handleOpen(form, { mode: 'Edit' });

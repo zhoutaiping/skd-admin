@@ -256,6 +256,8 @@ export default createDialog({
           this.$refs.TableChannel.setList(
             JSON.parse(data.channel_source_list) || []
           );
+
+        console.log('-----form', this.form);
         this.loading = false;
       });
     },
