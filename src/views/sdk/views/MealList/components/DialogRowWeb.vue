@@ -131,10 +131,22 @@ function portsValidator(rule, value, callback) {
   // } else {
   //   if (!value[0]) callback(new Error('请填写'));
   // }
+  value = value.toString().replace('，', ',');
   value = value.toString().split(',');
   if (value.length > 100) callback(new Error('最多同时添加100个端口'));
   value.forEach(item => {
-    if (!RULE.port.test(item) && !RULE.portRangeReg.test(item)) {
+    const port = item.split('-');
+    if (port.length === 1) {
+      if (!RULE.port.test(item)) callback(new Error('端口不正确 范围:1-65535'));
+    } else if (port.length === 2) {
+      if (!RULE.portRangeReg.test(item)) {
+        callback(new Error('端口不正确 范围:1-65535'));
+      } else if (RULE.portRangeReg.test(item)) {
+        if (port[0] > port[1]) {
+          callback(new Error('端口段不正确, 第二个端口要大于第一个'));
+        }
+      }
+    } else {
       callback(new Error('端口不正确 范围:1-65535'));
     }
   });

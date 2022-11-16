@@ -62,10 +62,10 @@
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="edit">编辑</el-dropdown-item>
                   <el-dropdown-item command="rule">规则管理</el-dropdown-item>
+                  <el-dropdown-item command="console">控制台</el-dropdown-item>
                   <el-dropdown-item command="delete">
                     <span style="color: red">删除</span>
                   </el-dropdown-item>
-                  <el-dropdown-item command="console">控制台</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
