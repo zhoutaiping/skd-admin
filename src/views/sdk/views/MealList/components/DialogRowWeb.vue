@@ -133,7 +133,13 @@ function portsValidator(rule, value, callback) {
   // }
   value = value.toString().replace('，', ',');
   value = value.toString().split(',');
-  if (value.length > 100) callback(new Error('最多同时添加50个端口'));
+  if (value.length > 50) callback(new Error('最多同时添加50个端口'));
+  const _value = [...new Set(value)];
+
+  if (_value.length !== value.length) {
+    callback(new Error('端口不正确, 不能重复'));
+  }
+
   value.forEach(item => {
     const port = item.split('-');
     if (port.length === 1) {
@@ -142,7 +148,7 @@ function portsValidator(rule, value, callback) {
       if (!RULE.portRangeReg.test(item)) {
         callback(new Error('端口不正确 范围:1-65535'));
       } else if (RULE.portRangeReg.test(item)) {
-        if (port[0] > port[1]) {
+        if (Number(port[0]) >= Number(port[1])) {
           callback(new Error('端口段不正确, 第二个端口要大于第一个'));
         }
       }
@@ -202,19 +208,20 @@ export default createDialog({
       },
       rules: {
         port: [
-          { required: true, message: '请输入端口', trigger: 'blur' },
-          { validator: portsValidator, trigger: 'blur' }
+          { required: true, message: '请输入端口' },
+          { validator: portsValidator, trigger: ['blur', 'change'] }
         ],
         domain: [{}],
         is_using_center_pool: [],
         source_port_type: [
-          { required: true, message: '请选择', trigger: 'blur' }
+          { required: true, message: '请选择', trigger: ['blur', 'change'] }
         ],
         source_port: [
-          { required: true, message: '请输入端口', trigger: 'blur' },
-          { validator: portValidator, trigger: 'blur' }
+          { required: true, message: '请输入端口' },
+          { validator: portValidator, trigger: ['blur', 'change'] }
         ]
-      }
+      },
+      is_using_center_pool: false
     };
   },
   computed: {
@@ -224,13 +231,16 @@ export default createDialog({
           JSON.parse(localStorage.getItem('user')).id) ||
         0
       );
-    },
-    is_using_center_pool() {
-      return this.$route.query.is_using_center_pool > 0 || false;
     }
   },
   methods: {
     afterOpen(form) {
+      if (this.options.mode === 'Create') {
+        this.is_using_center_pool = this.$route.query.is_using_center_pool > 0;
+      } else {
+        this.is_using_center_pool = form.is_using_center_pool > 0;
+      }
+
       this.$nextTick(async () => {
         this.$refs.Form.clearValidate();
         const data = deepClone({ ...form });
@@ -257,7 +267,6 @@ export default createDialog({
             JSON.parse(data.channel_source_list) || []
           );
 
-        console.log('-----form', this.form);
         this.loading = false;
       });
     },

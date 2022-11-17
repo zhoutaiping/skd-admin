@@ -174,7 +174,6 @@ function ipVaildate(rule, value, callback) {
   } else {
     if (!value[0]) callback(new Error('请填写 IP'));
   }
-
   value.forEach(item => {
     if (!RULE.cidrREG.test(item) && !RULE.ipRangeReg.test(item)) {
       callback(new Error('IP 地址不正确'));
@@ -234,17 +233,19 @@ export default {
         type: [{ required: true, trigger: 'blur', message: ' ' }]
       },
       rulesMap: {
-        ip: [{ validator: ipVaildate, trigger: 'blur' }],
-        target_port: [{ validator: portVaildate, trigger: 'blur' }],
-        region: [{ validator: validateRegion, trigger: 'blur' }],
-        fingerprint: [{ validator: validateArr, trigger: 'blur' }],
-        device_os: [{ validator: validateArr, trigger: 'blur' }],
-        device_risk: [{ validator: validateArr, trigger: 'blur' }],
-        device_rate_limit: [{ validator: validateLimit, trigger: 'blur' }],
-        cpu_arch: [{ validator: validateArr, trigger: 'blur' }],
-        device: [{ validator: validateArr, trigger: 'blur' }],
-        app_name: [{ validator: validateArr, trigger: 'blur' }],
-        app_sign_hash: [{ validator: validateArr, trigger: 'blur' }]
+        ip: [{ validator: ipVaildate, trigger: ['blur', 'change'] }],
+        target_port: [{ validator: portVaildate, trigger: ['blur', 'change'] }],
+        region: [{ validator: validateRegion, trigger: ['blur', 'change'] }],
+        fingerprint: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        device_os: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        device_risk: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        device_rate_limit: [
+          { validator: validateLimit, trigger: ['blur', 'change'] }
+        ],
+        cpu_arch: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        device: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        app_name: [{ validator: validateArr, trigger: ['blur', 'change'] }],
+        app_sign_hash: [{ validator: validateArr, trigger: ['blur', 'change'] }]
       },
       row: {
         rule_type: '',

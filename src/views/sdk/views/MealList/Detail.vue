@@ -160,9 +160,9 @@ export default {
         source_list: (form.source_list && JSON.parse(form.source_list)) || [],
         channel_source_list: form.channel_source_list,
         channel_status: form.channel_status,
-        source_port: form.source_port,
-        source_port_type: form.source_port_type,
-        is_using_center_pool: form.is_using_center_pool
+        source_port: form.source_port || '',
+        source_port_type: form.source_port_type || 0,
+        is_using_center_pool: form.is_using_center_pool || 0
       };
 
       this.$refs.DialogRowWeb.handleOpen(form, { mode: 'Edit' });

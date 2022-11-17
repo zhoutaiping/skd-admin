@@ -19,7 +19,7 @@
         <TableRules ref="TableRules" />
       </el-form-item>
       <el-form-item label="处置方式" prop="title">
-        <yd-form-radio v-model="form.action" :radios="actionType" />
+        <yd-form-radio v-model="form.action" :radios="actionType" @change="changeActionType" />
       </el-form-item>
       <el-form-item v-if="form.action === 'block'">
         <el-form-item
@@ -32,6 +32,7 @@
             :min="0"
             :max="3600"
             controls-position="right"
+            @change="e => changeInterVal(e)"
           />
         </el-form-item>
         <el-form-item
@@ -44,6 +45,7 @@
             :min="0"
             :max="60"
             controls-position="right"
+            @change="e => changeInterVal(e)"
           />
         </el-form-item>
         <el-form-item
@@ -56,6 +58,7 @@
             :min="0"
             :max="24"
             controls-position="right"
+            @change="e => changeInterVal(e)"
           />
         </el-form-item>
         <el-form-item
@@ -68,6 +71,7 @@
             :min="0"
             :max="7"
             controls-position="right"
+            @change="e => changeInterVal(e)"
           />
         </el-form-item>
         <yd-form-select
@@ -135,7 +139,7 @@ export default createDialog({
         action: 'watch',
         action_data: {
           time_unit: 'second',
-          interval: 0
+          interval: 10
         }
       }
     };
@@ -146,7 +150,7 @@ export default createDialog({
       if (!form.action_data || !form.action_data.time_unit) {
         this.form.action_data = {
           time_unit: 'second',
-          interval: 0
+          interval: 10
         };
       }
       this.mode = form.rule_id ? 'Edit' : 'Create';
@@ -165,7 +169,15 @@ export default createDialog({
         this.$refs.TableRules.setList([]);
       }
     },
-
+    changeActionType(e) {
+      this.form.action_data = {
+        time_unit: 'second',
+        interval: 10
+      };
+    },
+    changeInterVal(e) {
+      if (!e) this.form.action_data.interval = 1;
+    },
     async fetchSubmit() {
       const rules = await this.$refs.TableRules.getList();
 
