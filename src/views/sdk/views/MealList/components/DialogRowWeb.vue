@@ -235,12 +235,7 @@ export default createDialog({
   },
   methods: {
     afterOpen(form) {
-      if (this.options.mode === 'Create') {
-        this.is_using_center_pool = this.$route.query.is_using_center_pool > 0;
-      } else {
-        this.is_using_center_pool = form.is_using_center_pool > 0;
-      }
-
+      this.getSdk();
       this.$nextTick(async () => {
         this.$refs.Form.clearValidate();
         const data = deepClone({ ...form });
@@ -269,6 +264,17 @@ export default createDialog({
 
         this.loading = false;
       });
+    },
+
+    async getSdk() {
+      try {
+        const data = await this.FetchAccount.get('/sdk/info', {
+          sdk_id: this.$route.params.id
+        });
+        this.is_using_center_pool = Number(data.center_pool_id) > 0;
+      } catch (error) {
+        return;
+      }
     },
     changeSourcePortType(val) {
       this.form.source_port = '';
