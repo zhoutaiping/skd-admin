@@ -179,22 +179,20 @@ export default createDialog({
       if (!e) this.form.action_data.interval = 1;
     },
     async fetchSubmit() {
-      const rules = await this.$refs.TableRules.getList();
-
+      let rules = await this.$refs.TableRules.getList();
+      rules.forEach(i => {
+        const _data = JSON.stringify(i.data, null, 0) || '';
+        i.data = _data;
+      });
       if (rules.length === 0) {
         this.$message.warning('至少添加一条规则');
         throw new Error();
       }
       const form = {
+        ...this.form,
         sdk_id: Number(this.$route.params.id),
-        rules: rules.map(i => {
-          i.data = JSON.stringify(i.data, null, 0);
-          return {
-            ...i
-          };
-        }),
-        type: 'app',
-        ...this.form
+        rules: rules,
+        type: 'app'
       };
       try {
         if (this.mode === 'Create') {

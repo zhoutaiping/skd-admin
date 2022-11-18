@@ -291,7 +291,7 @@ export default {
     },
 
     async setList(list) {
-      this.list = list;
+      this.list = JSON.parse(JSON.stringify(list));
     },
 
     async getList() {
@@ -300,7 +300,7 @@ export default {
       } catch (e) {
         throw new Error();
       }
-      return this.list;
+      return JSON.parse(JSON.stringify(this.list));
     }
   }
 };
