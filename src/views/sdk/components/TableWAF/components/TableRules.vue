@@ -175,7 +175,11 @@ function ipVaildate(rule, value, callback) {
     if (!value[0]) callback(new Error('请填写 IP'));
   }
   value.forEach(item => {
-    if (!RULE.cidrREG.test(item) && !RULE.ipRangeReg.test(item)) {
+    if (
+      !RULE.ipReg.test(item) &&
+      !RULE.cidrREG.test(item) &&
+      !RULE.ipRangeReg.test(item)
+    ) {
       callback(new Error('IP 地址不正确'));
     }
   });
