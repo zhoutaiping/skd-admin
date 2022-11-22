@@ -30,10 +30,14 @@
           <el-table-column label="UUID" width="120" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tooltip content="点击可复制到粘贴板">
-                <el-button type="text" @click="copyAccessKey(scope.row,'uuid')">
-                  copy-uuid
+                <span
+                  class="primary--color"
+                  @click="copyAccessKey(scope.row,'uuid')"
+                  style="cursor: pointer;"
+                >
+                  复制 uuid
                   <i class="el-icon-copy-document" style="margin-left: 8px" />
-                </el-button>
+                </span>
               </el-tooltip>
             </template>
           </el-table-column>
