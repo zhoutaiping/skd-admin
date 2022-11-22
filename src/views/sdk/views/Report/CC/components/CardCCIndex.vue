@@ -40,7 +40,7 @@ export default {
       let CC_TOTAL = 0;
       let CC_IPTOTAL = 0;
       try {
-        const data = await this.Fetch.get(
+        const data = await this.Fetch.post(
           '/statistic/app/tcp_ccqps_line',
           params
         );

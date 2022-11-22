@@ -22,7 +22,7 @@ export default {
 
   data() {
     return {
-      API_URI: 'GET /statistic/app/tcp_ccqps_line',
+      API_URI: 'POST /statistic/app/tcp_ccqps_line',
       settings: {
         type: 'line'
       }
