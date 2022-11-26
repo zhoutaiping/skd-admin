@@ -23,7 +23,9 @@ router.beforeEach(async (to, from, next) => {
   let url_token = getQueryVariable("token");
   if (!url_token && !local_token) {
     store.dispatch("user/logout").then((res) => {
-      window.location.href = signIn + "?redirect_url=" + window.location.origin;
+      window.location.replace(
+        signIn + "?redirect_url=" + window.location.origin
+      );
     });
     return;
   }

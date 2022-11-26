@@ -83,7 +83,7 @@ export default {
         '&setting=true';
       const customer_user_id = localStorage.getItem('customer_user_id') || null;
       if (!!customer_user_id) {
-        url = url + '&customer_user_id' + Number(customer_user_id);
+        url = url + '&customer_user_id=' + Number(customer_user_id);
       }
       window.location.replace(url, '_self');
     },

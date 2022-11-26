@@ -31,9 +31,8 @@
             <template slot-scope="scope">
               <el-tooltip content="点击可复制到粘贴板">
                 <span
-                  class="primary--color"
                   @click="copyAccessKey(scope.row,'uuid')"
-                  style="cursor: pointer;"
+                  style="cursor: pointer;color:#1664ff;"
                 >
                   复制 uuid
                   <i class="el-icon-copy-document" style="margin-left: 8px" />
