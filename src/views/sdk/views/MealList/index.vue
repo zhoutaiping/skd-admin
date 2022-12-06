@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column label="AccessKey" min-width="150">
             <template slot-scope="scope">
-              <span>{{ scope.row.access_key }}</span>
+              <span class="copy-box" @click="copyAccessKey(scope.row,'access_key')">{{ scope.row.access_key }}</span>
               <el-tooltip content="点击可复制到粘贴板">
                 <el-button type="text" @click="copyAccessKey(scope.row,'access_key')">
                   <i class="el-icon-copy-document" style="margin-left: 8px" />
@@ -186,3 +186,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.copy-box {
+  text-decoration:underline dotted;
+}
+</style>
